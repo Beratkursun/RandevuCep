@@ -4,7 +4,7 @@
 </script>
 
 <header class="ust">
-  <a href="/" class="logo">passo<span>klon</span></a>
+  <a href="/" class="logo">Randevu<span>Cep</span></a>
   <button
     class="tema-dugme"
     onclick={() => tema.degistir()}
@@ -35,7 +35,7 @@
   }
 
   .logo span {
-    color: var(--renk-ana);
+    color: var(--renk-vurgu);
   }
 
   .tema-dugme {

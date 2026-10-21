@@ -9,40 +9,56 @@ Davranış spec'leri; her yaprak bölüm `tests/` altındaki tek bir Vitest test
 
 ## Sepet
 
-Sepet store'unun birleştirme, türetme ve silme davranışı.
+Randevu sepeti store'unun taslak ekleme, türetme, silme ve doğrudan randevu davranışını doğrular.
 
-### Aynı kategoride adet birleşir
+### Aynı taslak ikinci kez eklenmez
 
-Aynı etkinlik ve aynı bilet kategorisi ikinci kez eklendiğinde sepet yeni satır açmamalı, mevcut kalemin adedini artırmalıdır; aksi hâlde kullanıcı aynı bileti iki ayrı satırda görür.
+Aynı salon, berber, tarih, saat ve hizmet listesine sahip taslak ikinci kez eklenmemeli; aksi hâlde kullanıcı aynı randevuyu iki kez onaylayabilir.
 
-### Farklı kategoriler ayrı satır olur
+### Farklı hizmetler ayrı taslak olur
 
-Aynı etkinliğin farklı bilet kategorileri (örneğin Yan Tribün ve Kale Arkası) birleşmemeli, ayrı kalem olarak durmalıdır.
+Aynı salon ve saatte farklı hizmet listeleri seçildiğinde bunlar ayrı taslaklar olarak durmalı; böylece çok hizmetli ve tek hizmetli randevular birbirine karışmaz.
 
-### Toplam ve adet türetilir
+### Toplam tutar ve süre türetilir
 
-`adet` bilet sayılarının toplamını, `toplam` ise adet × kategori fiyatı toplamını vermelidir; ödeme ekranındaki tutar doğrudan bu değerden okunur.
+`adet` taslak sayısını, `toplamTutar` hizmet fiyatlarının toplamını, `toplamSure` ise toplam süreyi vermelidir; sepet özeti doğrudan bu değerlerden okunur.
 
-### Kalem silinir ve sepet temizlenir
+### Taslak silinir ve sepet temizlenir
 
-`sil` yalnızca verilen indeksteki kalemi kaldırmalı, `temizle` tüm kalemleri boşaltıp toplamı sıfıra indirmelidir; ödeme sonrası sepetin boş kalması buna bağlıdır.
+`sil` yalnızca verilen indeksteki taslağı kaldırmalı, `temizle` tüm taslakları boşaltıp toplamı sıfıra indirmelidir; onay sonrası sepetin boş kalması buna bağlıdır.
 
-## Biletler
+### Doğrudan taslak ayrı tutulur
 
-Satın alma akışının tarayıcı tarafındaki sözleşmesi; Rust komutu bu testlerde çalışmaz.
+`dogrudanAyarla` ile atanan tek taslak sepet listesine eklenmemeli ve `dogrudanTemizle` ile ayrıca boşaltılabilmelidir; "Hemen randevu al" akışı buna dayanır.
 
-### Satın alma bilet kodu üretir ve kalıcılaştırır
+## Randevular
 
-Tauri olmayan ortamda `satinAl` her kalem için `WEB-` ile başlayan bir kod üretmeli, bileti listeye yazmalı ve `localStorage["biletlerim"]` altına kaydetmelidir; sayfa yenilendiğinde biletlerin geri gelmesi buna bağlıdır.
+Onay akışının tarayıcı tarafındaki sözleşmesi; Rust komutu bu testlerde çalışmaz.
+
+### Onay kodu üretir ve kalıcılaştırır
+
+Tauri olmayan ortamda `onayla` her taslak için `WEB-RNV-` ile başlayan bir kod üretmeli, randevuyu listeye yazmalı ve `localStorage["randevularim"]` altına kaydetmelidir; sayfa yenilendiğinde randevuların geri gelmesi buna bağlıdır.
+
+### İlk müsait berber boş kimlikle saklanır
+
+`berberId` null olan taslak onaylandığında randevu `berberId: null` ve "İlk müsait berber" etiketiyle saklanmalıdır; kullanıcı belirli bir berber seçmeden de randevu alabilmelidir.
+
+### Bozuk kayıt boş listeyle açılır
+
+`localStorage["randevularim"]` geçersiz JSON veya dizi olmayan bir değer içeriyorsa store boş listeyle açılmalıdır; bozuk bir kayıt uygulamayı kilitlememelidir.
 
 ## Veri
 
-Katalog erişimi ve biçimlendirme yardımcıları.
+Salon kataloğu, hizmet arama ve biçimlendirme yardımcıları.
 
-### Etkinlik kimlikle bulunur
+### Salon kimlikle bulunur
 
-`etkinlikBul` var olan kimlikte ilgili kaydı, olmayan kimlikte `undefined` döndürmelidir; detay sayfası ve sepet kalemleri bu fonksiyona güvenir.
+`salonBul` var olan kimlikte ilgili salonu, olmayan kimlikte `undefined` döndürmelidir; `hizmetBul` ise salon içindeki hizmeti bulmalıdır.
 
 ### Fiyat ve tarih tr-TR biçimlenir
 
-`tl` tutarı Türk lirası olarak binlik ayraçla, `tarihYaz` ise Türkçe ay adı ve iki haneli saatle yazmalıdır; tüm ekranlar bu iki yardımcıyı kullandığı için biçim tek yerden korunur.
+`tl` tutarı Türk lirası olarak binlik ayraçla, `tarihYaz` ise Türkçe ay adı ve isteğe bağlı saati yazmalıdır; tüm ekranlar bu iki yardımcıyı kullandığı için biçim tek yerden korunur.
+
+### Çok hizmetli toplamlar hesaplanır
+
+`toplamSure` ve `toplamTutar` birden fazla hizmetin süre ve fiyatlarını doğru toplamalı, `baslangicFiyat` salonun en düşük hizmet fiyatını vermelidir; kart ve sepet özetleri bu değerlere güvenir.

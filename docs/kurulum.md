@@ -9,7 +9,7 @@
 
 1. **Depoyu klonlayın:**
 ```bash
-git clone https://github.com/keyvanarasteh/hello-mobil.git
+git clone https://github.com/Beratkursun/hello-mobil.git
 cd hello-mobil
 ```
 

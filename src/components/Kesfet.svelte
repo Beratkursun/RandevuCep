@@ -1,25 +1,60 @@
 <script lang="ts">
-  // Adım 6: Ana sayfa (Keşfet) — arama + kategori filtresi + etkinlik listesi
-  import EtkinlikKart from "$lib/components/EtkinlikKart.svelte";
-  import { etkinlikler, kategoriler, type Kategori } from "$lib/data";
+  // Ana sayfa (Keşfet) — salon arama, hizmet filtresi ve üç durum
+  import { onMount } from "svelte";
+  import SalonKart from "$lib/components/SalonKart.svelte";
+  import { hizmetKategorileri, salonlar } from "$lib/data";
+  import type { HizmetKategorisi } from "$lib/types";
 
-  const filtreler: (Kategori | "Tümü")[] = ["Tümü", ...kategoriler];
-
-  let secili = $state<Kategori | "Tümü">("Tümü");
   let arama = $state("");
+  let secili = $state<HizmetKategorisi | "Tümü">("Tümü");
+  let durum = $state<"yukleniyor" | "hazir" | "hata">("yukleniyor");
+  let hata = $state("");
 
-  // $derived: secili veya arama değişince liste otomatik yeniden hesaplanır
+  const filtreler: (HizmetKategorisi | "Tümü")[] = ["Tümü", ...hizmetKategorileri];
+
   const liste = $derived(
-    etkinlikler.filter(
-      (e) =>
-        (secili === "Tümü" || e.kategori === secili) &&
-        e.baslik.toLocaleLowerCase("tr").includes(arama.toLocaleLowerCase("tr")),
-    ),
+    salonlar.filter((s) => {
+      const kategoriUygun =
+        secili === "Tümü" || s.hizmetler.some((h) => h.kategori === secili);
+      const metin = `${s.ad} ${s.semt} ${s.hizmetler.map((h) => h.ad).join(" ")}`.toLocaleLowerCase(
+        "tr",
+      );
+      return kategoriUygun && metin.includes(arama.toLocaleLowerCase("tr"));
+    }),
   );
+
+  function yukle() {
+    durum = "yukleniyor";
+    hata = "";
+    try {
+      if (typeof window !== "undefined" && new URLSearchParams(window.location.search).has("hata")) {
+        throw new Error("Katalog servisine ulaşılamadı.");
+      }
+      if (!Array.isArray(salonlar)) throw new Error("Katalog okunamadı.");
+      durum = "hazir";
+    } catch (e) {
+      hata = e instanceof Error ? e.message : "Katalog yüklenemedi.";
+      durum = "hata";
+    }
+  }
+
+  onMount(() => {
+    const zaman = setTimeout(yukle, 250);
+    return () => clearTimeout(zaman);
+  });
 </script>
 
 <div class="sayfa">
-  <input class="arama" type="search" placeholder="Etkinlik, takım veya sanatçı ara" bind:value={arama} />
+  <div class="giris">
+    <p class="ust-yazi">Berber ve kuaför randevusu</p>
+    <h1>Yakınındaki salonu seç</h1>
+    <input
+      class="arama"
+      type="search"
+      placeholder="Salon, semt veya hizmet ara"
+      bind:value={arama}
+    />
+  </div>
 
   <div class="cipler">
     {#each filtreler as k}
@@ -27,14 +62,51 @@
     {/each}
   </div>
 
-  {#each liste as e (e.id)}
-    <EtkinlikKart etkinlik={e} />
+  {#if durum === "yukleniyor"}
+    <div class="durum" aria-live="polite">Randevu saatleri yükleniyor…</div>
+    {#each [1, 2, 3] as _}
+      <div class="kart iskelet"></div>
+    {/each}
+  {:else if durum === "hata"}
+    <div class="kart durum hata" aria-live="assertive">
+      <b>Katalog yüklenemedi.</b>
+      <p>{hata}</p>
+      <button class="btn" onclick={yukle}>Tekrar dene</button>
+    </div>
+  {:else if liste.length === 0}
+    <div class="kart durum" aria-live="polite">
+      <b>Sonuç bulunamadı.</b>
+      <p>Aramanı veya filtreleri değiştir.</p>
+      <button
+        class="btn"
+        onclick={() => {
+          arama = "";
+          secili = "Tümü";
+        }}>Filtreleri temizle</button>
+    </div>
   {:else}
-    <p class="bos">Aramanıza uygun etkinlik bulunamadı.</p>
-  {/each}
+    {#each liste as s (s.id)}
+      <SalonKart salon={s} />
+    {/each}
+  {/if}
 </div>
 
 <style>
+  .giris h1 {
+    margin: 2px 0 12px;
+    font-size: 24px;
+    letter-spacing: -0.4px;
+  }
+
+  .ust-yazi {
+    margin: 0;
+    color: var(--renk-ana);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
   .arama {
     width: 100%;
     padding: 12px 14px;
@@ -65,5 +137,32 @@
     border-color: var(--renk-ana);
     color: #fff;
     font-weight: 600;
+  }
+
+  .durum {
+    padding: 24px 18px;
+    text-align: center;
+    color: var(--yazi-soluk);
+  }
+
+  .durum b {
+    color: var(--yazi);
+  }
+
+  .hata {
+    border-color: var(--renk-vurgu);
+  }
+
+  .iskelet {
+    height: 210px;
+    background: linear-gradient(90deg, var(--kart), var(--zemin), var(--kart));
+    background-size: 200% 100%;
+    animation: parla 1.2s infinite linear;
+  }
+
+  @keyframes parla {
+    to {
+      background-position: -200% 0;
+    }
   }
 </style>

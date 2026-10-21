@@ -1,4 +1,4 @@
-# PassoKlon — ajan başlangıç talimatı
+# RandevuCep — ajan başlangıç talimatı
 
 Bu depoda mimari ve davranış bilgisi kodun yanında değil `lat.md/` bilgi grafiğinde tutulur. Kod yazmadan önce grafiği oku, iş bitince güncelle. Bu bölüm projeye aittir; alttaki `%% lat:begin/end %%` bloğu lat aracının malıdır, oraya proje notu yazma.
 
@@ -18,7 +18,7 @@ Sonra `lat check` çalıştır; çıktı `All checks passed` olmalı. Kırık ba
 2. Bölümün dosyasını aç; açılış paragrafını ve alt başlıklarını oku.
 3. `lat refs "<dosya#Bölüm>"` ile o bölümü hangi kodun uyguladığını gör.
 
-Harita: `lat.md/lat.md` indeks; `mimari` (Astro + Tauri kabuğu, rotalar), `veri-modeli` (katalog, tr-TR biçimlendirme), `sepet`, `biletler` (Rust `bilet_olustur`, localStorage), `tema`, `navigasyon`, `kullanici`, `testler`.
+Harita: `lat.md/lat.md` indeks; `mimari` (Astro + Tauri kabuğu, rotalar), `veri-modeli` (salon/berber/hizmet/randevu tipleri, tr-TR biçimlendirme), `sepet` (randevu taslakları), `randevular` (Rust `randevu_olustur`, `native.ts`, localStorage), `tema`, `navigasyon`, `kullanici`, `testler`, `gorevler` (Hafta 03/04 durumu).
 
 `lat search "<cümle>"` semantik arama yapar ama `LAT_LLM_KEY` ister; anahtar yoksa `lat locate` kullan.
 

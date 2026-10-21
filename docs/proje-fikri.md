@@ -43,11 +43,15 @@ Uygulama gerçek bir ödeme veya canlı takvim servisine bağlanmaz; katalog ve 
 
 ## 4. Veri Modeli ve Kod Üretimi
 
-- `Salon`: `id`, `ad`, `semt`, `adres`, `puan`, `hizmetler`, `berberler`, `calismaSaatleri`, `renk`.
-- `Berber`: `id`, `salonId`, `ad`, `uzmanlik`, `musaitSaatler`.
-- `Hizmet`: `id`, `ad`, `sureDk`, `fiyat`.
-- `Randevu`: `id`, `salonId`, `berberId`, `hizmetId`, `tarih`, `saat`, `kod`, `durum`.
-- `Kullanici`: `ad`, `telefon`, `eposta`.
+- `Salon`: `id`, `ad`, `semt`, `adres`, `puan`, `renk`, `aciklama`, `calismaSaatleri`, `hizmetler`, `berberler`.
+- `Berber`: `id`, `ad`, `uzmanlik`.
+- `Hizmet`: `id`, `ad`, `kategori`, `sureDk`, `fiyat`.
+- `RandevuTaslagi`: `id`, `salonId`, `berberId` (null ise ilk müsait), `hizmetler`, `tarih`, `saat`.
+- `Kullanici`: `ad`, `telefon`.
+
+Akış dört kombinasyonu destekler: tek veya çok hizmet, belirli veya ilk müsait berber, sepetli veya doğrudan onay.
+
+Onaylanan randevu `Randevu` tipine dönüşür; `kod`, `salonAd`, `berberAd`, `toplamTutar`, `toplamSure` ve `durum` alanlarını taşır.
 
 Rust tarafında üretilen kodun formatı `RNV-AAA-BBBBBBB` olacaktır:
 

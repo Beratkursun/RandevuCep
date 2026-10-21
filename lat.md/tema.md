@@ -18,4 +18,6 @@ Kaynak: [[src/lib/tema.svelte.ts#TemaYonetici#degistir]], [[src/components/AppHe
 
 ## Stil Kaynağı
 
-Canlı stil dosyası `src/styles/app.css`'tir ve `Layout.astro` yalnızca onu import eder. `src/app.css` aynı değişkenleri tanımlayan eski bir kopyadır ve hiçbir yerden import edilmez; stil değişikliği orada yapılırsa ekrana yansımaz.
+Canlı stil dosyası `src/styles/app.css`'tir ve `Layout.astro` yalnızca onu import eder; projede ikinci bir kopya yoktur. Renk değişikliği bu dosyadaki tokenlardan yapılır.
+
+Kaynak: [[src/styles/app.css]], [[src/layouts/Layout.astro]].

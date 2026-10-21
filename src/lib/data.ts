@@ -1,131 +1,178 @@
-// Adım 4: Veri modeli — şimdilik sabit (mock) veri, ileride bir API'den gelebilir
+import type { Berber, Hizmet, HizmetKategorisi, Salon } from "./types";
 
-// @lat: [[veri-modeli#Veri Tipleri]]
-export type Kategori = "Futbol" | "Basketbol" | "Konser" | "Tiyatro";
+export const hizmetKategorileri: HizmetKategorisi[] = ["Saç", "Sakal", "Bakım", "Boyama"];
 
-export interface BiletKategorisi {
-  ad: string;
-  fiyat: number;
-}
-
-export interface Etkinlik {
-  id: number;
-  baslik: string;
-  kategori: Kategori;
-  tarih: string; // ISO formatında: "2026-10-18T19:00"
-  mekan: string;
-  sehir: string;
-  renk: string; // afiş görseli yerine CSS gradyanı
-  aciklama: string;
-  biletler: BiletKategorisi[];
-}
-
-export const kategoriler: Kategori[] = ["Futbol", "Basketbol", "Konser", "Tiyatro"];
+export const saatler = [
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
+  "18:00",
+  "19:00",
+];
 
 // @lat: [[veri-modeli#Katalog ve Arama]]
-export const etkinlikler: Etkinlik[] = [
+export const salonlar: Salon[] = [
   {
     id: 1,
-    baslik: "Boğaziçi SK – Anadolu FK",
-    kategori: "Futbol",
-    tarih: "2026-10-18T19:00",
-    mekan: "Kuzey Stadyumu",
-    sehir: "İstanbul",
-    renk: "linear-gradient(135deg, #e4002b, #7a0016)",
-    aciklama: "Ligin 9. haftasında zirve mücadelesi. Kapılar maçtan 2 saat önce açılır.",
-    biletler: [
-      { ad: "Kale Arkası", fiyat: 450 },
-      { ad: "Yan Tribün", fiyat: 900 },
-      { ad: "Maraton", fiyat: 1500 },
+    ad: "Kadıköy Berber Atölyesi",
+    semt: "Kadıköy",
+    adres: "Caferağa Mah. Moda Cad. No: 18",
+    puan: 4.8,
+    renk: "linear-gradient(135deg, #0f766e, #134e4a)",
+    aciklama: "Mahallenin klasik berberi; randevulu çalışır, çay ikramı hazırdır.",
+    calismaSaatleri: "09:00 - 20:00",
+    hizmetler: [
+      { id: "kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 30, fiyat: 250 },
+      { id: "sakal", ad: "Sakal Tıraşı", kategori: "Sakal", sureDk: 20, fiyat: 150 },
+      { id: "kombo", ad: "Saç + Sakal", kategori: "Saç", sureDk: 45, fiyat: 350 },
+      { id: "cilt", ad: "Cilt Bakımı", kategori: "Bakım", sureDk: 30, fiyat: 300 },
+    ],
+    berberler: [
+      { id: "emre", ad: "Emre Usta", uzmanlik: ["Saç", "Sakal"] },
+      { id: "mert", ad: "Mert Usta", uzmanlik: ["Saç", "Sakal", "Bakım"] },
     ],
   },
   {
     id: 2,
-    baslik: "Ege Yıldızları – Başkent Basket",
-    kategori: "Basketbol",
-    tarih: "2026-10-22T20:30",
-    mekan: "Kordon Spor Salonu",
-    sehir: "İzmir",
-    renk: "linear-gradient(135deg, #f97316, #9a3412)",
-    aciklama: "Normal sezon karşılaşması. Salona giriş için biletinizi telefonunuzda gösterin.",
-    biletler: [
-      { ad: "Üst Kat", fiyat: 300 },
-      { ad: "Alt Kat", fiyat: 650 },
-      { ad: "Parke Kenarı", fiyat: 2200 },
+    ad: "Nişantaşı Kuaför Studio",
+    semt: "Şişli",
+    adres: "Teşvikiye Mah. Nişantaşı Cad. No: 42",
+    puan: 4.9,
+    renk: "linear-gradient(135deg, #7c3aed, #312e81)",
+    aciklama: "Saç tasarımı ve renklendirme odaklı butik kuaför.",
+    calismaSaatleri: "10:00 - 21:00",
+    hizmetler: [
+      { id: "kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 40, fiyat: 450 },
+      { id: "boyama", ad: "Saç Boyama", kategori: "Boyama", sureDk: 90, fiyat: 900 },
+      { id: "fon", ad: "Fön", kategori: "Saç", sureDk: 30, fiyat: 250 },
+      { id: "bakim", ad: "Saç Bakımı", kategori: "Bakım", sureDk: 45, fiyat: 600 },
+    ],
+    berberler: [
+      { id: "selin", ad: "Selin", uzmanlik: ["Saç", "Boyama"] },
+      { id: "ayse", ad: "Ayşe", uzmanlik: ["Saç", "Bakım", "Boyama"] },
     ],
   },
   {
     id: 3,
-    baslik: "Gece Yarısı Orkestrası",
-    kategori: "Konser",
-    tarih: "2026-11-02T21:00",
-    mekan: "Açıkhava Sahnesi",
-    sehir: "İstanbul",
-    renk: "linear-gradient(135deg, #7c3aed, #1e1b4b)",
-    aciklama: "Yeni albüm turnesinin İstanbul durağı. 18 yaş sınırı vardır.",
-    biletler: [
-      { ad: "Ayakta", fiyat: 750 },
-      { ad: "Tribün", fiyat: 1100 },
+    ad: "Beşiktaş Barber Club",
+    semt: "Beşiktaş",
+    adres: "Sinanpaşa Mah. Çarşı Cad. No: 7",
+    puan: 4.7,
+    renk: "linear-gradient(135deg, #b45309, #78350f)",
+    aciklama: "Hızlı ve net tıraş sevenler için çarşı içinde modern barber.",
+    calismaSaatleri: "09:00 - 20:00",
+    hizmetler: [
+      { id: "kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 30, fiyat: 300 },
+      { id: "sakal", ad: "Sakal Tıraşı", kategori: "Sakal", sureDk: 20, fiyat: 180 },
+      { id: "kombo", ad: "Saç + Sakal", kategori: "Saç", sureDk: 45, fiyat: 420 },
+    ],
+    berberler: [
+      { id: "can", ad: "Can", uzmanlik: ["Saç", "Sakal"] },
+      { id: "burak", ad: "Burak", uzmanlik: ["Saç", "Sakal"] },
     ],
   },
   {
     id: 4,
-    baslik: "Hamlet",
-    kategori: "Tiyatro",
-    tarih: "2026-10-25T20:00",
-    mekan: "Şehir Tiyatrosu Büyük Sahne",
-    sehir: "Ankara",
-    renk: "linear-gradient(135deg, #0f766e, #134e4a)",
-    aciklama: "Shakespeare'in klasik eseri, iki perde. Oyun süresi 2 saat 40 dakikadır.",
-    biletler: [
-      { ad: "Balkon", fiyat: 250 },
-      { ad: "Salon", fiyat: 400 },
+    ad: "Moda Güzellik Salonu",
+    semt: "Kadıköy",
+    adres: "Caferağa Mah. Moda Cad. No: 63",
+    puan: 4.6,
+    renk: "linear-gradient(135deg, #be185d, #831843)",
+    aciklama: "El ve cilt bakımına odaklanan sakin bir güzellik salonu.",
+    calismaSaatleri: "10:00 - 19:00",
+    hizmetler: [
+      { id: "manikur", ad: "Manikür", kategori: "Bakım", sureDk: 30, fiyat: 200 },
+      { id: "pedikur", ad: "Pedikür", kategori: "Bakım", sureDk: 40, fiyat: 250 },
+      { id: "kas", ad: "Kaş Tasarımı", kategori: "Bakım", sureDk: 15, fiyat: 150 },
+      { id: "cilt", ad: "Cilt Bakımı", kategori: "Bakım", sureDk: 40, fiyat: 350 },
+    ],
+    berberler: [
+      { id: "derya", ad: "Derya", uzmanlik: ["Bakım"] },
+      { id: "ece", ad: "Ece", uzmanlik: ["Bakım"] },
     ],
   },
   {
     id: 5,
-    baslik: "Karadeniz Gücü – Boğaziçi SK",
-    kategori: "Futbol",
-    tarih: "2026-11-08T16:00",
-    mekan: "Sahil Arena",
-    sehir: "Trabzon",
-    renk: "linear-gradient(135deg, #1d4ed8, #7f1d1d)",
-    aciklama: "Deplasman tribünü biletleri yalnızca misafir taraftarlara satılır.",
-    biletler: [
-      { ad: "Kale Arkası", fiyat: 350 },
-      { ad: "Kapalı Tribün", fiyat: 800 },
+    ad: "Levent Erkek Kuaförü",
+    semt: "Beşiktaş",
+    adres: "Levent Mah. Büyükdere Cad. No: 112",
+    puan: 4.5,
+    renk: "linear-gradient(135deg, #1d4ed8, #1e3a8a)",
+    aciklama: "İş çıkışı hızlı randevu almak isteyenler için pratik kuaför.",
+    calismaSaatleri: "09:00 - 20:00",
+    hizmetler: [
+      { id: "kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 30, fiyat: 280 },
+      { id: "sakal", ad: "Sakal Tıraşı", kategori: "Sakal", sureDk: 20, fiyat: 160 },
+      { id: "kombo", ad: "Saç + Sakal", kategori: "Saç", sureDk: 45, fiyat: 390 },
+    ],
+    berberler: [
+      { id: "hakan", ad: "Hakan", uzmanlik: ["Saç", "Sakal"] },
+      { id: "serkan", ad: "Serkan", uzmanlik: ["Saç", "Sakal"] },
     ],
   },
   {
     id: 6,
-    baslik: "Caz Günleri",
-    kategori: "Konser",
-    tarih: "2026-11-14T20:00",
-    mekan: "Kültür Merkezi",
-    sehir: "İzmir",
-    renk: "linear-gradient(135deg, #ca8a04, #422006)",
-    aciklama: "Üç farklı caz grubu aynı gecede sahnede.",
-    biletler: [
-      { ad: "Genel Giriş", fiyat: 500 },
-      { ad: "Masa", fiyat: 1200 },
+    ad: "Bostancı Hair & Care",
+    semt: "Kadıköy",
+    adres: "Bostancı Mah. Bağdat Cad. No: 210",
+    puan: 4.4,
+    renk: "linear-gradient(135deg, #0d9488, #115e59)",
+    aciklama: "Saç ve bakım hizmetlerini uygun fiyatla sunan mahalle salonu.",
+    calismaSaatleri: "09:00 - 19:00",
+    hizmetler: [
+      { id: "kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 30, fiyat: 220 },
+      { id: "fon", ad: "Fön", kategori: "Saç", sureDk: 25, fiyat: 180 },
+      { id: "boyama", ad: "Saç Boyama", kategori: "Boyama", sureDk: 80, fiyat: 750 },
+    ],
+    berberler: [
+      { id: "nihal", ad: "Nihal", uzmanlik: ["Saç", "Boyama"] },
+      { id: "cem", ad: "Cem", uzmanlik: ["Saç", "Bakım"] },
     ],
   },
 ];
 
-export function etkinlikBul(id: number): Etkinlik | undefined {
-  return etkinlikler.find((e) => e.id === id);
+export function salonBul(id: number): Salon | undefined {
+  return salonlar.find((s) => s.id === id);
 }
 
-// Yardımcılar: para ve tarih biçimlendirme
+export function hizmetBul(salon: Salon, hizmetId: string): Hizmet | undefined {
+  return salon.hizmetler.find((h) => h.id === hizmetId);
+}
+
+export function berberBul(salon: Salon, berberId: string | null): Berber | undefined {
+  if (!berberId) return undefined;
+  return salon.berberler.find((b) => b.id === berberId);
+}
+
+export function toplamSure(hizmetler: Hizmet[]): number {
+  return hizmetler.reduce((t, h) => t + h.sureDk, 0);
+}
+
+export function toplamTutar(hizmetler: Hizmet[]): number {
+  return hizmetler.reduce((t, h) => t + h.fiyat, 0);
+}
+
+export function baslangicFiyat(salon: Salon): number {
+  return Math.min(...salon.hizmetler.map((h) => h.fiyat));
+}
+
 // @lat: [[veri-modeli#Biçimlendirme]]
 export const tl = (tutar: number) =>
   tutar.toLocaleString("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
 
-export const tarihYaz = (iso: string) =>
-  new Date(iso).toLocaleString("tr-TR", {
+export const tarihYaz = (tarih: string, saat?: string) => {
+  if (!tarih) return "";
+  const iso = saat ? `${tarih}T${saat}` : `${tarih}T12:00`;
+  const metin = new Date(iso).toLocaleDateString("tr-TR", {
     weekday: "short",
     day: "numeric",
     month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
   });
+  return saat ? `${metin} · ${saat}` : metin;
+};
