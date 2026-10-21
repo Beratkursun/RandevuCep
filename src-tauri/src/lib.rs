@@ -21,3 +21,29 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
+#[cfg(test)]
+mod tests {
+    use super::randevu_olustur;
+
+    // @lat: [[testler#Rust#Kod formatı salon kimliğini taşır]]
+    #[test]
+    fn kod_formati_salon_kimligini_tasir() {
+        let kod = randevu_olustur(42);
+        assert!(kod.starts_with("RNV-042-"));
+
+        let son_ek = kod.strip_prefix("RNV-042-").unwrap();
+        assert!(!son_ek.is_empty());
+        assert!(son_ek.len() <= 7);
+        assert!(son_ek.chars().all(|c| c.is_ascii_hexdigit()));
+    }
+
+    // @lat: [[testler#Rust#Her çağrı yeni kod üretir]]
+    #[test]
+    fn her_cagri_yeni_kod_uretir() {
+        let ilk = randevu_olustur(7);
+        std::thread::sleep(std::time::Duration::from_nanos(1));
+        let ikinci = randevu_olustur(7);
+        assert_ne!(ilk, ikinci);
+    }
+}

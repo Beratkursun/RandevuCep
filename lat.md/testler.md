@@ -5,7 +5,7 @@ lat:
 
 # Testler
 
-Davranış spec'leri; her yaprak bölüm `tests/` altındaki tek bir Vitest testine bağlıdır ve `bun run test` ile doğrulanır.
+Davranış spec'leri; her yaprak bölüm bir Vitest veya Rust testine bağlıdır ve `bun run test` ile `cargo test` üzerinden doğrulanır.
 
 ## Sepet
 
@@ -62,3 +62,15 @@ Salon kataloğu, hizmet arama ve biçimlendirme yardımcıları.
 ### Çok hizmetli toplamlar hesaplanır
 
 `toplamSure` ve `toplamTutar` birden fazla hizmetin süre ve fiyatlarını doğru toplamalı, `baslangicFiyat` salonun en düşük hizmet fiyatını vermelidir; kart ve sepet özetleri bu değerlere güvenir.
+
+## Rust
+
+Rust `randevu_olustur` komutunun kod sözleşmesini doğrulayan `cargo test` spec'leri.
+
+### Kod formatı salon kimliğini taşır
+
+`randevu_olustur(42)` çıktısı `RNV-042-` önekiyle başlamalı; son ek boş olmamalı, en fazla 7 karakter olmalı ve yalnızca onaltılık karakterler içermelidir.
+
+### Her çağrı yeni kod üretir
+
+Aynı salon kimliğiyle art arda iki çağrı farklı kod döndürmelidir; kodun her onayda yeniden üretilmesi bu davranışa bağlıdır.

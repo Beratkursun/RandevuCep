@@ -2,11 +2,12 @@
   // Yeniden kullanılabilir salon kartı — dışarıdan "salon" prop'u alır
   import { baslangicFiyat, tl } from "$lib/data";
   import type { Salon } from "$lib/types";
+  import Kart from "../../components/ui/Kart.svelte";
 
   let { salon }: { salon: Salon } = $props();
 </script>
 
-<a href={`/salon/${salon.id}`} class="kart salon">
+<Kart href={`/salon/${salon.id}`} sinif="salon">
   <div class="gorsel" style:background={salon.renk}>
     <span>{salon.semt}</span>
     <b>★ {salon.puan.toFixed(1)}</b>
@@ -17,10 +18,10 @@
     <p class="adres">{salon.adres}</p>
     <strong>{tl(baslangicFiyat(salon))}'den başlayan fiyatlarla</strong>
   </div>
-</a>
+</Kart>
 
 <style>
-  .salon {
+  :global(.salon) {
     display: block;
     overflow: hidden;
   }

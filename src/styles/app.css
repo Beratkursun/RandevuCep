@@ -44,7 +44,8 @@ a {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
   color: inherit;
 }
@@ -89,4 +90,50 @@ button {
   padding: 48px 16px;
   text-align: center;
   color: var(--yazi-soluk);
+}
+
+.durum {
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  color: var(--yazi-soluk);
+}
+
+.durum b {
+  color: var(--yazi);
+  font-size: 16px;
+}
+
+.durum p {
+  margin: 0;
+}
+
+.durum .btn {
+  margin-top: 4px;
+}
+
+.durum.hata {
+  border-color: var(--renk-vurgu);
+}
+
+.iskeletler {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.iskelet {
+  height: 18px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--kart), var(--zemin), var(--kart));
+  background-size: 200% 100%;
+  animation: parla 1.2s infinite linear;
+}
+
+@keyframes parla {
+  to {
+    background-position: -200% 0;
+  }
 }
