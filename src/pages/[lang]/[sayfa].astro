@@ -1,0 +1,29 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BilgiSayfasi from '../../components/BilgiSayfasi.astro';
+import { diller, icerik, sayfalar, type BilgiSayfasiTuru, type Dil } from '$lib/icerik';
+
+export function getStaticPaths() {
+  return diller
+    .filter((lang) => lang !== 'tr')
+    .flatMap((lang) =>
+      sayfalar.map((sayfa) => ({
+        params: { lang, sayfa },
+        props: { lang, sayfa },
+      })),
+    );
+}
+
+interface Props {
+  lang: Dil;
+  sayfa: BilgiSayfasiTuru;
+}
+
+const { lang, sayfa } = Astro.props;
+const dir = lang === 'ar' || lang === 'fa' ? 'rtl' : 'ltr';
+const metin = icerik[lang][sayfa];
+---
+
+<Layout title={`${metin.baslik} — RandevuCep`} {lang} {dir}>
+  <BilgiSayfasi {lang} {sayfa} />
+</Layout>

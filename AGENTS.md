@@ -20,14 +20,36 @@ Sonra `lat check` çalıştır; çıktı `All checks passed` olmalı. Kırık ba
 
 Harita: `lat.md/lat.md` indeks; `mimari` (Astro + Tauri kabuğu, rotalar), `veri-modeli` (salon/berber/hizmet/randevu tipleri, tr-TR biçimlendirme), `sepet` (randevu taslakları), `randevular` (Rust `randevu_olustur`, `native.ts`, localStorage), `tema`, `navigasyon`, `kullanici`, `testler`, `gorevler` (Hafta 03/04 durumu).
 
+### Doküman indeksi
+
+| Belge | Kapsam | Bağlayıcı kural |
+|---|---|---|
+| [`docs/klasor-mimarisi.md`](docs/klasor-mimarisi.md) | Dizin ve dosya yapısı | Yeni dosya eklerken bu hiyerarşiye uy; dizin ağacını başka yerde tekrarlama. |
+| [`docs/proje-fikri.md`](docs/proje-fikri.md) | Proje konsepti | Veri modeli ve ekranlar bu konsepte sadık kalmalı. |
+| [`docs/branding.md`](docs/branding.md) | Marka ve renkler | Ad-hoc renk yazma; yalnızca `src/styles/app.css` tokenlarını kullan. |
+| [`docs/mimari-agac.md`](docs/mimari-agac.md) | Sayfa ve özellik haritası | Yeni rota eklerken bu ağaca uy. |
+| [`docs/veri-modeli.md`](docs/veri-modeli.md) | Randevu veri sözleşmesi | Tip değişikliğinde `src/lib/types/` ve bu belge birlikte güncellenir. |
+| [`docs/platform-destegi.md`](docs/platform-destegi.md) | Platform ve Rust sözleşmesi | `randevu_olustur` ve `native.ts` uyumunu koru. |
+| [`docs/kurallar.md`](docs/kurallar.md) | Proje kuralları | Git akışı ve kod yazım kuralları. |
+| [`docs/teslim.md`](docs/teslim.md) | Teslim adımları | Blackboard ve ZIP süreci. |
+| [`docs/kaynaklar.md`](docs/kaynaklar.md) | Kaynaklar | Ders ve tasarım referansları. |
+| [`docs/kurulum.md`](docs/kurulum.md) | Kurulum | Klonlama, `bun install` ve çalıştırma. |
+| [`docs/pr-guvenligi.md`](docs/pr-guvenligi.md) | PR/master güvenliği | Doğrudan push yok; PR ve merge akışı. |
+| [`docs/calisma-yontemi.md`](docs/calisma-yontemi.md) | AI çalışma yöntemi | Bağlam, dal, doğrulama ve istem günlüğü akışı. |
+| [`docs/ilerleme-batch-01.md`](docs/ilerleme-batch-01.md) | Batch 01 denetimi | 9/9 matris ve build kanıtı. |
+| [`docs/ilerleme-batch-02.md`](docs/ilerleme-batch-02.md) | Batch 02 denetimi | 09.1–16 matrisi ve doğrulama. |
+| [`docs/istem-gunlukleri/`](docs/istem-gunlukleri/) | İstem günlükleri | AI istemleri ve sonuçları. |
+| [`docs/tasks/`](docs/tasks/) | Haftalık görevler | Eğitmenin tanımladığı kabul ölçütleri. |
+| [`lat.md/lat.md`](lat.md/lat.md) | Bilgi grafiği | Mimari ve davranışın tek kaynağı. |
+
 `lat search "<cümle>"` semantik arama yapar ama `LAT_LLM_KEY` ister; anahtar yoksa `lat locate` kullan.
 
 ## 3. Katkı kuralları — `lat check` bunları zorlar
 
 - Her bölümün başlıktan hemen sonra en fazla 250 karakterlik açılış paragrafı olmalı.
-- Kod → bölüm bağı yorumla kurulur: `// @lat: [[biletler#Rust Komutu]]` (Python/PHP'de `#`).
+- Kod → bölüm bağı yorumla kurulur: `// @lat: [[randevular#Rust Komutu]]` (Python/PHP'de `#`).
 - Bölüm başına tek `@lat` yorumu, ilgili sembolün yanında.
-- `@lat` yalnızca `.ts .tsx .js .jsx .rs .py .go .c .h .java .php .swift .dart` dosyalarında okunur. `.astro`, `.svelte`, `.mjs` desteklenmez; onlara dosya yolu linki ver: `[[src/components/Sepet.svelte]]`.
+- `@lat` yalnızca `.ts .tsx .js .jsx .rs .py .go .c .h .java .php .swift .dart` dosyalarında okunur. `.astro`, `.svelte`, `.mjs` desteklenmez; onlara dosya yolu linki ver: `[[src/components/RandevuSepeti.svelte]]`.
 - `lat` yalnızca **git'in izlediği** dosyaları tarar. Yeni test veya kaynak dosyası eklediysen `git add` yapmadan `@lat` yorumun sayılmaz ve `require-code-mention` hatası alırsın.
 - Üretilmiş `SKILL.md` dosyalarını ve lat bloğunu düzenleme; proje bilgisi yalnızca `lat.md/` içine yazılır.
 
@@ -58,6 +80,19 @@ git checkout master && git pull origin master
 ```
 
 PR açıklamasına ne yapıldığını ve AI'a verilen görevi 2-3 cümleyle yaz. `gh` girişi bu makinede kayıtlıdır (`gh auth status`), her seferinde yeniden giriş istemez.
+
+## 6. Teknoloji ve komutlar
+
+- **Çekirdek:** Tauri v2 (Rust) + Astro statik ön yüz.
+- **Arayüz:** Svelte 5 runes (`$state`, `$derived`, `$props`), React 19 yalnızca `CanliRozet`, MDX bilgi sayfaları.
+- **Paket yöneticisi:** Bun.
+- `bun run dev` — Astro, `127.0.0.1:1420`.
+- `bun run tauri dev` — masaüstü kabuğu.
+- `bun run build` — statik üretim.
+- `bun run test` — Vitest.
+- `bun run check` — `svelte-check` + `lat check`.
+
+Svelte bileşenlerinde `export let` ve `$:` kullanılmaz; `window`/`localStorage` erişimleri `typeof window !== "undefined"` veya `onMount` ile korunur. Rust komutu `randevu_olustur`, JS yedeği `src/lib/native.ts` içindedir.
 
 %% lat:begin %%
 # Before starting work

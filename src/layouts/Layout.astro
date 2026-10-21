@@ -6,14 +6,16 @@ import '../styles/app.css';
 
 interface Props {
   title?: string;
+  lang?: "tr" | "en" | "ar" | "fa";
+  dir?: "ltr" | "rtl";
 }
 
-const { title = "RandevuCep" } = Astro.props;
+const { title = "RandevuCep", lang = "tr", dir = "ltr" } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
-<html lang="tr">
+<html lang={lang} dir={dir}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />

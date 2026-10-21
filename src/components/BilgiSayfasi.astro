@@ -1,0 +1,123 @@
+---
+import { icerik, sayfalar, type BilgiSayfasiTuru, type Dil } from "../lib/icerik";
+import DilSecici from "./DilSecici.astro";
+import IletisimFormu from "./IletisimFormu.svelte";
+import CanliRozet from "./react/CanliRozet";
+
+interface Props {
+  lang: Dil;
+  sayfa: BilgiSayfasiTuru;
+}
+
+const { lang, sayfa } = Astro.props;
+const metin = icerik[lang][sayfa];
+const bilgiYolu = (hedef: BilgiSayfasiTuru) =>
+  lang === "tr" ? `/${hedef}` : `/${lang}/${hedef}`;
+---
+
+<div class="sayfa bilgi">
+  <DilSecici {lang} {sayfa} />
+
+  <nav class="bilgi-menu" aria-label="Bilgi sayfaları">
+    {sayfalar.map((hedef) => (
+      <a href={bilgiYolu(hedef)} class:aktif={hedef === sayfa}>{icerik[lang][hedef].baslik}</a>
+    ))}
+  </nav>
+
+  <article class="kart icerik">
+    <h1>{metin.baslik}</h1>
+    <p class="giris">{metin.giris}</p>
+
+    {sayfa === "hakkinda" && (
+      <div class="rozet">
+        <CanliRozet client:load etiket="RandevuCep · Astro + Svelte" />
+      </div>
+    )}
+
+    {metin.bolumler.map((bolum) => (
+      <section>
+        <h2>{bolum.baslik}</h2>
+        {bolum.metin && <p>{bolum.metin}</p>}
+        {bolum.maddeler && (
+          <ul>
+            {bolum.maddeler.map((madde) => <li>{madde}</li>)}
+          </ul>
+        )}
+      </section>
+    ))}
+
+    {sayfa === "iletisim" && <IletisimFormu client:load {lang} />}
+  </article>
+</div>
+
+<style>
+  .bilgi {
+    max-width: 760px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .icerik {
+    padding: 22px;
+  }
+
+  .bilgi-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .bilgi-menu a {
+    padding: 6px 10px;
+    border-radius: 999px;
+    color: var(--yazi-soluk);
+    font-size: 12px;
+    text-decoration: none;
+  }
+
+  .bilgi-menu a.aktif {
+    background: var(--kart);
+    border: 1px solid var(--kenar);
+    color: var(--yazi);
+    font-weight: 600;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 24px;
+    letter-spacing: -0.3px;
+  }
+
+  .giris {
+    margin: 0 0 8px;
+    color: var(--yazi-soluk);
+  }
+
+  .rozet {
+    margin: 14px 0 4px;
+  }
+
+  section {
+    margin-top: 18px;
+  }
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 17px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--yazi-soluk);
+  }
+
+  ul {
+    margin: 0;
+    padding-inline-start: 20px;
+    color: var(--yazi-soluk);
+  }
+
+  li {
+    margin: 3px 0;
+  }
+</style>

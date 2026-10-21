@@ -1,7 +1,7 @@
 # Proje Fikri: RandevuCep
 
 - **Öğrenci Adı Soyadı:** Berat Kurşun
-- **Öğrenci Numarası:** [Öğrenci Numaranız]
+- **Öğrenci Numarası:** 2620511110
 - **İlham Alınan Konsept:** Kuaför & Berber Randevu Sistemi (Görev 02, fikir 32)
 
 ## 1. Proje Özeti

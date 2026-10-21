@@ -12,11 +12,11 @@ Kaynaklar: [[astro.config.mjs]], [[src-tauri/src/main.rs#main]], [[src-tauri/src
 
 ## Sayfa Yönlendirme
 
-Rotalar `src/pages` altındaki dosyalardan türetilir; `/salon/[id]` `getStaticPaths` ile katalogdaki altı salon için derleme anında üretilir ve derleme 12 sayfa çıkarır.
+Rotalar `src/pages` altındaki dosyalardan türetilir; `/salon/[id]` `getStaticPaths` ile katalogdaki altı salon için derleme anında üretilir ve derleme 27 sayfa çıkarır.
 
-Statik rotalar `/`, `/randevu`, `/onay`, `/randevularim`, `/profil` ve MDX tabanlı `/hakkinda`. Sayfa geçişleri `<ClientRouter />` ile SPA akıcılığında yapılır; bileşenler yeniden yüklenmediği için aktif menü durumu `astro:page-load` olayından okunur (bkz. [[navigasyon#Aktif Sekme]]).
+Statik rotalar `/`, `/randevu`, `/onay`, `/randevularim`, `/profil`; bilgi sayfaları `/hakkinda`, `/iletisim`, `/kosullar`, `/gizlilik` ve `/en`, `/ar`, `/fa` alt varyantlarıdır. Bilgi sayfaları `src/components/BilgiSayfasi.astro` üzerinden dört dilde üretilir; AR/FA için `dir="rtl"` uygulanır.
 
-Kaynak: [[src/pages/salon/[id].astro]], [[src/layouts/Layout.astro]].
+Kaynak: [[src/pages/salon/[id].astro]], [[src/layouts/Layout.astro]], [[src/components/BilgiSayfasi.astro]], [[src/pages/[lang]/[sayfa].astro]].
 
 ## Çoklu Çatı
 

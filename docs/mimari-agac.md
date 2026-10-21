@@ -34,9 +34,10 @@ RandevuCep
 │
 └── Bilgi Sayfaları
     ├── /hakkinda (MDX)
-    ├── /iletisim (Reaktif Form — planlanan)
-    ├── /kosullar (MDX — planlanan)
-    └── /gizlilik (MDX — planlanan)
+    ├── /iletisim (Astro + Svelte form)
+    ├── /kosullar (MDX)
+    ├── /gizlilik (MDX)
+    └── /en, /ar, /fa varyantları (AR/FA RTL)
 ```
 
 ## 2. Ana Klasörler
@@ -46,10 +47,10 @@ RandevuCep
 | `package.json` | Bağımlılıklar ve `dev`, `build`, `test`, `check`, `tauri` komutları. |
 | `astro.config.mjs` | Astro entegrasyonları, `$lib` alias'ı ve 1420 portu. |
 | `src-tauri/` | Rust çekirdeği, `randevu_olustur` komutu ve pencere ayarları. |
-| `src/layouts/` | Ortak sayfa iskeleti (`Layout.astro`). |
-| `src/pages/` | Dosya tabanlı rotalar. |
-| `src/components/` | Svelte ekranları ve ortak arayüz parçaları. |
-| `src/lib/` | Tipler, mock katalog, store'lar ve `native.ts`. |
+| `src/layouts/` | Ortak sayfa iskeleti (`Layout.astro`) ve dil/yön props'ları. |
+| `src/pages/` | Dosya tabanlı rotalar ve `[lang]/[sayfa].astro` bilgi varyantları. |
+| `src/components/` | Svelte ekranları, `BilgiSayfasi`, `DilSecici` ve `IletisimFormu`. |
+| `src/lib/` | Tipler, mock katalog, store'lar, `native.ts` ve `icerik.ts`. |
 | `src/lib/types/` | `Salon`, `Hizmet`, `Berber`, `RandevuTaslagi`, `Randevu`, `Kullanici`. |
 | `src/styles/` | Global renk tokenları (`app.css`). |
 | `docs/` | Görevler, marka, veri modeli ve platform belgeleri. |
@@ -67,8 +68,8 @@ RandevuCep
 ## 4. Responsive Breakpoints
 
 - **Telefon (360–430px):** Tek sütun; alt menü sabit; kartlar tam genişlik.
-- **Tablet (768–1024px):** İki sütunlu salon ızgarası; alt menü korunur.
-- **Masaüstü (1200px+):** Üç sütunlu ızgara; içerik `max-width` ile ortalanır.
+- **Tablet (768–1024px):** `Kesfet` iki sütunlu ızgara; alt menü korunur.
+- **Masaüstü (1200px+):** Üç sütunlu ızgara; içerik `max-width: 1200px` ile ortalanır.
 - Pencere minimumu `360×640`; alt menü `env(safe-area-inset-bottom)` ile çentikli cihazlara uyum sağlar.
 
 ## 5. Randevu Kombinasyonları
@@ -81,3 +82,10 @@ Uygulama dört ekseni birlikte destekler:
 4. Tek randevu veya birden fazla randevu taslağı.
 
 Kod tarafında bu esneklik `RandevuTaslagi.hizmetler` dizisi, `berberId: string | null` alanı ve `randevuSepeti.dogrudan` store'u ile karşılanır.
+
+## 6. Bilgi Sayfaları ve Diller
+
+- `src/lib/icerik.ts` TR/EN/AR/FA metinlerini tek yerde tutar.
+- `src/components/BilgiSayfasi.astro` içeriği ve `IletisimFormu`'nu render eder.
+- `src/pages/[lang]/[sayfa].astro` EN/AR/FA için 12 statik sayfa üretir.
+- AR/FA sayfalarında `<html dir="rtl">` uygulanır; dil seçici aynı sayfanın diğer dillerine bağlanır.
