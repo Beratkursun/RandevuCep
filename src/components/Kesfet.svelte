@@ -85,9 +85,11 @@
         }}>Filtreleri temizle</button>
     </div>
   {:else}
+    <div class="liste">
     {#each liste as s (s.id)}
       <SalonKart salon={s} />
     {/each}
+    </div>
   {/if}
 </div>
 
@@ -158,6 +160,24 @@
     background: linear-gradient(90deg, var(--kart), var(--zemin), var(--kart));
     background-size: 200% 100%;
     animation: parla 1.2s infinite linear;
+  }
+
+  .liste {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .liste {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .liste {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   @keyframes parla {

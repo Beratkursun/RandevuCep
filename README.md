@@ -14,17 +14,17 @@
 <sub>İstinye Üniversitesi · Meslek Yüksekokulu</sub>
 
 <p>
-  <a href="#"><img alt="İSTİNYE ÜNİVERSİTESİ İSTANBUL" src="https://img.shields.io/badge/%C4%B0ST%C4%B0NYE%20%C3%9CN%C4%B0VERS%C4%B0TES%C4%B0-%C4%B0STANBUL-002855?style=for-the-badge"></a>
-  <a href="#"><img alt="MYO063 MOBİL PROGRAMLAMA" src="https://img.shields.io/badge/MYO063-MOB%C4%B0L%20PROGRAMLAMA-e4002b?style=for-the-badge"></a>
-  <a href="#"><img alt="DÖNEM 2026-2027 GÜZ" src="https://img.shields.io/badge/D%C3%96NEM-2026--2027%20G%C3%9CZ-2563eb?style=for-the-badge"></a>
+  <a href="https://www.istinye.edu.tr"><img alt="İSTİNYE ÜNİVERSİTESİ İSTANBUL" src="https://img.shields.io/badge/%C4%B0ST%C4%B0NYE%20%C3%9CN%C4%B0VERS%C4%B0TES%C4%B0-%C4%B0STANBUL-002855?style=for-the-badge"></a>
+  <a href="https://qrofessor.com"><img alt="MYO063 MOBİL PROGRAMLAMA" src="https://img.shields.io/badge/MYO063-MOB%C4%B0L%20PROGRAMLAMA-e4002b?style=for-the-badge"></a>
+  <a href="https://qrofessor.com"><img alt="DÖNEM 2026-2027 GÜZ" src="https://img.shields.io/badge/D%C3%96NEM-2026--2027%20G%C3%9CZ-2563eb?style=for-the-badge"></a>
 </p>
 <p>
-  <a href="#"><img alt="Tauri v2" src="https://img.shields.io/badge/Tauri-v2-FFC131?style=for-the-badge&logo=tauri&logoColor=white"></a>
-  <a href="#"><img alt="Astro v5" src="https://img.shields.io/badge/Astro-v5-BC52EE?style=for-the-badge&logo=astro&logoColor=white"></a>
-  <a href="#"><img alt="Svelte 5" src="https://img.shields.io/badge/Svelte-5-FF3E00?style=for-the-badge&logo=svelte&logoColor=white"></a>
-  <a href="#"><img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black"></a>
-  <a href="#"><img alt="Bun 1.3" src="https://img.shields.io/badge/Bun-1.3-000000?style=for-the-badge&logo=bun&logoColor=black"></a>
-  <a href="#"><img alt="License Apache-2.0" src="https://img.shields.io/badge/License-Apache--2.0-blue?style=for-the-badge"></a>
+  <a href="https://v2.tauri.app/"><img alt="Tauri v2" src="https://img.shields.io/badge/Tauri-v2-FFC131?style=for-the-badge&logo=tauri&logoColor=white"></a>
+  <a href="https://astro.build/"><img alt="Astro v5" src="https://img.shields.io/badge/Astro-v5-BC52EE?style=for-the-badge&logo=astro&logoColor=white"></a>
+  <a href="https://svelte.dev/"><img alt="Svelte 5" src="https://img.shields.io/badge/Svelte-5-FF3E00?style=for-the-badge&logo=svelte&logoColor=white"></a>
+  <a href="https://react.dev/"><img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black"></a>
+  <a href="https://bun.sh/"><img alt="Bun 1.3" src="https://img.shields.io/badge/Bun-1.3-000000?style=for-the-badge&logo=bun&logoColor=black"></a>
+  <a href="https://github.com/Beratkursun/hello-mobil/blob/master/LICENSE"><img alt="License Apache-2.0" src="https://img.shields.io/badge/License-Apache--2.0-blue?style=for-the-badge"></a>
 </p>
 
 </div>
@@ -32,7 +32,7 @@
 ---
 
 ## 📋 İçindekiler
-- [Akademik Bilgiler](#-akademik-bilgiler)
+- [Akademik Bilgiler](#-akademik-bilgiler--ders-künyesi)
 - [Proje Hakkında](#-proje-hakkında)
 - [Mimari ve Çoklu Çatı (Multi-Framework)](#-mimari-ve-çoklu-çatı-multi-framework)
 - [Temel Yetenekler](#-temel-yetenekler)
@@ -49,8 +49,8 @@
 <div align="center">
 
 [![İSÜ](https://img.shields.io/badge/İSTİNYE_ÜNİVERSİTESİ-İSTANBUL-0080BB?style=for-the-badge&logo=google-chrome&logoColor=white)](https://www.istinye.edu.tr)
-[![MYO063](https://img.shields.io/badge/MYO063-Mobil_Programlama-FF6F00?style=for-the-badge&logo=dart&logoColor=white)](#)
-[![Dönem](https://img.shields.io/badge/Dönem-2026--2027_Güz-007ACC?style=for-the-badge)](#)
+[![MYO063](https://img.shields.io/badge/MYO063-Mobil_Programlama-FF6F00?style=for-the-badge&logo=dart&logoColor=white)](https://qrofessor.com)
+[![Dönem](https://img.shields.io/badge/Dönem-2026--2027_Güz-007ACC?style=for-the-badge)](https://qrofessor.com)
 [![Qrofessor](https://img.shields.io/badge/Qrofessor-qrofessor.com-4361EE?style=for-the-badge&logo=google-chrome&logoColor=white)](https://qrofessor.com)
 
 </div>
@@ -69,7 +69,7 @@
 | **Blackboard Kursu** | Kurs Kodu: `2026–2027–1–11283–1` |
 | **Kaynak Depo** | [`keyvanarasteh/hello-mobil`](https://github.com/keyvanarasteh/hello-mobil) |
 | **Telegram Grubu** | `App Development - 2026` *(Ders içi kapalı grup · Bağlantı sınıfta paylaşılır)* |
-| **Geliştirici / Öğrenci** | **Berat Kurşun** — `[Öğrenci Numaranız]` — Şube 1 &nbsp;·&nbsp; [`docs/proje-fikri.md`](docs/proje-fikri.md) |
+| **Geliştirici / Öğrenci** | **Berat Kurşun** — `2620511110` — Şube 1 &nbsp;·&nbsp; [`docs/proje-fikri.md`](docs/proje-fikri.md) |
 
 <br>
 
@@ -101,7 +101,7 @@
 
 <ul>
   <li><b>Adı Soyadı:</b> <code>Berat Kurşun</code></li>
-  <li><b>Öğrenci No:</b> <code>[Öğrenci Numaranız]</code></li>
+  <li><b>Öğrenci No:</b> <code>2620511110</code></li>
   <li><b>Şube:</b> <code>Şube 1</code></li>
   <li><b>GitHub:</b> <code>Beratkursun</code></li>
   <li><b>Proje Fikri:</b> <a href="docs/proje-fikri.md">docs/proje-fikri.md</a></li>

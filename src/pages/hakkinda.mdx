@@ -1,53 +1,8 @@
 ---
 layout: ../layouts/Layout.astro
-title: RandevuCep — Proje Rehberi
+title: RandevuCep — Hakkında
 ---
 
-import CanliRozet from '../components/react/CanliRozet';
+import BilgiSayfasi from '../components/BilgiSayfasi.astro';
 
-<div class="sayfa">
-  <div class="kart" style="padding: 20px;">
-    <h1>💈 RandevuCep</h1>
-    <p>
-      RandevuCep, berber ve kuaför salonlarında hizmet, berber ve saat seçerek
-      saniyeler içinde randevu almayı sağlayan bir mobil/masaüstü uygulamasıdır.
-    </p>
-
-    <div style="margin: 16px 0;">
-      <CanliRozet client:load etiket="RandevuCep · Astro + Svelte" />
-    </div>
-
-    <h2>🎓 Geliştirici</h2>
-    <ul>
-      <li><strong>Öğrenci:</strong> Berat Kurşun</li>
-      <li><strong>Ders:</strong> MYO063 — Mobil Programlama</li>
-      <li><strong>Kurum:</strong> İstinye Üniversitesi Meslek Yüksekokulu</li>
-    </ul>
-
-    <h2>🧱 Teknolojiler</h2>
-    <ul>
-      <li><strong>Tauri v2:</strong> Rust çekirdeği ve platform kabuğu.</li>
-      <li><strong>Astro:</strong> Statik sayfa üretimi ve dosya tabanlı rotalar.</li>
-      <li><strong>Svelte 5:</strong> Runes (<code>$state</code>, <code>$derived</code>) ile reaktif ekranlar.</li>
-      <li><strong>React 19:</strong> MDX içinde etkileşimli <code>CanliRozet</code> bileşeni.</li>
-      <li><strong>Rust:</strong> <code>randevu_olustur</code> komutuyla RNV kodu üretimi.</li>
-    </ul>
-
-    <h2>📱 Sayfalar</h2>
-    <ul>
-      <li><strong>Keşfet (<code>/</code>):</strong> Salon arama, hizmet filtresi ve üç durum.</li>
-      <li><strong>Salon detayı (<code>/salon/[id]</code>):</strong> Hizmet, berber ve saat seçimi.</li>
-      <li><strong>Randevu sepeti (<code>/randevu</code>):</strong> Taslakları topluca onaylama.</li>
-      <li><strong>Onay (<code>/onay</code>):</strong> Doğrudan randevu oluşturma.</li>
-      <li><strong>Randevularım (<code>/randevularim</code>):</strong> RNV kodları ve randevu geçmişi.</li>
-      <li><strong>Profil (<code>/profil</code>):</strong> Kullanıcı bilgisi ve tema.</li>
-    </ul>
-
-    <h2>🔐 Veri ve Gizlilik</h2>
-    <p>
-      Kullanıcı adı, telefonu ve randevular yalnızca cihazdaki
-      <code>localStorage</code> içinde tutulur; harici bir sunucuya gönderilmez.
-      Bu proje eğitim amaçlıdır ve gerçek ödeme almaz.
-    </p>
-  </div>
-</div>
+<BilgiSayfasi lang="tr" sayfa="hakkinda" />

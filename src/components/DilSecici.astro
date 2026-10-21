@@ -1,0 +1,42 @@
+---
+import { dilAdlari, diller, type BilgiSayfasiTuru, type Dil } from "../lib/icerik";
+
+interface Props {
+  lang: Dil;
+  sayfa: BilgiSayfasiTuru;
+}
+
+const { lang, sayfa } = Astro.props;
+const yol = (d: Dil) => (d === "tr" ? `/${sayfa}` : `/${d}/${sayfa}`);
+---
+
+<nav class="diller" aria-label="Dil seçimi">
+  {diller.map((d) => (
+    <a href={yol(d)} class:aktif={d === lang} hreflang={d}>{dilAdlari[d]}</a>
+  ))}
+</nav>
+
+<style>
+  .diller {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+
+  .diller a {
+    padding: 6px 10px;
+    border: 1px solid var(--kenar);
+    border-radius: 999px;
+    color: var(--yazi-soluk);
+    font-size: 12px;
+    text-decoration: none;
+  }
+
+  .diller a.aktif {
+    background: var(--renk-ana);
+    border-color: var(--renk-ana);
+    color: #fff;
+    font-weight: 600;
+  }
+</style>
