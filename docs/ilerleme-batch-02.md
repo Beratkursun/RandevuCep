@@ -34,7 +34,7 @@ Finished `dev` profile [unoptimized + debuginfo] target(s)
 
 ## 3. Etiket
 
-`v0.2.0-batch-02` etiketi master üzerinde oluşturulup push edilecektir.
+`v0.2.0-batch-02` etiketi master üzerinde oluşturuldu ve push edildi (`93daf19`).
 
 ## 4. Kalan
 
