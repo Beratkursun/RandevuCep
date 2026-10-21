@@ -1,0 +1,4 @@
+# lat, AGENTS.md içindeki yönetilen bloğu bayt bayt hash'liyor.
+# Windows'ta autocrlf dosyayı CRLF'e çevirince hash tutmuyor ve lat init
+# "blok değişmiş" uyarısı veriyor; bu dosyayı her zaman LF tutuyoruz.
+AGENTS.md text eol=lf
