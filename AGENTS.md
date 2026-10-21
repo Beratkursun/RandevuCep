@@ -41,6 +41,24 @@ bun run build
 
 Üçü de geçmeden iş bitmiş sayılmaz. Davranış değiştiyse ilgili `lat.md/` bölümünü güncelle ve `lat.md/testler.md` içindeki spec'e test bağla.
 
+## 5. Dal ve PR disiplini
+
+`master`'a doğrudan commit atma. Her iş için `feature/<kisa-ad>` dalı aç (Türkçe karakter ve boşluk kullanma), conventional commit yaz (`feat:`, `fix:`, `docs:`), `bun run build` geçtikten sonra push edip PR aç.
+
+```bash
+git checkout master && git pull origin master
+git checkout -b feature/<kisa-ad>
+# ... değişiklik ...
+git add -A && git commit -m "feat: ..."
+git push -u origin feature/<kisa-ad>
+gh pr create --fill --base master
+gh pr diff            # Files changed kontrolü
+gh pr merge <no> --merge
+git checkout master && git pull origin master
+```
+
+PR açıklamasına ne yapıldığını ve AI'a verilen görevi 2-3 cümleyle yaz. `gh` girişi bu makinede kayıtlıdır (`gh auth status`), her seferinde yeniden giriş istemez.
+
 %% lat:begin %%
 # Before starting work
 
