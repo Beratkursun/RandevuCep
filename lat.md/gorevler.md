@@ -4,7 +4,7 @@ Hafta 03 ve Hafta 04 görevlerinin mevcut durumunu, kanıtlarını ve kalan tesl
 
 ## Durum Özeti
 
-RandevuCep dönüşümü tamamlandı: 27 sayfa, 11 test, dört dilli bilgi sayfaları, platform ikonları ve master koruması hazır. Kalan tek zorunlu adım final ZIP'in Blackboard'a yüklenmesidir.
+RandevuCep dönüşümü tamamlandı: 27 sayfa, 11 Vitest + 2 Rust testi, dört dilli bilgi sayfaları, platform ikonları ve GitHub ruleset'i hazır. Kalan tek zorunlu adım final ZIP'in Blackboard'a yüklenmesidir.
 
 Doğrulama: `lat check`, `bun run check`, `bun run test`, `bun run build` ve `cargo check` geçmektedir; ayrıntılar [[docs/ilerleme-batch-01.md]] ve [[docs/ilerleme-batch-02.md]] içindedir.
 
@@ -41,12 +41,12 @@ Batch 02'nin tüm kalemleri tamamlandı; 16 için yalnızca etiket push'u kaldı
 
 | Görev | Durum | Kanıt |
 |---|---|---|
-| 09.1 Master koruması | Tamam | [[docs/pr-guvenligi.md]]; `master` PR zorunlu, force push ve silme kapalı. |
+| 09.1 Master koruması | Tamam | [[docs/pr-guvenligi.md]]; GitHub ruleset `master-koruma` (ID 25555472), PR zorunlu, force push ve silme kapalı. |
 | 10 Çalışma yöntemi | Tamam | [[docs/calisma-yontemi.md]] ve [[docs/istem-gunlukleri/01-lat-analizi.md]] dahil üç istem günlüğü. |
 | 11 Veri sözleşmesi | Tamam | `src/lib/types/`, [[docs/veri-modeli.md]], `bun run check`. |
-| 12 Kart bileşeni | Tamam | [[src/lib/components/SalonKart.svelte]]. |
-| 13 Liste ve üç durum | Tamam | [[src/components/Kesfet.svelte]]; yükleme/boş/hata. |
-| 15 Rust komutu ve platform | Tamam | [[src-tauri/src/lib.rs#randevu_olustur]], [[src/lib/native.ts]], [[docs/platform-destegi.md]]. |
+| 12 Kart bileşeni | Tamam | [[src/components/ui/Kart.svelte]] genel kart; [[src/lib/components/SalonKart.svelte]] bunu kullanıyor. |
+| 13 Liste ve üç durum | Tamam | [[src/components/ui/Yukleniyor.svelte]], [[src/components/ui/BosDurum.svelte]], [[src/components/ui/HataDurumu.svelte]]; [[src/components/Kesfet.svelte]] bunları kullanıyor. |
+| 15 Rust komutu ve platform | Tamam | [[src-tauri/src/lib.rs#randevu_olustur]], [[src/lib/native.ts]], [[docs/platform-destegi.md]]; `cargo test` 2/2. |
 | 16 Batch 02 denetimi | Tamam | `minWidth: 360`, [[docs/ilerleme-batch-02.md]], `v0.2.0-batch-02` tag. |
 
 ## Kalan İşler

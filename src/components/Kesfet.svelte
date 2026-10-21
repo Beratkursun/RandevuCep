@@ -4,6 +4,9 @@
   import SalonKart from "$lib/components/SalonKart.svelte";
   import { hizmetKategorileri, salonlar } from "$lib/data";
   import type { HizmetKategorisi } from "$lib/types";
+  import Yukleniyor from "./ui/Yukleniyor.svelte";
+  import BosDurum from "./ui/BosDurum.svelte";
+  import HataDurumu from "./ui/HataDurumu.svelte";
 
   let arama = $state("");
   let secili = $state<HizmetKategorisi | "Tümü">("Tümü");
@@ -63,32 +66,24 @@
   </div>
 
   {#if durum === "yukleniyor"}
-    <div class="durum" aria-live="polite">Randevu saatleri yükleniyor…</div>
-    {#each [1, 2, 3] as _}
-      <div class="kart iskelet"></div>
-    {/each}
+    <Yukleniyor mesaj="Randevu saatleri yükleniyor…" satir={3} />
   {:else if durum === "hata"}
-    <div class="kart durum hata" aria-live="assertive">
-      <b>Katalog yüklenemedi.</b>
-      <p>{hata}</p>
-      <button class="btn" onclick={yukle}>Tekrar dene</button>
-    </div>
+    <HataDurumu baslik="Katalog yüklenemedi." mesaj={hata} onTekrar={yukle} />
   {:else if liste.length === 0}
-    <div class="kart durum" aria-live="polite">
-      <b>Sonuç bulunamadı.</b>
-      <p>Aramanı veya filtreleri değiştir.</p>
-      <button
-        class="btn"
-        onclick={() => {
-          arama = "";
-          secili = "Tümü";
-        }}>Filtreleri temizle</button>
-    </div>
+    <BosDurum
+      baslik="Sonuç bulunamadı."
+      mesaj="Aramanı veya filtreleri değiştir."
+      eylemEtiketi="Filtreleri temizle"
+      onEylem={() => {
+        arama = "";
+        secili = "Tümü";
+      }}
+    />
   {:else}
     <div class="liste">
-    {#each liste as s (s.id)}
-      <SalonKart salon={s} />
-    {/each}
+      {#each liste as s (s.id)}
+        <SalonKart salon={s} />
+      {/each}
     </div>
   {/if}
 </div>
@@ -141,27 +136,6 @@
     font-weight: 600;
   }
 
-  .durum {
-    padding: 24px 18px;
-    text-align: center;
-    color: var(--yazi-soluk);
-  }
-
-  .durum b {
-    color: var(--yazi);
-  }
-
-  .hata {
-    border-color: var(--renk-vurgu);
-  }
-
-  .iskelet {
-    height: 210px;
-    background: linear-gradient(90deg, var(--kart), var(--zemin), var(--kart));
-    background-size: 200% 100%;
-    animation: parla 1.2s infinite linear;
-  }
-
   .liste {
     display: grid;
     gap: 16px;
@@ -177,12 +151,6 @@
   @media (min-width: 1200px) {
     .liste {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  @keyframes parla {
-    to {
-      background-position: -200% 0;
     }
   }
 </style>

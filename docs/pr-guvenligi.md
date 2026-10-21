@@ -1,65 +1,90 @@
 # PR ve Master Güvenliği
 
-`master` dalı doğrudan push'a kapatıldı; tüm değişiklikler feature dalı ve Pull Request üzerinden ilerler. Bu belge kuralın kapsamını ve canlı GitHub kanıtını kaydeder.
+`master` dalı GitHub **ruleset** ile korunuyor: doğrudan push kapalı, her değişiklik PR ile ilerliyor, force push ve dal silme engelli. Bu belge kuralın kapsamını ve canlı API kanıtını kaydeder.
 
-## 1. Kural
+## 1. Ruleset
 
-- `master` dalına doğrudan commit/push yapılamaz.
-- Her değişiklik `feature/<kisa-ad>` dalında açılır ve PR ile birleştirilir.
-- Force push ve dal silme kapalıdır.
-- `enforce_admins` açıktır; yönetici hesabı da kurala tabidir.
-- PR için en az 0 onay yeterlidir; amaç insan incelemesini zorunlu kılmak değil, doğrudan push'u engellemektir.
+| Alan | Değer |
+|---|---|
+| Ad | `master-koruma` |
+| ID | `25555472` |
+| Hedef | Varsayılan dal (`master`) |
+| Durum | `active` |
+| PR zorunlu | Evet |
+| Onay sayısı | 0 (PR açılması zorunlu, ek onay şartı yok) |
+| Force push | Kapalı |
+| Dal silme | Kapalı |
+| Bypass | Yok (`current_user_can_bypass: never`) |
 
-## 2. Uygulama
+GitHub sayfası: <https://github.com/Beratkursun/hello-mobil/rules/25555472>
+
+## 2. Oluşturma
 
 ```bash
-gh api -X PUT repos/Beratkursun/hello-mobil/branches/master/protection \
-  --input protection.json
+gh api -X POST repos/Beratkursun/hello-mobil/rulesets --input ruleset.json
 ```
 
-Kullanılan `protection.json`:
+Kullanılan `ruleset.json`:
 
 ```json
 {
-  "required_status_checks": null,
-  "enforce_admins": true,
-  "required_pull_request_reviews": {
-    "dismiss_stale_reviews": true,
-    "require_code_owner_reviews": false,
-    "required_approving_review_count": 0
+  "name": "master-koruma",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["~DEFAULT_BRANCH"],
+      "exclude": []
+    }
   },
-  "restrictions": null,
-  "required_linear_history": false,
-  "allow_force_pushes": false,
-  "allow_deletions": false
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": true,
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false
+      }
+    }
+  ],
+  "bypass_actors": []
 }
 ```
 
 ## 3. Canlı Kanıt
 
-GitHub API yanıtı (21.10.2026):
+`gh api repos/Beratkursun/hello-mobil/rulesets/25555472` yanıtı (özet):
 
 ```json
 {
-  "required_pull_request_reviews": {
-    "dismiss_stale_reviews": true,
-    "require_code_owner_reviews": false,
-    "required_approving_review_count": 0
+  "id": 25555472,
+  "name": "master-koruma",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] }
   },
-  "enforce_admins": { "enabled": true },
-  "required_linear_history": { "enabled": false },
-  "allow_force_pushes": { "enabled": false },
-  "allow_deletions": { "enabled": false }
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    { "type": "pull_request", "parameters": { "required_approving_review_count": 0 } }
+  ],
+  "bypass_actors": [],
+  "current_user_can_bypass": "never"
 }
 ```
 
-![Master koruması kanıtı](ekran-pr-guvenligi.png)
+![Master ruleset kanıtı](ekran-pr-guvenligi.png)
 
 ## 4. PR Akışı
 
 1. `git checkout master && git pull origin master`
 2. `git checkout -b feature/<kisa-ad>`
-3. Geliştir, `bun run check`, `bun run test`, `bun run build` çalıştır.
+3. Geliştir; `bun run check`, `bun run test`, `bun run build`, `cargo test` çalıştır.
 4. `git push -u origin feature/<kisa-ad>`
 5. `gh pr create --fill --base master`
 6. `gh pr diff` ile dosyaları kontrol et.
@@ -67,4 +92,4 @@ GitHub API yanıtı (21.10.2026):
 
 ## 5. Not
 
-Ekran görüntüsü, GitHub API'nin canlı yanıtından üretilmiş özet kanıttır; GitHub ayarlar sayfasının görseli değildir. Kural seti API üzerinden doğrulanmıştır.
+Ekran görüntüsü, GitHub ruleset API'sinin canlı yanıtından üretilmiş özet kanıttır; GitHub ayarlar sayfasının birebir görüntüsü değildir. Kural seti API üzerinden doğrulanmıştır.
