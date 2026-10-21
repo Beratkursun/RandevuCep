@@ -4,7 +4,7 @@ Passo benzeri bilet uygulaması: etkinlik keşfi, sepet ve Rust ile üretilen bi
 
 ## Bölümler
 
-Bilgi grafiği sekiz dosyaya ayrılmıştır; her dosya tek bir kavramı anlatır.
+Bilgi grafiği dokuz dosyaya ayrılmıştır; her dosya tek bir kavramı anlatır.
 
 - [[mimari]] — Astro + Tauri kabuğu, rotalar ve çoklu çatı
 - [[veri-modeli]] — etkinlik tipleri, mock katalog, tr-TR biçimlendirme
@@ -14,3 +14,4 @@ Bilgi grafiği sekiz dosyaya ayrılmıştır; her dosya tek bir kavramı anlatı
 - [[navigasyon]] — sekmeler, aktif sekme, sepet rozeti
 - [[kullanici]] — sahte giriş ve localStorage kaydı
 - [[testler]] — Vitest davranış spec'leri
+- [[gorevler]] — Hafta 03/04 görev durumu ve uygulama sırası

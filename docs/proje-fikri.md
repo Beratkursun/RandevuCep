@@ -1,38 +1,66 @@
-# Proje Fikri ve Konsept Belgesi
+# Proje Fikri: RandevuCep
 
-> ✍️ **Öğrenci Görevi:** Bu taslağı seçtiğiniz proje fikrine göre doldurun. Ayrıntılı rehber ve 40 örnek proje için [`docs/tasks/week-3/02-proje-fikriniz.task.md`](tasks/week-3/02-proje-fikriniz.task.md) dosyasını inceleyin.
-
----
-
-## 1. Proje Künyesi
-
-- **Proje Adı:** [Projenizin Adı]
-- **Slogan / Tek Cümlelik Tanım:** [Örn: Üniversite öğrencileri için hızlı kampüs rehberi]
-- **Öğrenci Adı Soyadı:** [Adınız Soyadınız]
+- **Öğrenci Adı Soyadı:** Berat Kurşun
 - **Öğrenci Numarası:** [Öğrenci Numaranız]
-- **İlham Alınan Konsept / Platform:** [Örn: Spotify / Getir / Duolingo / Tesla / Kendi Fikrim]
+- **İlham Alınan Konsept:** Kuaför & Berber Randevu Sistemi (Görev 02, fikir 32)
 
----
+## 1. Proje Özeti
 
-## 2. Proje Amacı ve Çözülen Problem
+RandevuCep, kullanıcıların yakınlarındaki berber ve kuaför salonlarını bulup hizmet, berber, tarih ve saat seçerek saniyeler içinde randevu almasını sağlayan bir mobil/masaüstü uygulamasıdır. Salonların telefonla randevu yönetme yükünü azaltır; kullanıcıya onay kodu, randevu özeti ve geçmiş randevularını tek ekranda sunar.
 
-[Uygulamanız hangi sorunu çözüyor? Kullanıcı ne yapacak? 2-3 cümleyle açıklayın.]
+Uygulama gerçek bir ödeme veya canlı takvim servisine bağlanmaz; katalog ve müsait saatler örnek veriyle çalışır, randevu kodu Rust tarafında üretilir ve cihazda saklanır.
 
----
-
-## 3. Temel Ekranlar ve İşlevler
+## 2. Temel 3 Ekran ve İşlev
 
 1. **Ana Liste Ekranı (Keşfet):**
-   - [Hangi öğeler listelenecek? Hangi filtreler olacak?]
+   - Salon kartlarında ad, semt, puan, hizmet özeti ve başlangıç fiyatı gösterilir.
+   - Arama; salon adı, hizmet ve semt üzerinde çalışır.
+   - Hizmet türü, semt, puan ve fiyat filtreleri bulunur.
+   - Yükleme, boş sonuç ve hata durumları ayrı ayrı gösterilir.
+
 2. **Detay ve Seçim Ekranı:**
-   - [Öğenin detayında hangi bilgiler, seçenekler ve butonlar yer alacak?]
-3. **Kayıt / Kod Üretme Ekranı (Rust Backend):**
-   - [Rust komutu ne tür bir işlem veya onay/takip kodu üretecek?]
-4. **Profil ve Ayarlar:**
-   - [Kullanıcı hangi bilgilerini görecek ve hangi ayarları değiştirebilecek?]
+   - Salonun adresi, çalışma saatleri, puanı ve hizmet listesi yer alır.
+   - Kullanıcı berberini, hizmetini, tarihini ve saatini seçer.
+   - Seçilen hizmetlerin toplam süresi ve tutarı canlı hesaplanır.
+   - "Randevuya ekle" ile seçim randevu sepetine alınır.
 
----
+3. **Kayıt / Kod Üretme Ekranı:**
+   - Randevu özeti; salon, berber, hizmet, tarih, saat ve toplam tutar gösterilir.
+   - Kullanıcı ad ve telefon bilgisini girer; onayladığında Rust `randevu_olustur` komutu çalışır.
+   - Üretilen kod `RNV-AAA-BBBBBBB` biçiminde ekranda gösterilir ve `localStorage` içine kaydedilir.
+   - Aynı akış sonunda kullanıcı "Randevularım" listesine yönlendirilir.
 
-## 4. Hedef Kitle
+4. **Profil ve Ayarlar (yardımcı ekran):**
+   - Kullanıcı adı, telefonu ve randevu geçmişi gösterilir.
+   - Gece/gündüz teması değiştirilebilir; çıkışta kullanıcı bilgisi silinir.
 
-[Bu uygulamayı kimler kullanacak?]
+## 3. Hedef Kitle
+
+- Hızlı randevu almak isteyen 18–45 yaş arası şehirli kullanıcılar.
+- Yoğun ders programı nedeniyle telefonla randevu almaya zaman ayıramayan üniversite öğrencileri.
+- Çalışma saatleri içinde randevu planlaması yapan beyaz yakalı kullanıcılar.
+- İkincil hedef: telefon trafiğini azaltmak ve randevularını dijitalden yönetmek isteyen salon işletmecileri.
+
+## 4. Veri Modeli ve Kod Üretimi
+
+- `Salon`: `id`, `ad`, `semt`, `adres`, `puan`, `hizmetler`, `berberler`, `calismaSaatleri`, `renk`.
+- `Berber`: `id`, `salonId`, `ad`, `uzmanlik`, `musaitSaatler`.
+- `Hizmet`: `id`, `ad`, `sureDk`, `fiyat`.
+- `Randevu`: `id`, `salonId`, `berberId`, `hizmetId`, `tarih`, `saat`, `kod`, `durum`.
+- `Kullanici`: `ad`, `telefon`, `eposta`.
+
+Rust tarafında üretilen kodun formatı `RNV-AAA-BBBBBBB` olacaktır:
+
+- `RNV`: uygulama öneki.
+- `AAA`: üç haneli salon kimliği (örn. `042`).
+- `BBBBBBB`: sistem saatinden üretilen en fazla yedi haneli onaltılık son ek (örn. `1A2B3C4`).
+
+Örnek kod: `RNV-042-1A2B3C4`. Kod her randevu onayında yeniden üretilir; aynı randevu için tekrar kullanılmaz.
+
+## 5. Kapsam ve Sınırlar
+
+- Katalog, berberler, hizmetler ve müsait saatler örnek veridir; gerçek salon API'si yoktur.
+- Ödeme alınmaz; randevu onayı ve kod üretimi vardır.
+- Kullanıcı oturumu gerçek kimlik doğrulaması değildir; ad ve telefon cihazda saklanır.
+- Randevu kodları `localStorage` içinde tutulur; sunucuya gönderilmez.
+- Uygulama Astro statik ön yüzü ve Tauri v2 kabuğu içinde çalışır; Rust yalnızca kod üretiminde devreye girer.
