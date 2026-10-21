@@ -4,7 +4,7 @@ Hafta 03 ve Hafta 04 görevlerinin mevcut durumunu, kanıtlarını ve kalan tesl
 
 ## Durum Özeti
 
-RandevuCep dönüşümü tamamlandı: 27 sayfa, 11 test, dört dilli bilgi sayfaları, platform ikonları ve master koruması hazır. Kalan tek zorunlu adım etiketlerin push edilmesi ve final ZIP'in Blackboard'a yüklenmesidir.
+RandevuCep dönüşümü tamamlandı: 27 sayfa, 11 test, dört dilli bilgi sayfaları, platform ikonları ve master koruması hazır. Kalan tek zorunlu adım final ZIP'in Blackboard'a yüklenmesidir.
 
 Doğrulama: `lat check`, `bun run check`, `bun run test`, `bun run build` ve `cargo check` geçmektedir; ayrıntılar [[docs/ilerleme-batch-01.md]] ve [[docs/ilerleme-batch-02.md]] içindedir.
 
@@ -33,7 +33,7 @@ Batch 01'in tüm kod ve doküman çıktıları tamamlandı; yalnızca etiket ve 
 | 06 Bilgi sayfaları | Tamam | Dört sayfa TR/EN/AR/FA; AR/FA `dir="rtl"`; `IletisimFormu` çalışır. |
 | 07 Mimari ağaç | Tamam | [[docs/mimari-agac.md]] sayfa ağacı, platform matrisi ve breakpoint'ler. |
 | 08 İleri AGENTS | Tamam | [[AGENTS.md]] içinde docs indeksi, komutlar ve Svelte 5/SSR kuralları. |
-| 09 Batch 01 | Kısmi | Build, 9/9 matris ve ekran görüntüleri hazır; `v0.1.0-batch-01` tag ve Blackboard ZIP kullanıcıda. |
+| 09 Batch 01 | Kısmi | Build, 9/9 matris, ekran görüntüleri ve `v0.1.0-batch-01` tag hazır; Blackboard ZIP yüklemesi kullanıcıda. |
 
 ## Hafta 04 Batch 02
 
@@ -53,9 +53,9 @@ Batch 02'nin tüm kalemleri tamamlandı; 16 için yalnızca etiket push'u kaldı
 
 Teslim zinciri tamamlandı; yalnızca kullanıcı ve uzak depo adımları kaldı.
 
-1. `v0.1.0-batch-01` ve `v0.2.0-batch-02` etiketlerini `master` üzerinde oluşturup push et.
-2. Final ZIP'i (`RandevuCep-final.zip`) Blackboard'a yükle.
-3. İsteğe bağlı: GitHub ayarlar sayfasının ekran görüntüsünü `docs/ekran-pr-guvenligi.png` yanına ekle.
+
+1. Final ZIP'i (`RandevuCep-final.zip`) Blackboard'a yükle.
+2. İsteğe bağlı: GitHub ayarlar sayfasının ekran görüntüsünü `docs/ekran-pr-guvenligi.png` yanına ekle.
 
 ## Karar Bekleyenler
 

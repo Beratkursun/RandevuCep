@@ -38,7 +38,7 @@ Ekran görüntüsü: [`docs/ekran-01-kesfet.png`](ekran-01-kesfet.png) · tablet
 
 ## 3. Etiket
 
-`v0.1.0-batch-01` etiketi master üzerinde oluşturulup push edilecektir.
+`v0.1.0-batch-01` etiketi master üzerinde oluşturuldu ve push edildi (`93daf19`).
 
 ## 4. Kalan
 
