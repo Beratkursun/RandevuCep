@@ -1,5 +1,6 @@
 // Adım 4: Veri modeli — şimdilik sabit (mock) veri, ileride bir API'den gelebilir
 
+// @lat: [[veri-modeli#Veri Tipleri]]
 export type Kategori = "Futbol" | "Basketbol" | "Konser" | "Tiyatro";
 
 export interface BiletKategorisi {
@@ -21,6 +22,7 @@ export interface Etkinlik {
 
 export const kategoriler: Kategori[] = ["Futbol", "Basketbol", "Konser", "Tiyatro"];
 
+// @lat: [[veri-modeli#Katalog ve Arama]]
 export const etkinlikler: Etkinlik[] = [
   {
     id: 1,
@@ -115,6 +117,7 @@ export function etkinlikBul(id: number): Etkinlik | undefined {
 }
 
 // Yardımcılar: para ve tarih biçimlendirme
+// @lat: [[veri-modeli#Biçimlendirme]]
 export const tl = (tutar: number) =>
   tutar.toLocaleString("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
 
