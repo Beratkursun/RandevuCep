@@ -2,6 +2,7 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import type { SepetKalemi } from "./sepet.svelte";
 
+// @lat: [[biletler#Bilet Üretimi]]
 export interface Bilet {
   kod: string;
   baslik: string;
@@ -13,6 +14,7 @@ export interface Bilet {
 
 const ANAHTAR = "biletlerim";
 
+// @lat: [[biletler#Kalıcılık]]
 function yukle(): Bilet[] {
   try {
     if (typeof localStorage === "undefined") return [];
@@ -23,6 +25,7 @@ function yukle(): Bilet[] {
 }
 
 // Tauri içinde çalışıyorsak Rust komutunu çağır, tarayıcıda ise JS ile üret
+// @lat: [[biletler#Ortam Ayrımı]]
 async function biletKoduAl(etkinlikId: number): Promise<string> {
   if (typeof window !== "undefined" && isTauri()) {
     // Rust tarafındaki etkinlik_id parametresi JS'te camelCase yazılır: etkinlikId
@@ -34,6 +37,7 @@ async function biletKoduAl(etkinlikId: number): Promise<string> {
 class Biletlerim {
   liste = $state<Bilet[]>(yukle());
 
+  // @lat: [[biletler#Satın Alma Akışı]]
   async satinAl(kalemler: SepetKalemi[]) {
     for (const k of kalemler) {
       const kod = await biletKoduAl(k.etkinlik.id);

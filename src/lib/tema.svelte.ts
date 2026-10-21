@@ -1,4 +1,5 @@
 // Adım 15: Tema (gece / gündüz) — seçim localStorage'da saklanır
+// @lat: [[tema#Gece/Gündüz Teması]]
 export type Tema = "gunduz" | "gece";
 
 const ANAHTAR = "tema";
@@ -10,6 +11,7 @@ class TemaYonetici {
       : "gunduz"
   );
 
+  // @lat: [[tema#Değiştirme]]
   degistir() {
     this.mod = this.mod === "gece" ? "gunduz" : "gece";
     if (typeof document !== "undefined") {

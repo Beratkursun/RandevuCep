@@ -2,6 +2,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 // Adım 11: Rust komutu — ön yüz invoke("bilet_olustur", { etkinlikId }) ile çağırır
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+// @lat: [[biletler#Rust Komutu]]
 #[tauri::command]
 fn bilet_olustur(etkinlik_id: u32) -> String {
     let zaman = SystemTime::now()
@@ -11,6 +12,7 @@ fn bilet_olustur(etkinlik_id: u32) -> String {
     format!("PSK-{:03}-{:07X}", etkinlik_id, zaman % 0xFFF_FFFF)
 }
 
+// @lat: [[mimari#Platform Kabuğu]]
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()

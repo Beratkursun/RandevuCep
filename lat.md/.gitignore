@@ -1,0 +1,4 @@
+config.local.yaml
+
+# lat'ın yeniden üretilebilir önbelleği (commit edilmez)
+.cache/
