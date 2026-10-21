@@ -11,7 +11,7 @@ Bu belge, projenin temel dizin yapısını, önemli klasörlerin sorumlulukları
 ## 📂 Temel Dizin Mimarisi
 
 ```
-hello-mobil/
+randevucep/
 ├── package.json             # Bağımlılıklar, scriptler ve motor tanımları
 ├── astro.config.mjs         # Astro entegrasyonları (Svelte, React, MDX) ve Vite port ayarları
 ├── tsconfig.json            # TypeScript yapılandırması ve $lib alias'ı
@@ -28,7 +28,7 @@ hello-mobil/
 │   ├── pages/               # Dosya tabanlı rota sistemi (URL rotaları: .astro, .mdx)
 │   ├── components/          # Yeniden kullanılabilir UI bileşenleri (.svelte, .tsx)
 │   ├── lib/                 # İş mantığı, mock veri, Svelte 5 state store'ları ($state)
-│   ├── types/               # TypeScript tip tanımları ve arayüzler (.ts)
+│   │   └── types/           # TypeScript tip tanımları ve arayüzler (.ts)
 │   └── styles/              # Global tema değişkenleri ve CSS stilleri (app.css)
 │
 └── docs/                    # Proje dokümantasyonu, görevler ve mimari rehberler
@@ -48,14 +48,14 @@ hello-mobil/
 
 ### 3. `src-tauri/` (Native Çekirdek)
 - **Ne konur?** Rust backend kodları (`src/lib.rs`), Cargo paketleri (`Cargo.toml`) ve uygulama pencere/izin ayarları (`tauri.conf.json`).
-- **Ne zaman kullanılır?** İşletim sistemiyle konuşacak native kodlar (bilet oluşturma, dosya sistemi, bildirimler) yazılırken.
+- **Ne zaman kullanılır?** İşletim sistemiyle konuşacak native kodlar (randevu kodu üretme, dosya sistemi, bildirimler) yazılırken.
 
 ### 4. `src/layouts/` (Sayfa İskeletleri)
 - **Ne konur?** Sayfaların ortak şablonları (`Layout.astro`).
 - **Ne zaman kullanılır?** Üst bar, alt gezinme menüsü, tema kontrolü (`document.documentElement.dataset.tema`) ve yumuşak sayfa geçişleri (`<ClientRouter />`) burada tanımlanır. Sayfalar bu layout'u sarmalar.
 
 ### 5. `src/pages/` (Dosya Tabanlı Rotalar)
-- **Ne konur?** Kullanıcının tarayıcıda veya mobil ekranda gezeceği sayfalar (`index.astro`, `biletlerim.astro`, `etkinlik/[id].astro`, `hakkinda.mdx`).
+- **Ne konur?** Kullanıcının tarayıcıda veya mobil ekranda gezeceği sayfalar (`index.astro`, `randevularim.astro`, `salon/[id].astro`, `hakkinda.mdx`).
 - **Kural:** Dosya adı doğrudan URL yolu olur. İçerik ağırlıklı sayfalar için `.mdx`, dinamik veya bileşen içeren sayfalar için `.astro` kullanılır.
 
 ### 6. `src/components/` (Yeniden Kullanılabilir UI Bileşenleri)
@@ -63,11 +63,11 @@ hello-mobil/
 - **Kural:** Birden fazla sayfada tekrar eden veya bağımsız bir işlevi olan görsel parçalar burada toplanır. Svelte veya React ile yazılabilir.
 
 ### 7. `src/lib/` (Durum ve İş Mantığı)
-- **Ne konur?** Svelte 5 `$state` store'ları (sepet, biletler, tema), mock veriler (`data.ts`) ve Rust invoke çağrıları.
-- **Nasıl import edilir?** `$lib/data` veya `$lib/sepet.svelte` şeklinde doğrudan alias ile çağrılır.
+- **Ne konur?** Svelte 5 `$state` store'ları (`randevu-sepeti`, `randevular`, `tema`), mock veriler (`data.ts`), tipler (`types/`) ve Rust invoke çağrıları (`native.ts`).
+- **Nasıl import edilir?** `$lib/data` veya `$lib/randevu-sepeti.svelte` şeklinde doğrudan alias ile çağrılır.
 
-### 8. `src/types/` (Tip Tanımları)
-- **Ne konur?** Projede kullanılan TypeScript arayüzleri (`interface`) ve tipleri (`type`). Veri modelleri karmaşıklaştıkça tipler bu klasörde toplanır.
+### 8. `src/lib/types/` (Tip Tanımları)
+- **Ne konur?** Projede kullanılan TypeScript arayüzleri (`interface`) ve tipleri (`type`). `Salon`, `Hizmet`, `Berber`, `RandevuTaslagi`, `Randevu` ve `Kullanici` burada yaşar.
 
 ### 9. `src/styles/` (Tasarım ve Stiller)
 - **Ne konur?** `app.css` ve tema tanımları.

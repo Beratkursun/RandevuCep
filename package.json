@@ -1,13 +1,14 @@
 {
-  "name": "hello-mobil",
+  "name": "randevucep",
   "version": "0.1.0",
-  "description": "",
+  "description": "Berber ve kuaför randevu uygulaması",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "test": "vitest run",
+    "check": "svelte-check --tsconfig ./tsconfig.json && lat check",
     "astro": "astro",
     "tauri": "tauri"
   },

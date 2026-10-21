@@ -1,21 +1,21 @@
 <script lang="ts">
-  // Adım 3 & 9: Alt menü navigasyonu ve dinamik sepet rozeti
+  // Adım 3 & 9: Alt menü navigasyonu ve dinamik randevu sepeti rozeti
   import { onMount } from "svelte";
-  import { sepet } from "$lib/sepet.svelte";
+  import { randevuSepeti } from "$lib/randevu-sepeti.svelte";
 
   let { currentPath = "/" } = $props();
-  let yol = $state(currentPath);
+  let yol = $state("/");
 
   const menu = [
-    { href: "/", ad: "Keşfet", ikon: "🏟️" },
-    { href: "/biletlerim", ad: "Biletlerim", ikon: "🎟️" },
-    { href: "/sepet", ad: "Sepet", ikon: "🛒" },
+    { href: "/", ad: "Keşfet", ikon: "💈" },
+    { href: "/randevularim", ad: "Randevularım", ikon: "📅" },
+    { href: "/randevu", ad: "Sepet", ikon: "🛒" },
     { href: "/profil", ad: "Profil", ikon: "👤" },
     { href: "/hakkinda", ad: "Rehber", ikon: "📖" },
   ];
 
   onMount(() => {
-    yol = window.location.pathname;
+    yol = currentPath || window.location.pathname;
     const handleNav = () => {
       yol = window.location.pathname;
     };
@@ -36,8 +36,8 @@
     >
       <span class="ikon">{m.ikon}</span>
       {m.ad}
-      {#if m.href === "/sepet" && sepet.adet > 0}
-        <b class="rozet">{sepet.adet}</b>
+      {#if m.href === "/randevu" && randevuSepeti.adet > 0}
+        <b class="rozet">{randevuSepeti.adet}</b>
       {/if}
     </a>
   {/each}

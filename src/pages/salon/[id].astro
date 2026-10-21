@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SalonDetay from '../../components/SalonDetay.svelte';
+import { salonlar } from '$lib/data';
+import type { Salon } from '$lib/types';
+
+export function getStaticPaths() {
+  return salonlar.map((salon) => ({
+    params: { id: String(salon.id) },
+    props: { salon },
+  }));
+}
+
+interface Props {
+  salon: Salon;
+}
+
+const { salon } = Astro.props;
+---
+
+<Layout title={`${salon.ad} — RandevuCep`}>
+  <SalonDetay client:load salon={salon} />
+</Layout>

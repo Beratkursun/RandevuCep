@@ -10,7 +10,7 @@
 
 <br><br>
 
-# PassoKlon — Mobil Programlama
+# RandevuCep — Mobil Programlama
 <sub>İstinye Üniversitesi · Meslek Yüksekokulu</sub>
 
 <p>
@@ -39,7 +39,7 @@
 - [Teknoloji Yığını](#-teknoloji-yığını)
 - [Kurulum ve Çalıştırma](docs/kurulum.md)
 - [Dokümantasyon](#-dokümantasyon)
-- [Haftalık Görevler](#-haftalık-görevler)
+- [Haftalık Görevler](docs/tasks/week-3/)
 - [Lisans](#-lisans)
 
 ---
@@ -69,7 +69,7 @@
 | **Blackboard Kursu** | Kurs Kodu: `2026–2027–1–11283–1` |
 | **Kaynak Depo** | [`keyvanarasteh/hello-mobil`](https://github.com/keyvanarasteh/hello-mobil) |
 | **Telegram Grubu** | `App Development - 2026` *(Ders içi kapalı grup · Bağlantı sınıfta paylaşılır)* |
-| **Geliştirici / Öğrenci** | *`[Adınız Soyadınız — Öğrenci No — Şube 1]`* &nbsp;·&nbsp; [`docs/proje-fikri.md`](docs/proje-fikri.md) |
+| **Geliştirici / Öğrenci** | **Berat Kurşun** — `[Öğrenci Numaranız]` — Şube 1 &nbsp;·&nbsp; [`docs/proje-fikri.md`](docs/proje-fikri.md) |
 
 <br>
 
@@ -100,10 +100,10 @@
 <p><i>Repoyu fork'ladıktan sonra kendi bilgilerinizi doldurunuz:</i></p>
 
 <ul>
-  <li><b>Adı Soyadı:</b> <code>[Adınız Soyadınız]</code></li>
+  <li><b>Adı Soyadı:</b> <code>Berat Kurşun</code></li>
   <li><b>Öğrenci No:</b> <code>[Öğrenci Numaranız]</code></li>
   <li><b>Şube:</b> <code>Şube 1</code></li>
-  <li><b>GitHub:</b> <code>[@kullanici-adiniz]</code></li>
+  <li><b>GitHub:</b> <code>Beratkursun</code></li>
   <li><b>Proje Fikri:</b> <a href="docs/proje-fikri.md">docs/proje-fikri.md</a></li>
 </ul>
 
@@ -117,9 +117,9 @@
 
 Bu proje, İstinye Üniversitesi Bilişim Güvenliği Teknolojisi programı **MYO063 Mobil Programlama** dersi kapsamında geliştirilmiştir.
 
-Uygulama, popüler bilet ve etkinlik platformu **Passo**'nun temel işlevlerini (etkinlik keşfi, biletleme, sepet, Rust ile bilet/doğrulama kodu üretimi, kullanıcı profili ve dinamik tema) modern bir çapraz platform mimarisi üzerinde uygular.
+**RandevuCep**, kullanıcıların berber ve kuaför salonlarını bulup hizmet, berber, tarih ve saat seçerek hızlıca randevu almasını sağlar. Uygulama; salon keşfi, çok hizmetli randevu sepeti, doğrudan onay, Rust ile üretilen `RNV` kodları, randevu geçmişi ve gece/gündüz temasını tek bir çapraz platform kod tabanında birleştirir.
 
-Öğrenciler bu şablonu kendi GitHub hesaplarına fork'layarak kendi özgün mobil/masaüstü ürün fikirlerine dönüştürürler.
+Proje, İstinye Üniversitesi MYO063 Mobil Programlama dersi kapsamında Berat Kurşun tarafından geliştirilmektedir.
 
 ---
 
@@ -129,7 +129,7 @@ Bu proje salt bir web sayfası değil; tek bir kod tabanından **iOS, Android, m
 
 1. **Rust Çekirdeği (Tauri v2):**
    - Bellek güvenliği, yüksek hız ve işletim sisteminin yerel WebView'ını kullanarak ultra hafif (~10-15 MB) paket boyutu.
-   - IPC (Inter-Process Communication) ile JavaScript arayüzünden Rust fonksiyonlarını doğrudan çağırma (`bilet_olustur`).
+   - IPC (Inter-Process Communication) ile JavaScript arayüzünden Rust fonksiyonlarını doğrudan çağırma (`randevu_olustur`).
 2. **Astro Statik Altyapısı (`output: 'static'`):**
    - Hızlı statik sayfa derlemesi ve dosya tabanlı yönlendirme (`src/pages/`).
    - Dahili `<ClientRouter />` (View Transitions) ile sayfa geçişlerinde SPA akıcılığı.
@@ -142,12 +142,13 @@ Bu proje salt bir web sayfası değil; tek bir kod tabanından **iOS, Android, m
 
 ## ✨ Temel Yetenekler
 
-- 🏟️ **Keşfet (Ana Sayfa):** Canlı arama kutusu ve kategori çipleriyle anında filtrelenen etkinlik kartları.
-- 🎫 **Etkinlik Detay:** Seçilen etkinliğin kategori, fiyat ve adet seçenekleri ile sepete ekleme akışı.
-- 🛒 **Sepet Yönetimi:** Dinamik tutar hesabı, kalem silme ve ödemeyi tamamlama.
-- 🎟️ **Biletlerim:** Rust backend'i tarafından üretilen benzersiz bilet kodları (`PSK-XXX-XXXXXXX`) ve yerel depolama.
-- 👤 **Profil & Tema:** Kullanıcı bilgileri ve açılışta parlamayı önleyen (blocking script) **Gece / Gündüz** modu.
-- 📖 **Rehber (MDX):** Projenin dokümantasyonunu ve React entegrasyonunu gösteren rehber sayfası.
+- 💈 **Keşfet (Ana Sayfa):** Salon adı, semt veya hizmete göre arama; hizmet kategorisi filtreleri ve yükleme/boş/hata durumları.
+- 📅 **Salon Detayı:** Hizmet, berber ve saat seçimi; tek veya çok hizmet, belirli berber veya "İlk müsait berber".
+- 🛒 **Randevu Sepeti:** Birden fazla randevu taslağı, toplam süre/tutar ve toplu onay.
+- ⚡ **Doğrudan Randevu:** Sepeti atlamadan tek taslakla hızlı onay.
+- 🎟️ **Randevularım:** Rust `randevu_olustur` ile üretilen `RNV-AAA-BBBBBBB` kodları ve yerel depolama.
+- 👤 **Profil & Tema:** Ad/telefon, randevu sayısı ve açılışta parlamayı önleyen gece/gündüz modu.
+- 📖 **Rehber (MDX):** Proje mimarisini ve React entegrasyonunu gösteren sayfa.
 
 ---
 
@@ -171,6 +172,8 @@ Bu proje salt bir web sayfası değil; tek bir kod tabanından **iOS, Android, m
 - [Branding](docs/branding.md)
 - [Mimari ağaç](docs/mimari-agac.md)
 - [Proje fikri](docs/proje-fikri.md)
+- [Veri modeli](docs/veri-modeli.md)
+- [Platform desteği](docs/platform-destegi.md)
 - [Kurulum](docs/kurulum.md)
 - [Kurallar](docs/kurallar.md)
 - [Kaynaklar](docs/kaynaklar.md)

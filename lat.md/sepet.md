@@ -1,21 +1,27 @@
-# Sepet Durumu
+# Randevu Sepeti
 
-Sepet modül düzeyinde tek bir Svelte 5 store'udur; tüm sayfalar aynı örneği paylaşır ve içerik kasıtlı olarak kalıcı değildir — sayfa yenilenince boşalır.
+Sepet, onaylanmamış randevu taslaklarını tutan tek bir Svelte 5 store'udur; her taslak bir salon, berber, hizmet listesi ve saat taşır.
 
-## Birleştirme Kuralı
+## Taslak Ekleme
 
-`ekle` aynı etkinlik kimliğine ve aynı bilet adına sahip bir kalem bulursa yeni satır açmaz, mevcut kalemin adedini artırır; farklı kategori her zaman ayrı satır olur.
+`ekle` aynı salon, berber, tarih, saat ve hizmet listesine sahip bir taslağı ikinci kez kabul etmez; farklı hizmet listesi veya saat yeni taslak olarak eklenir.
 
-Kaynak: [[src/lib/sepet.svelte.ts#Sepet#ekle]].
+Kaynak: [[src/lib/randevu-sepeti.svelte.ts#RandevuSepeti#ekle]].
 
 ## Türetilmiş Değerler
 
-`adet` bilet sayılarının toplamı, `toplam` ise adet × kategori fiyatı toplamıdır; ikisi de `$derived` olduğu için kalem değişince kendiliğinden güncellenir ve ayrıca hesaplanmaz.
+`adet` taslak sayısını, `toplamTutar` taslaklardaki hizmet fiyatlarının toplamını, `toplamSure` ise toplam süreyi verir; üçü de `$derived` olduğu için sepet değişince kendiliğinden güncellenir.
 
-Kaynak: [[src/lib/sepet.svelte.ts#Sepet]].
+Kaynak: [[src/lib/randevu-sepeti.svelte.ts#RandevuSepeti]].
 
-## Kalem Silme ve Temizleme
+## Silme ve Temizleme
 
-`sil` indeksle tek kalemi diziden çıkarır, `temizle` sepeti tamamen boşaltır; ödeme tamamlandığında çağrılan da `temizle`dir (bkz. [[biletler#Satın Alma Akışı]]).
+`sil` indeksle tek taslağı kaldırır, `temizle` sepeti tamamen boşaltır; onaydan sonra çağrılan da `temizle`dir (bkz. [[randevular#Onay Akışı]]).
 
-Kaynak: [[src/lib/sepet.svelte.ts#Sepet#sil]].
+Kaynak: [[src/lib/randevu-sepeti.svelte.ts#RandevuSepeti#sil]].
+
+## Doğrudan Randevu
+
+`dogrudan` alanı sepetten bağımsız tek bir taslağı tutar; `dogrudanAyarla` ile doldurulur, `dogrudanTemizle` ile boşaltılır. `/onay` sayfası bu alanı okur, sepet ise `taslaklar` dizisini kullanır.
+
+Kaynak: [[src/lib/randevu-sepeti.svelte.ts#RandevuSepeti#dogrudanAyarla]], [[src/components/RandevuOnay.svelte]].

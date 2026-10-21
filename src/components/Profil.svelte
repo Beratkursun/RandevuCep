@@ -1,26 +1,33 @@
 <script lang="ts">
-  // Adım 14: Profil — basit (sahte) giriş formu, kullanıcı localStorage'da tutulur
-  import { biletlerim } from "$lib/biletler.svelte";
+  // Profil — basit (sahte) giriş; ad ve telefon cihazda tutulur
+  import { randevular } from "$lib/randevular.svelte";
 
   let kullanici = $state(
-    typeof localStorage !== "undefined"
-      ? (localStorage.getItem("kullanici") ?? "")
-      : ""
+    typeof localStorage !== "undefined" ? (localStorage.getItem("kullanici") ?? "") : "",
+  );
+  let telefonKayitli = $state(
+    typeof localStorage !== "undefined" ? (localStorage.getItem("telefon") ?? "") : "",
   );
   let ad = $state("");
-  let eposta = $state("");
+  let telefon = $state("");
 
-  const gecerli = $derived(ad.trim().length > 1 && eposta.includes("@"));
+  const gecerli = $derived(
+    ad.trim().length > 1 && telefon.replace(/\D/g, "").length >= 10,
+  );
 
   function girisYap(event: SubmitEvent) {
     event.preventDefault();
     kullanici = ad.trim();
+    telefonKayitli = telefon.trim();
     localStorage.setItem("kullanici", kullanici);
+    localStorage.setItem("telefon", telefonKayitli);
   }
 
   function cikisYap() {
     kullanici = "";
+    telefonKayitli = "";
     localStorage.removeItem("kullanici");
+    localStorage.removeItem("telefon");
   }
 </script>
 
@@ -29,30 +36,46 @@
     <div class="kart profil">
       <div class="avatar">{kullanici[0].toLocaleUpperCase("tr")}</div>
       <h2>Merhaba, {kullanici}</h2>
-      <p>{biletlerim.liste.length} biletiniz var</p>
+      {#if telefonKayitli}
+        <p>{telefonKayitli}</p>
+      {/if}
+      <p>{randevular.liste.length} randevunuz var</p>
     </div>
-    <a class="btn" href="/biletlerim">Biletlerime git</a>
+    <a class="btn" href="/randevularim">Randevularıma git</a>
     <button class="btn ikincil" onclick={cikisYap}>Çıkış yap</button>
   {:else}
-    <h1>Giriş yap</h1>
+    <div>
+      <p class="ust-yazi">Randevularını takip et</p>
+      <h1>Giriş yap</h1>
+    </div>
     <form class="kart form" onsubmit={girisYap}>
       <label>
         Ad Soyad
         <input bind:value={ad} placeholder="Ayşe Yılmaz" />
       </label>
       <label>
-        E-posta
-        <input type="email" bind:value={eposta} placeholder="ayse@ornek.com" />
+        Telefon
+        <input type="tel" bind:value={telefon} placeholder="0555 000 00 00" />
       </label>
       <button class="btn" disabled={!gecerli}>Giriş yap</button>
+      <p class="not">Bilgiler yalnızca bu cihazda saklanır; sunucuya gönderilmez.</p>
     </form>
   {/if}
 </div>
 
 <style>
   h1 {
-    margin: 0;
+    margin: 2px 0 0;
     font-size: 22px;
+  }
+
+  .ust-yazi {
+    margin: 0;
+    color: var(--renk-ana);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   .profil {
@@ -109,5 +132,12 @@
     color: var(--yazi);
     border: 1px solid var(--kenar);
     margin-top: 8px;
+  }
+
+  .not {
+    margin: 0;
+    color: var(--yazi-soluk);
+    font-size: 12px;
+    text-align: center;
   }
 </style>

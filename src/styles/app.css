@@ -1,12 +1,13 @@
-/* Adım 2: Global stil — tüm sayfaların ortak renkleri ve yardımcı sınıfları */
+/* RandevuCep — ortak renk tokenları ve temel yardımcı sınıflar */
 :root {
-  --renk-ana: #e4002b;
-  --renk-koyu: #1a1a2e;
-  --zemin: #f4f5f7;
+  --renk-ana: #0f766e;
+  --renk-koyu: #0f172a;
+  --renk-vurgu: #d4a017;
+  --zemin: #f8fafc;
   --kart: #ffffff;
-  --yazi: #1a1a2e;
-  --yazi-soluk: #6b7280;
-  --kenar: #e5e7eb;
+  --yazi: #0f172a;
+  --yazi-soluk: #64748b;
+  --kenar: #e2e8f0;
   --radius: 14px;
   color-scheme: light;
 
@@ -16,13 +17,15 @@
   -webkit-text-size-adjust: 100%;
 }
 
-/* Adım 15: Gece modu — <html data-tema="gece"> olunca değişkenler koyulaşır */
+/* Gece modu — <html data-tema="gece"> olunca değişkenler koyulaşır */
 :root[data-tema="gece"] {
-  --zemin: #0f1117;
-  --kart: #1a1d26;
-  --yazi: #f3f4f6;
-  --yazi-soluk: #9ca3af;
-  --kenar: #2a2e3a;
+  --renk-ana: #14b8a6;
+  --renk-vurgu: #fbbf24;
+  --zemin: #0b1120;
+  --kart: #111827;
+  --yazi: #f8fafc;
+  --yazi-soluk: #94a3b8;
+  --kenar: #334155;
   color-scheme: dark;
 }
 
@@ -40,7 +43,8 @@ a {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
   color: inherit;
 }

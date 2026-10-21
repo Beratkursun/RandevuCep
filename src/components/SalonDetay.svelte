@@ -1,0 +1,292 @@
+<script lang="ts">
+  // Salon detayı — hizmet, berber ve saat seçimi; sepetli veya doğrudan randevu
+  import { onMount } from "svelte";
+  import { navigate } from "astro:transitions/client";
+  import {
+    saatler,
+    tl,
+    toplamSure as sureHesapla,
+    toplamTutar as tutarHesapla,
+  } from "$lib/data";
+  import { randevuSepeti } from "$lib/randevu-sepeti.svelte";
+  import type { RandevuTaslagi, Salon } from "$lib/types";
+
+  let { salon }: { salon: Salon } = $props();
+
+  let seciliHizmetler = $state<string[]>([]);
+  let seciliBerber = $state("ilk");
+  let tarih = $state("");
+  let saat = $state("10:00");
+  let mesaj = $state("");
+
+  const bugun = new Date().toISOString().slice(0, 10);
+
+  const seciliHizmetObjeleri = $derived(
+    salon.hizmetler.filter((h) => seciliHizmetler.includes(h.id)),
+  );
+  const tutar = $derived(tutarHesapla(seciliHizmetObjeleri));
+  const sure = $derived(sureHesapla(seciliHizmetObjeleri));
+  const gecerli = $derived(seciliHizmetObjeleri.length > 0 && tarih !== "" && saat !== "");
+
+  onMount(() => {
+    tarih = bugun;
+  });
+
+  function taslakOlustur(): RandevuTaslagi {
+    return {
+      id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+      salonId: salon.id,
+      berberId: seciliBerber === "ilk" ? null : seciliBerber,
+      hizmetler: seciliHizmetObjeleri,
+      tarih,
+      saat,
+    };
+  }
+
+  function sepeteEkle() {
+    if (!gecerli) return;
+    const eklendi = randevuSepeti.ekle(taslakOlustur());
+    if (eklendi) {
+      navigate("/randevu");
+    } else {
+      mesaj = "Bu randevu zaten sepetinizde.";
+    }
+  }
+
+  function hemenAl() {
+    if (!gecerli) return;
+    randevuSepeti.dogrudanAyarla(taslakOlustur());
+    navigate("/onay");
+  }
+</script>
+
+<div class="kapak" style:background={salon.renk}>
+  <span>{salon.semt}</span>
+  <h1>{salon.ad}</h1>
+  <p>★ {salon.puan.toFixed(1)} · {salon.hizmetler.length} hizmet</p>
+</div>
+
+<div class="sayfa">
+  <div class="kart bilgi">
+    <p>📍 {salon.adres}</p>
+    <p>🕘 {salon.calismaSaatleri}</p>
+    <p class="aciklama">{salon.aciklama}</p>
+  </div>
+
+  <section>
+    <h2>Hizmet seçin</h2>
+    <p class="ipucu">Birden fazla hizmet seçebilirsiniz.</p>
+    {#each salon.hizmetler as h (h.id)}
+      <label class="kart secenek" class:secili={seciliHizmetler.includes(h.id)}>
+        <input type="checkbox" value={h.id} bind:group={seciliHizmetler} />
+        <span class="hizmet">
+          <b>{h.ad}</b>
+          <small>{h.kategori} · {h.sureDk} dk</small>
+        </span>
+        <strong>{tl(h.fiyat)}</strong>
+      </label>
+    {/each}
+  </section>
+
+  <section>
+    <h2>Berber seçin</h2>
+    <label class="kart secenek" class:secili={seciliBerber === "ilk"}>
+      <input type="radio" value="ilk" bind:group={seciliBerber} />
+      <span class="hizmet">
+        <b>İlk müsait berber</b>
+        <small>Salon senin için uygun berberi seçer.</small>
+      </span>
+    </label>
+    {#each salon.berberler as b (b.id)}
+      <label class="kart secenek" class:secili={seciliBerber === b.id}>
+        <input type="radio" value={b.id} bind:group={seciliBerber} />
+        <span class="hizmet">
+          <b>{b.ad}</b>
+          <small>{b.uzmanlik.join(" · ")}</small>
+        </span>
+      </label>
+    {/each}
+  </section>
+
+  <section>
+    <h2>Tarih ve saat</h2>
+    <div class="tarih-saat">
+      <label>
+        Tarih
+        <input type="date" min={bugun} bind:value={tarih} />
+      </label>
+      <label>
+        Saat
+        <select bind:value={saat}>
+          {#each saatler as s}
+            <option value={s}>{s}</option>
+          {/each}
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <div class="kart ozet">
+    <div>
+      <span>Toplam süre</span>
+      <b>{sure} dk</b>
+    </div>
+    <div>
+      <span>Toplam tutar</span>
+      <b>{tl(tutar)}</b>
+    </div>
+  </div>
+
+  {#if mesaj}
+    <p class="mesaj" aria-live="polite">{mesaj}</p>
+  {/if}
+
+  <div class="eylemler">
+    <button class="btn ikincil" onclick={sepeteEkle} disabled={!gecerli}>Sepete ekle</button>
+    <button class="btn" onclick={hemenAl} disabled={!gecerli}>Hemen randevu al</button>
+  </div>
+</div>
+
+<style>
+  .kapak {
+    padding: 44px 16px 20px;
+    color: #fff;
+  }
+
+  .kapak span {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  .kapak h1 {
+    margin: 4px 0 2px;
+    font-size: 24px;
+  }
+
+  .kapak p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  .bilgi {
+    padding: 14px;
+  }
+
+  .bilgi p {
+    margin: 4px 0;
+  }
+
+  .aciklama {
+    color: var(--yazi-soluk);
+    font-size: 14px;
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 17px;
+  }
+
+  .ipucu {
+    margin: -4px 0 2px;
+    color: var(--yazi-soluk);
+    font-size: 13px;
+  }
+
+  .secenek {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    cursor: pointer;
+  }
+
+  .secenek.secili {
+    border-color: var(--renk-ana);
+    box-shadow: 0 0 0 1px var(--renk-ana);
+  }
+
+  .secenek input {
+    accent-color: var(--renk-ana);
+  }
+
+  .hizmet {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hizmet small {
+    color: var(--yazi-soluk);
+  }
+
+  .tarih-saat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .tarih-saat label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .tarih-saat input,
+  .tarih-saat select {
+    padding: 12px;
+    border: 1px solid var(--kenar);
+    border-radius: 10px;
+    background: var(--kart);
+    font-weight: 400;
+  }
+
+  .ozet {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px;
+  }
+
+  .ozet div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ozet span {
+    color: var(--yazi-soluk);
+    font-size: 13px;
+  }
+
+  .ozet b {
+    font-size: 18px;
+  }
+
+  .mesaj {
+    margin: 0;
+    color: var(--renk-ana);
+    font-weight: 600;
+  }
+
+  .eylemler {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ikincil {
+    background: var(--kart);
+    color: var(--yazi);
+    border: 1px solid var(--kenar);
+  }
+</style>

@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "hello-mobil",
+  "productName": "randevucep",
   "version": "0.1.0",
-  "identifier": "edu.istinye.uygulamam",
+  "identifier": "edu.istinye.randevucep",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "PassoKlon",
+        "title": "RandevuCep",
         "width": 420,
-        "height": 820
+        "height": 820,
+        "minWidth": 360,
+        "minHeight": 640
       }
     ],
     "security": {
