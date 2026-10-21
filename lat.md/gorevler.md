@@ -25,7 +25,7 @@ Fork ve PR altyapısı dışında Batch 01'in doküman ve marka çıktıları k�
 | Görev | Durum | Kalan iş | İlgili bölüm |
 |---|---|---|---|
 | 01 Fork ve işbirliği | Tamam | Rapor 10/10; yapılacak yok. | — |
-| 01.2 Branch ve PR | Tamam | PR #1–#4 merge edildi; bu dönüşüm PR #5 olarak açılacak. | — |
+| 01.2 Branch ve PR | Tamam | PR #1–#5 merge edildi; RandevuCep dönüşümü PR #5 ile tamamlandı. | — |
 | 02 Proje fikri | Kısmi | Doküman dolduruldu; öğrenci numarası ve Blackboard teslimi kullanıcıda. | [[veri-modeli]] |
 | 03 README | Kısmi | Başlık ve açıklama RandevuCep'e çekildi; öğrenci numarası ve bazı badge linkleri açık. | [[mimari]] |
 | 04 Ajan dosyaları | Kısmi | AGENTS haritası güncellendi; docs indeks tablosu ve kod kuralları hâlâ eksik. | — |
@@ -79,7 +79,7 @@ Batch 02'nin veri, kart, liste ve Rust kalemleri tamamlandı; master koruması, 
 
 | Görev | Durum | Kalan iş |
 |---|---|---|
-| 09.1 Master koruması | Açık | Kural seti, PR güvenliği belgesi ve kanıt görseli yok; `gh` PATH'te olmadığı için canlı doğrulanamadı. |
+| 09.1 Master koruması | Açık | Kural seti, PR güvenliği belgesi ve kanıt görseli yok. |
 | 10 Çalışma yöntemi | Açık | Şartname ve prompt/istem günlükleri yok. |
 | 11 Veri sözleşmesi | Tamam | `src/lib/types/` dolu; `docs/veri-modeli.md` ve `bun run check` betiği var. |
 | 12 Kart bileşeni | Tamam | `src/lib/components/SalonKart.svelte` salon kartı olarak eklendi. |
