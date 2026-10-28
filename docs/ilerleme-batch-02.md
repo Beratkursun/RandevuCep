@@ -40,7 +40,7 @@ test result: ok. 2 passed; 0 failed
 
 ## 3. Etiket
 
-`v0.2.0-batch-02` etiketi master üzerinde oluşturuldu ve push edildi (`93daf19`).
+`v0.2.0-batch-02` etiketi master üzerinde oluşturuldu ve push edildi (`4f626f1`).
 
 ## 4. Kalan
 
