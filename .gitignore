@@ -19,3 +19,6 @@ docs/tasks/**/raw/
 .mcp.json
 .opencode
 .codex
+
+# Teslim ZIP'i (Blackboard'a yuklenir, repoya girmez)
+RandevuCep-final.zip
