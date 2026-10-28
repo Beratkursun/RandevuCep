@@ -12,10 +12,11 @@ Doğrulama: `lat check`, `bun run check`, `bun run test`, `bun run build` ve `ca
 
 Uygulama artık PassoKlon etkinlik/bilet akışını değil RandevuCep randevu akışını uygular; eski `etkinlik`, `sepet` ve `biletlerim` sayfaları kaldırılmıştır.
 
-- Rotalar: `/`, `/salon/[id]`, `/randevu`, `/onay`, `/randevularim`, `/profil` ve `/hakkinda`, `/iletisim`, `/kosullar`, `/gizlilik`; ayrıca `/en`, `/ar`, `/fa` bilgi varyantları.
+- Rotalar: `/`, `/salon/[id]`, `/randevu`, `/onay`, `/randevularim`, `/profil`, `/yonetim` ve `/hakkinda`, `/iletisim`, `/kosullar`, `/gizlilik`; ayrıca `/en`, `/ar`, `/fa` bilgi varyantları.
 - Veri: `Salon`, `Hizmet`, `Berber`, `RandevuTaslagi`, `Randevu`, `Kullanici` (bkz. [[veri-modeli]]).
 - Kombinasyonlar: tek/çok hizmet, belirli/ilk müsait berber, sepetli/doğrudan onay (bkz. [[sepet]]).
 - Rust: `randevu_olustur` + `src/lib/native.ts`; tarayıcıda `WEB-RNV-...` (bkz. [[randevular]]).
+- Yönetim: `/yonetim` paneli; SQLite şeması ve `vt_` komutları (bkz. [[yonetim]]).
 - Test: 3 dosya, 11 test (bkz. [[testler]]).
 
 ## Hafta 03 Batch 01

@@ -94,3 +94,10 @@ Yönetim panelinin SQLite katmanı; cargo test ile bellek içi veritabanında do
 ### Geçersiz durum reddedilir
 
 `durum_guncelle` yalnızca `bekliyor`, `onaylandi`, `iptal` değerlerini kabul etmeli; başka bir değerde hata dönmeli ve kayıt değişmemelidir.
+### Durum etiketleri ve özet hesaplanır
+
+`durumEtiketi` üç durumu Türkçeye çevirmeli, bilinmeyen değeri olduğu gibi bırakmalı; `ozetSayilari` bekleyen/onaylı/iptal sayılarını ve onaylı randevuların cirosunu toplamalıdır.
+
+### Tarayıcı yedeği kaydı saklar
+
+`yedekSalonEkle` ve `yedekRandevuEkle` kayıtları localStorage'a yazmalı, berber seçilmemişse "İlk müsait berber" etiketini üretmeli; `yedekDurumGuncelle` durumu değiştirmeli ve geçersiz durumu reddetmelidir.
