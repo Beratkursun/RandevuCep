@@ -74,3 +74,23 @@ Rust `randevu_olustur` komutunun kod sözleşmesini doğrulayan `cargo test` spe
 ### Her çağrı yeni kod üretir
 
 Aynı salon kimliğiyle art arda iki çağrı farklı kod döndürmelidir; kodun her onayda yeniden üretilmesi bu davranışa bağlıdır.
+
+## Yönetim
+
+Yönetim panelinin SQLite katmanı; cargo test ile bellek içi veritabanında doğrulanır.
+
+### Şema dört tabloyu oluşturur
+
+`hazirla` çalıştırıldığında `salonlar`, `hizmetler`, `berberler` ve `randevular` tabloları oluşmalıdır; eksik tablo panelin ilk açılışta çökmesine yol açar.
+
+### Salon eklenir ve listelenir
+
+`salon_ekle` boş adı reddetmeli, geçerli kaydı kimlikle döndürmeli; `salon_listele` eklenen salonu alanlarıyla birlikte getirmelidir.
+
+### Randevu kaydedilir ve durumu güncellenir
+
+`randevu_kaydet` kaydı `bekliyor` durumuyla yazmalı, liste salon ve berber adlarını birleştirmeli; `durum_guncelle` durumu `onaylandi` yapmalıdır.
+
+### Geçersiz durum reddedilir
+
+`durum_guncelle` yalnızca `bekliyor`, `onaylandi`, `iptal` değerlerini kabul etmeli; başka bir değerde hata dönmeli ve kayıt değişmemelidir.

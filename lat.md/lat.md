@@ -13,6 +13,7 @@ Bilgi grafiği dokuz dosyaya ayrılmıştır; her dosya tek bir kavramı anlatı
 - [[tema]] — gece/gündüz modu ve ilk boyama
 - [[navigasyon]] — sekmeler, aktif sekme, sepet rozeti
 - [[kullanici]] — sahte giriş ve localStorage kaydı
-- [[testler]] — Vitest davranış spec'leri
+- [[testler]] — Vitest ve Rust davranış spec'leri
+- [[yonetim]] — SQLite şeması, Rust komutları ve yönetim paneli
 
 - [[gorevler]] — Hafta 03/04 görev durumu ve uygulama sırası

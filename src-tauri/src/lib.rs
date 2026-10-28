@@ -1,4 +1,7 @@
 use std::time::{SystemTime, UNIX_EPOCH};
+use tauri::Manager;
+
+mod db;
 
 // Adım 11: Rust komutu — ön yüz invoke("randevu_olustur", { salonId }) ile çağırır
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -17,7 +20,25 @@ fn randevu_olustur(salon_id: u32) -> String {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![randevu_olustur])
+        .setup(|app| {
+            let klasor = app.path().app_data_dir()?;
+            std::fs::create_dir_all(&klasor)?;
+            let conn = db::baglan(&klasor.join("randevucep.db"))?;
+            app.manage(db::Veritabani(std::sync::Mutex::new(conn)));
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![
+            randevu_olustur,
+            db::vt_salon_ekle,
+            db::vt_salon_listele,
+            db::vt_hizmet_ekle,
+            db::vt_hizmet_listele,
+            db::vt_berber_ekle,
+            db::vt_berber_listele,
+            db::vt_randevu_kaydet,
+            db::vt_randevu_listele,
+            db::vt_durum_guncelle
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
