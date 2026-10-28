@@ -25,3 +25,17 @@ Kaynak: [[src-tauri/src/db.rs#hazirla]].
 Durum yalnızca `bekliyor`, `onaylandi`, `iptal` değerlerini alabilir; geçersiz değer hata döner. Randevu listesi salon ve berber tablolarıyla birleştirilir; berber seçilmemişse etiket "İlk müsait berber" olur.
 
 Kaynak: [[src-tauri/src/db.rs#vt_randevu_listele]], [[src-tauri/src/db.rs#durum_guncelle]].
+
+## Panel Akışı
+
+`/yonetim` sayfası açılışta salonları ve randevuları `native.ts` üzerinden yükler; özet kartları bekleyen/onaylı/iptal sayılarıyla onaylı randevuların cirosunu gösterir.
+
+Tablodaki "Onayla" ve "İptal" düğmeleri `vt_durum_guncelle` çağırır ve listeyi yeniler. Salon, hizmet ve berber formları ilgili `vt_` komutlarına yazar; "Örnek randevu ekle" düğmesi seçili salon için kod üretip kaydı oluşturur.
+
+Kaynak: [[src/components/YonetimPaneli.svelte]], [[src/lib/native.ts#yonetimRandevulari]].
+
+## Tarayıcı Yedeği
+
+Tauri dışında (tarayıcı önizlemesi ve testler) aynı arayüz `localStorage["yonetim-verisi"]` altındaki yedekle karşılanır; salon, hizmet, berber ve randevu kayıtları burada tutulur.
+
+Kaynak: [[src/lib/yonetim.ts#yedekOku]].
