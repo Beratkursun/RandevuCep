@@ -180,6 +180,7 @@ Bu proje salt bir web sayfası değil; tek bir kod tabanından **iOS, Android, m
 - [Teslim](docs/teslim.md)
 - [Haftalık görevler](docs/tasks/week-3/)
 - [Lat bilgi grafiği](lat.md/lat.md) — mimari ve davranış haritası
+- [Yapay zeka geri bildirimi](docs/ai-geri-bildirim.md)
 
 ---
 
