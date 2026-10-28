@@ -36,6 +36,7 @@
 - [Proje Hakkında](#-proje-hakkında)
 - [Mimari ve Çoklu Çatı (Multi-Framework)](#-mimari-ve-çoklu-çatı-multi-framework)
 - [Temel Yetenekler](#-temel-yetenekler)
+- [Proje Durumu](#-proje-durumu)
 - [Teknoloji Yığını](#-teknoloji-yığını)
 - [Kurulum ve Çalıştırma](docs/kurulum.md)
 - [Dokümantasyon](#-dokümantasyon)
@@ -130,6 +131,7 @@ Bu proje salt bir web sayfası değil; tek bir kod tabanından **iOS, Android, m
 1. **Rust Çekirdeği (Tauri v2):**
    - Bellek güvenliği, yüksek hız ve işletim sisteminin yerel WebView'ını kullanarak ultra hafif (~10-15 MB) paket boyutu.
    - IPC (Inter-Process Communication) ile JavaScript arayüzünden Rust fonksiyonlarını doğrudan çağırma (`randevu_olustur`).
+   - Yönetim verileri `rusqlite` ile açılan SQLite dosyasında tutulur; `vt_*` komutları salon, hizmet, berber ve randevu kayıtlarını yönetir.
 2. **Astro Statik Altyapısı (`output: 'static'`):**
    - Hızlı statik sayfa derlemesi ve dosya tabanlı yönlendirme (`src/pages/`).
    - Dahili `<ClientRouter />` (View Transitions) ile sayfa geçişlerinde SPA akıcılığı.
@@ -147,11 +149,23 @@ Bu proje salt bir web sayfası değil; tek bir kod tabanından **iOS, Android, m
 - 🛒 **Randevu Sepeti:** Birden fazla randevu taslağı, toplam süre/tutar ve toplu onay.
 - ⚡ **Doğrudan Randevu:** Sepeti atlamadan tek taslakla hızlı onay.
 - 🎟️ **Randevularım:** Rust `randevu_olustur` ile üretilen `RNV-AAA-BBBBBBB` kodları ve yerel depolama.
+- 🗄️ **Yönetim Paneli (`/yonetim`):** Randevuları onaylama/iptal, salon-hizmet-berber kayıtları ve ciro özeti; Tauri içinde SQLite, tarayıcıda localStorage yedeği.
 - 👤 **Profil & Tema:** Ad/telefon, randevu sayısı ve açılışta parlamayı önleyen gece/gündüz modu.
 - 📖 **Rehber (MDX):** Proje mimarisini ve React entegrasyonunu gösteren sayfa.
 
 ---
 
+## 📈 Proje Durumu
+
+| Ölçü | Değer |
+|---|---|
+| Astro sayfası | 28 |
+| Vitest | 4 dosya / 13 test |
+| Rust (`cargo test`) | 6 test |
+| Sürüm etiketi | `v0.2.0-batch-02` |
+| Dokümantasyon | `lat.md/` bilgi grafiği + `docs/` |
+
+---
 ## 🛠️ Teknoloji Yığını
 
 | Katman | Teknoloji | Açıklama |
