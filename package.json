@@ -4,7 +4,7 @@
   "description": "Berber ve kuaför randevu uygulaması",
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --force",
     "build": "astro build",
     "preview": "astro preview",
     "test": "vitest run",
