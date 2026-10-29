@@ -67,7 +67,7 @@
     if (!gecerli) return;
     const eklendi = randevuSepeti.ekle(taslakOlustur());
     if (eklendi) {
-      navigate("/randevu");
+      navigate("/randevu/");
     } else {
       mesaj = "Bu randevu zaten sepetinizde.";
     }
@@ -76,7 +76,7 @@
   function hemenAl() {
     if (!gecerli) return;
     randevuSepeti.dogrudanAyarla(taslakOlustur());
-    navigate("/onay");
+    navigate("/onay/");
   }
 </script>
 

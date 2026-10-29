@@ -7,7 +7,7 @@
   let { salon }: { salon: Salon } = $props();
 </script>
 
-<Kart href={`/salon/${salon.id}`} sinif="salon">
+<Kart href={`/salon/${salon.id}/`} sinif="salon">
   <div class="gorsel">
     <img src={salonFoto(salon)} alt={`${salon.ad} — ${salon.semt}`} loading="lazy" />
     <div class="perde"></div>

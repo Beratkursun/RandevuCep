@@ -32,7 +32,7 @@
 </script>
 
 <div class="sayfa">
-  <p class="berber-link"><a href="/berber">Berber misiniz? Berber girişi →</a></p>
+  <p class="berber-link"><a href="/berber/">Berber misiniz? Berber girişi →</a></p>
   {#if kullanici}
     <div class="kart profil">
       <div class="avatar">{kullanici[0].toLocaleUpperCase("tr")}</div>
@@ -42,7 +42,7 @@
       {/if}
       <p>{randevular.liste.length} randevunuz var</p>
     </div>
-    <a class="btn" href="/randevularim">Randevularıma git</a>
+    <a class="btn" href="/randevularim/">Randevularıma git</a>
     <button class="btn ikincil" onclick={cikisYap}>Çıkış yap</button>
   {:else}
     <div>

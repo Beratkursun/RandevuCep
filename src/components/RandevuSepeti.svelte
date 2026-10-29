@@ -16,7 +16,7 @@
     try {
       await randevular.onayla(randevuSepeti.taslaklar);
       randevuSepeti.temizle();
-      navigate("/randevularim");
+      navigate("/randevularim/");
     } catch {
       hata = "Randevular onaylanamadı. Lütfen tekrar deneyin.";
     } finally {

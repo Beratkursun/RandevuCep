@@ -12,7 +12,7 @@ interface Props {
 const { lang, sayfa } = Astro.props;
 const metin = icerik[lang][sayfa];
 const bilgiYolu = (hedef: BilgiSayfasiTuru) =>
-  lang === "tr" ? `/${hedef}` : `/${lang}/${hedef}`;
+  lang === "tr" ? `/${hedef}/` : `/${lang}/${hedef}/`;
 ---
 
 <div class="sayfa bilgi">

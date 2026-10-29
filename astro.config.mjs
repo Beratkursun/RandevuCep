@@ -9,6 +9,7 @@ import mdx from '@astrojs/mdx';
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
+  trailingSlash: 'always',
   integrations: [svelte(), react(), mdx()],
   server: {
     port: 1420,

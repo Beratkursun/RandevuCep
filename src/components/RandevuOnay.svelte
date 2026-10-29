@@ -17,7 +17,7 @@
     try {
       await randevular.onayla([taslak]);
       randevuSepeti.dogrudanTemizle();
-      navigate("/randevularim");
+      navigate("/randevularim/");
     } catch {
       hata = "Randevu onaylanamadı. Lütfen tekrar deneyin.";
     } finally {
@@ -29,7 +29,7 @@
     if (!taslak) return;
     randevuSepeti.ekle(taslak);
     randevuSepeti.dogrudanTemizle();
-    navigate("/randevu");
+    navigate("/randevu/");
   }
 </script>
 

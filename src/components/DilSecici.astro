@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { lang, sayfa } = Astro.props;
-const yol = (d: Dil) => (d === "tr" ? `/${sayfa}` : `/${d}/${sayfa}`);
+const yol = (d: Dil) => (d === "tr" ? `/${sayfa}/` : `/${d}/${sayfa}/`);
 ---
 
 <nav class="diller" aria-label="Dil seçimi">
