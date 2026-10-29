@@ -301,7 +301,9 @@
 <style>
   h1 { margin: 0; font-size: 24px; }
   h2 { margin: 0; font-size: 17px; }
-  .ust { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .ust { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .ust .btn { width: auto; flex: 0 0 auto; padding: 10px 16px; }
+  .kimlik h1 { font-size: 21px; }
   .ust p { margin: 4px 0 0; color: var(--yazi-soluk); font-size: 14px; }
   .giris { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
   .aciklama { margin: 0; color: var(--yazi-soluk); font-size: 13px; }
@@ -347,7 +349,7 @@
   .bos { color: var(--yazi-soluk); font-size: 14px; }
   .uyari { margin: 0; padding: 10px 12px; border-radius: 10px; background: #fee2e2; color: #991b1b; font-size: 14px; }
   .kimlik { display: flex; align-items: center; gap: 12px; }
-  .avatar { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--renk-ana), #7a0016); color: #fff; font-weight: 800; font-size: 18px; letter-spacing: 0.5px; }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--renk-ana), #7a0016); color: #fff; font-weight: 800; font-size: 16px; letter-spacing: 0.5px; }
   .doluluk { margin: 0; font-size: 13px; color: var(--yazi-soluk); }
   .doluluk b { color: var(--yazi); }
 </style>
