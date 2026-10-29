@@ -40,7 +40,10 @@ pub fn run() {
             db::vt_randevu_listele,
             db::vt_durum_guncelle,
             db::vt_berber_randevulari,
-            db::vt_berber_durum_guncelle
+            db::vt_berber_durum_guncelle,
+            db::vt_kapali_slotlar,
+            db::vt_slot_kapat,
+            db::vt_slot_ac
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

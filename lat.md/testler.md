@@ -116,3 +116,14 @@ Berber girişi ve yetki sınırı; Rust komutları bellek içi veritabanında, t
 ### Tarayıcı yedeğinde berber girişi çalışır
 
 Tauri dışında `yedekBerberGiris` salon + ad + PIN ile oturum üretmeli, yanlış PIN'de hata vermeli ve `yedekBerberRandevulari` yalnızca berberin kendi randevularını döndürmelidir.
+### Slot kapatılır ve yeniden açılır
+
+`slot_kapat` kapalı saati listeye eklemeli, aynı slotu ikinci kez kapatmak hata vermemeli; `slot_ac` kaydı silmeli ve zaten açık slotu reddetmelidir.
+
+### Geçersiz slot reddedilir
+
+`slot_kapat` `25:00` veya `9:00` gibi geçersiz saatleri ve boş tarihi reddetmeli; geçerli kayıtlar etkilenmemelidir.
+
+### Tarayıcı yedeğinde slot kapatılır
+
+Tauri dışında `yedekSlotKapat` kapalı saati localStorage'a yazmalı, tekrar eklememeli; `yedekSlotAc` kaydı silmeli ve açık slotta hata vermelidir.

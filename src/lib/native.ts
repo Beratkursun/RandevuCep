@@ -7,6 +7,9 @@ import {
   yedekBerberEkle,
   yedekBerberGiris,
   yedekBerberRandevulari,
+  yedekKapaliSlotlar,
+  yedekSlotAc,
+  yedekSlotKapat,
   yedekDurumGuncelle,
   yedekHizmetEkle,
   yedekOku,
@@ -123,4 +126,26 @@ export async function berberDurumGuncelle(
     return;
   }
   yedekBerberDurumGuncelle(berberId, randevuId, durum);
+}
+
+// @lat: [[yonetim#Müsaitlik]]
+export async function kapaliSlotlar(berberId: number, tarih: string): Promise<string[]> {
+  if (tauriMi()) return invoke<string[]>("vt_kapali_slotlar", { berberId, tarih });
+  return yedekKapaliSlotlar(berberId, tarih);
+}
+
+export async function slotKapat(berberId: number, tarih: string, saat: string): Promise<void> {
+  if (tauriMi()) {
+    await invoke<void>("vt_slot_kapat", { berberId, tarih, saat });
+    return;
+  }
+  yedekSlotKapat(berberId, tarih, saat);
+}
+
+export async function slotAc(berberId: number, tarih: string, saat: string): Promise<void> {
+  if (tauriMi()) {
+    await invoke<void>("vt_slot_ac", { berberId, tarih, saat });
+    return;
+  }
+  yedekSlotAc(berberId, tarih, saat);
 }
