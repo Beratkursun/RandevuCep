@@ -8,10 +8,10 @@
 
   const menu = [
     { href: "/", ad: "Keşfet", ikon: "💈" },
-    { href: "/randevularim", ad: "Randevularım", ikon: "📅" },
-    { href: "/randevu", ad: "Sepet", ikon: "🛒" },
-    { href: "/profil", ad: "Profil", ikon: "👤" },
-    { href: "/hakkinda", ad: "Rehber", ikon: "📖" },
+    { href: "/randevularim/", ad: "Randevularım", ikon: "📅" },
+    { href: "/randevu/", ad: "Sepet", ikon: "🛒" },
+    { href: "/profil/", ad: "Profil", ikon: "👤" },
+    { href: "/hakkinda/", ad: "Rehber", ikon: "📖" },
   ];
 
   onMount(() => {
@@ -36,7 +36,7 @@
     >
       <span class="ikon">{m.ikon}</span>
       {m.ad}
-      {#if m.href === "/randevu" && randevuSepeti.adet > 0}
+      {#if m.href === "/randevu/" && randevuSepeti.adet > 0}
         <b class="rozet">{randevuSepeti.adet}</b>
       {/if}
     </a>
