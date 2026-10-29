@@ -149,3 +149,17 @@ export async function slotAc(berberId: number, tarih: string, saat: string): Pro
   }
   yedekSlotAc(berberId, tarih, saat);
 }
+
+// @lat: [[yonetim#Müşteri Tarafı]]
+export async function kapaliSaatler(salonAd: string, berberAd: string, tarih: string): Promise<string[]> {
+  if (tauriMi()) return invoke<string[]>("vt_kapali_saatler", { salonAd, berberAd, tarih });
+
+  const veri = yedekOku();
+  const salon = veri.salonlar.find((s) => s.ad.toLocaleLowerCase("tr") === salonAd.toLocaleLowerCase("tr"));
+  if (!salon) return [];
+  const berber = veri.berberler.find(
+    (b) => b.salonId === salon.id && b.ad.toLocaleLowerCase("tr") === berberAd.toLocaleLowerCase("tr"),
+  );
+  if (!berber) return [];
+  return yedekKapaliSlotlar(berber.id, tarih);
+}
