@@ -16,12 +16,12 @@
 | Dal silme | Kapalı |
 | Bypass | Yok (`current_user_can_bypass: never`) |
 
-GitHub sayfası: <https://github.com/Beratkursun/hello-mobil/rules/25555472>
+GitHub sayfası: <https://github.com/Beratkursun/RandevuCep/rules/25555472>
 
 ## 2. Oluşturma
 
 ```bash
-gh api -X POST repos/Beratkursun/hello-mobil/rulesets --input ruleset.json
+gh api -X POST repos/Beratkursun/RandevuCep/rulesets --input ruleset.json
 ```
 
 Kullanılan `ruleset.json`:
@@ -57,7 +57,7 @@ Kullanılan `ruleset.json`:
 
 ## 3. Canlı Kanıt
 
-`gh api repos/Beratkursun/hello-mobil/rulesets/25555472` yanıtı (özet):
+`gh api repos/Beratkursun/RandevuCep/rulesets/25555472` yanıtı (özet):
 
 ```json
 {

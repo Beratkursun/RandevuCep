@@ -9,8 +9,8 @@
 
 1. **Depoyu klonlayın:**
 ```bash
-git clone https://github.com/Beratkursun/hello-mobil.git
-cd hello-mobil
+git clone https://github.com/Beratkursun/RandevuCep.git
+cd RandevuCep
 ```
 
 2. **Bağımlılıkları yükleyin:**
