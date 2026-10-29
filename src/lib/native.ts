@@ -1,11 +1,18 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import {
+  oturumOku,
+  oturumSil,
+  oturumYaz,
+  yedekBerberDurumGuncelle,
   yedekBerberEkle,
+  yedekBerberGiris,
+  yedekBerberRandevulari,
   yedekDurumGuncelle,
   yedekHizmetEkle,
   yedekOku,
   yedekRandevuEkle,
   yedekSalonEkle,
+  type BerberOturumu,
   type YeniRandevuKaydi,
   type YonetimBerberi,
   type YonetimDurumu,
@@ -57,9 +64,9 @@ export async function yonetimBerberleri(salonId: number): Promise<YonetimBerberi
   return yedekOku().berberler.filter((b) => b.salonId === salonId);
 }
 
-export async function yonetimBerberEkle(salonId: number, ad: string): Promise<number> {
-  if (tauriMi()) return invoke<number>("vt_berber_ekle", { salonId, ad });
-  return yedekBerberEkle(salonId, ad).id;
+export async function yonetimBerberEkle(salonId: number, ad: string, pin: string): Promise<number> {
+  if (tauriMi()) return invoke<number>("vt_berber_ekle", { salonId, ad, pin });
+  return yedekBerberEkle(salonId, ad, pin).id;
 }
 
 export async function yonetimRandevulari(): Promise<YonetimRandevusu[]> {
@@ -78,4 +85,42 @@ export async function yonetimDurumGuncelle(id: number, durum: YonetimDurumu): Pr
     return;
   }
   yedekDurumGuncelle(id, durum);
+}
+
+// @lat: [[yonetim#Berber Girişi]]
+export async function berberGiris(salonId: number, ad: string, pin: string): Promise<BerberOturumu> {
+  if (tauriMi()) {
+    const oturum = await invoke<BerberOturumu>("vt_berber_giris", { salonId, ad, pin });
+    oturumYaz(oturum);
+    return oturum;
+  }
+  const oturum = yedekBerberGiris(salonId, ad, pin);
+  oturumYaz(oturum);
+  return oturum;
+}
+
+export function berberCikis(): void {
+  oturumSil();
+}
+
+export function berberOturumu(): BerberOturumu | null {
+  return oturumOku();
+}
+
+// @lat: [[yonetim#Berber Paneli]]
+export async function berberRandevulari(berberId: number): Promise<YonetimRandevusu[]> {
+  if (tauriMi()) return invoke<YonetimRandevusu[]>("vt_berber_randevulari", { berberId });
+  return yedekBerberRandevulari(berberId);
+}
+
+export async function berberDurumGuncelle(
+  berberId: number,
+  randevuId: number,
+  durum: "onaylandi" | "iptal",
+): Promise<void> {
+  if (tauriMi()) {
+    await invoke<void>("vt_berber_durum_guncelle", { berberId, randevuId, durum });
+    return;
+  }
+  yedekBerberDurumGuncelle(berberId, randevuId, durum);
 }

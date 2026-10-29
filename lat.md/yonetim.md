@@ -39,3 +39,18 @@ Kaynak: [[src/components/YonetimPaneli.svelte]], [[src/lib/native.ts#yonetimRand
 Tauri dışında (tarayıcı önizlemesi ve testler) aynı arayüz `localStorage["yonetim-verisi"]` altındaki yedekle karşılanır; salon, hizmet, berber ve randevu kayıtları burada tutulur.
 
 Kaynak: [[src/lib/yonetim.ts#yedekOku]].
+## Berber Girişi
+
+Berberler `/berber` sayfasından salon, ad ve 4 haneli PIN ile giriş yapar; PIN veritabanında SHA-256 özetiyle saklanır, oturum `localStorage["berber-oturum"]` içinde tutulur.
+
+Salon yöneticisi berberi eklerken PIN belirler; aynı salonda aynı ada sahip kayıt varsa giriş ad üzerinden eşleşir. Hatalı PIN veya 4 haneden farklı PIN reddedilir.
+
+Kaynak: [[src-tauri/src/db.rs#berber_giris]], [[src/components/BerberPaneli.svelte]].
+
+## Berber Paneli
+
+Giriş sonrası berber yalnızca kendi randevularını görür; onaylayabilir veya iptal edebilir, başka berberin randevusunu değiştiremez.
+
+Berberin durum güncellemesi `onaylandi` ve `iptal` ile sınırlıdır; `bekliyor` değeri reddedilir. Berber seçilmeden alınan ("İlk müsait berber") randevular yönetici panelinde kalır.
+
+Kaynak: [[src-tauri/src/db.rs#berber_randevulari]], [[src-tauri/src/db.rs#berber_durum_guncelle]].

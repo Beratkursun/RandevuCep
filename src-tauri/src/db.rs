@@ -2,8 +2,9 @@
 //! Veritabanı dosyası Tauri'nin uygulama veri klasöründe tutulur; testler
 //! bellek içi bağlantıyla çalıştığı için diske dokunmaz.
 
-use rusqlite::{params, Connection};
+use rusqlite::{params, Connection, OptionalExtension};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::path::Path;
 use std::sync::Mutex;
 use tauri::State;
@@ -42,6 +43,15 @@ pub struct BerberSatiri {
     pub ad: String,
 }
 
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BerberOturumu {
+    pub id: i64,
+    pub ad: String,
+    pub salon_id: i64,
+    pub salon_ad: String,
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct YeniRandevu {
@@ -68,6 +78,17 @@ pub struct RandevuSatiri {
     pub tutar: i64,
 }
 
+fn pin_hash(pin: &str) -> String {
+    let mut ozet = Sha256::new();
+    ozet.update(pin.trim().as_bytes());
+    format!("{:x}", ozet.finalize())
+}
+
+fn pin_gecerli(pin: &str) -> bool {
+    let p = pin.trim();
+    p.len() == 4 && p.chars().all(|c| c.is_ascii_digit())
+}
+
 // @lat: [[yonetim#Veritabanı Şeması]]
 pub fn hazirla(conn: &Connection) -> Sonuc<()> {
     conn.execute_batch(
@@ -88,7 +109,8 @@ pub fn hazirla(conn: &Connection) -> Sonuc<()> {
          CREATE TABLE IF NOT EXISTS berberler (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              salon_id INTEGER NOT NULL REFERENCES salonlar(id) ON DELETE CASCADE,
-             ad TEXT NOT NULL
+             ad TEXT NOT NULL,
+             pin_hash TEXT NOT NULL DEFAULT ''
          );
          CREATE TABLE IF NOT EXISTS randevular (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,7 +125,24 @@ pub fn hazirla(conn: &Connection) -> Sonuc<()> {
              olusturma TEXT NOT NULL DEFAULT (datetime('now'))
          );",
     )
-    .map_err(|e| e.to_string())
+    .map_err(|e| e.to_string())?;
+
+    // Eski veritabanlarında pin_hash kolonu yoksa eklenir.
+    let pin_kolonu: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM pragma_table_info('berberler') WHERE name = 'pin_hash'",
+            [],
+            |r| r.get(0),
+        )
+        .map_err(|e| e.to_string())?;
+    if pin_kolonu == 0 {
+        conn.execute(
+            "ALTER TABLE berberler ADD COLUMN pin_hash TEXT NOT NULL DEFAULT ''",
+            [],
+        )
+        .map_err(|e| e.to_string())?;
+    }
+    Ok(())
 }
 
 pub fn baglan(yol: &Path) -> Sonuc<Connection> {
@@ -195,13 +234,17 @@ pub fn hizmet_listele(conn: &Connection, salon_id: i64) -> Sonuc<Vec<HizmetSatir
     Ok(satirlar)
 }
 
-pub fn berber_ekle(conn: &Connection, salon_id: i64, ad: &str) -> Sonuc<i64> {
+// @lat: [[yonetim#Berber Girişi]]
+pub fn berber_ekle(conn: &Connection, salon_id: i64, ad: &str, pin: &str) -> Sonuc<i64> {
     if ad.trim().is_empty() {
         return Err("berber adı zorunlu".to_string());
     }
+    if !pin_gecerli(pin) {
+        return Err("PIN 4 haneli olmalı".to_string());
+    }
     conn.execute(
-        "INSERT INTO berberler (salon_id, ad) VALUES (?1, ?2)",
-        params![salon_id, ad.trim()],
+        "INSERT INTO berberler (salon_id, ad, pin_hash) VALUES (?1, ?2, ?3)",
+        params![salon_id, ad.trim(), pin_hash(pin)],
     )
     .map_err(|e| e.to_string())?;
     Ok(conn.last_insert_rowid())
@@ -225,6 +268,43 @@ pub fn berber_listele(conn: &Connection, salon_id: i64) -> Sonuc<Vec<BerberSatir
     Ok(satirlar)
 }
 
+/// Berberin kendi hesabıyla girişi: salon + ad + 4 haneli PIN.
+// @lat: [[yonetim#Berber Girişi]]
+pub fn berber_giris(conn: &Connection, salon_id: i64, ad: &str, pin: &str) -> Sonuc<BerberOturumu> {
+    if !pin_gecerli(pin) {
+        return Err("PIN 4 haneli olmalı".to_string());
+    }
+    let satir = conn
+        .query_row(
+            "SELECT b.id, b.ad, b.salon_id, s.ad, b.pin_hash
+             FROM berberler b JOIN salonlar s ON s.id = b.salon_id
+             WHERE b.salon_id = ?1 AND lower(b.ad) = lower(?2)",
+            params![salon_id, ad.trim()],
+            |r| {
+                Ok((
+                    r.get::<_, i64>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, i64>(2)?,
+                    r.get::<_, String>(3)?,
+                    r.get::<_, String>(4)?,
+                ))
+            },
+        )
+        .optional()
+        .map_err(|e| e.to_string())?
+        .ok_or_else(|| "berber bulunamadı".to_string())?;
+
+    if satir.4 != pin_hash(pin) {
+        return Err("PIN hatalı".to_string());
+    }
+    Ok(BerberOturumu {
+        id: satir.0,
+        ad: satir.1,
+        salon_id: satir.2,
+        salon_ad: satir.3,
+    })
+}
+
 pub fn randevu_kaydet(conn: &Connection, kayit: &YeniRandevu) -> Sonuc<i64> {
     if kayit.kod.trim().is_empty() || kayit.hizmet.trim().is_empty() {
         return Err("kod ve hizmet zorunlu".to_string());
@@ -246,19 +326,17 @@ pub fn randevu_kaydet(conn: &Connection, kayit: &YeniRandevu) -> Sonuc<i64> {
     Ok(conn.last_insert_rowid())
 }
 
-pub fn randevu_listele(conn: &Connection) -> Sonuc<Vec<RandevuSatiri>> {
-    let mut stmt = conn
-        .prepare(
-            "SELECT r.id, r.kod, s.ad, COALESCE(b.ad, 'İlk müsait berber'), r.hizmet,
-                    r.tarih, r.saat, r.durum, r.tutar
-             FROM randevular r
-             JOIN salonlar s ON s.id = r.salon_id
-             LEFT JOIN berberler b ON b.id = r.berber_id
-             ORDER BY r.tarih DESC, r.saat DESC, r.id DESC",
-        )
-        .map_err(|e| e.to_string())?;
+fn randevu_satirlari(conn: &Connection, filtre: Option<i64>) -> Sonuc<Vec<RandevuSatiri>> {
+    let sql = "SELECT r.id, r.kod, s.ad, COALESCE(b.ad, 'İlk müsait berber'), r.hizmet,
+                      r.tarih, r.saat, r.durum, r.tutar
+               FROM randevular r
+               JOIN salonlar s ON s.id = r.salon_id
+               LEFT JOIN berberler b ON b.id = r.berber_id
+               WHERE (?1 IS NULL OR r.berber_id = ?1)
+               ORDER BY r.tarih DESC, r.saat DESC, r.id DESC";
+    let mut stmt = conn.prepare(sql).map_err(|e| e.to_string())?;
     let satirlar = stmt
-        .query_map([], |r| {
+        .query_map(params![filtre], |r| {
             Ok(RandevuSatiri {
                 id: r.get(0)?,
                 kod: r.get(1)?,
@@ -277,6 +355,15 @@ pub fn randevu_listele(conn: &Connection) -> Sonuc<Vec<RandevuSatiri>> {
     Ok(satirlar)
 }
 
+pub fn randevu_listele(conn: &Connection) -> Sonuc<Vec<RandevuSatiri>> {
+    randevu_satirlari(conn, None)
+}
+
+// @lat: [[yonetim#Berber Paneli]]
+pub fn berber_randevulari(conn: &Connection, berber_id: i64) -> Sonuc<Vec<RandevuSatiri>> {
+    randevu_satirlari(conn, Some(berber_id))
+}
+
 pub fn durum_guncelle(conn: &Connection, id: i64, durum: &str) -> Sonuc<()> {
     dogrula_durum(durum)?;
     let etkilenen = conn
@@ -284,6 +371,29 @@ pub fn durum_guncelle(conn: &Connection, id: i64, durum: &str) -> Sonuc<()> {
         .map_err(|e| e.to_string())?;
     if etkilenen == 0 {
         return Err(format!("randevu bulunamadı: {id}"));
+    }
+    Ok(())
+}
+
+/// Berber yalnızca kendi randevusunu onaylayabilir veya iptal edebilir.
+// @lat: [[yonetim#Berber Paneli]]
+pub fn berber_durum_guncelle(
+    conn: &Connection,
+    berber_id: i64,
+    randevu_id: i64,
+    durum: &str,
+) -> Sonuc<()> {
+    if durum != "onaylandi" && durum != "iptal" {
+        return Err("berber yalnızca onaylayabilir veya iptal edebilir".to_string());
+    }
+    let etkilenen = conn
+        .execute(
+            "UPDATE randevular SET durum = ?1 WHERE id = ?2 AND berber_id = ?3",
+            params![durum, randevu_id, berber_id],
+        )
+        .map_err(|e| e.to_string())?;
+    if etkilenen == 0 {
+        return Err("randevu bulunamadı veya bu berbere ait değil".to_string());
     }
     Ok(())
 }
@@ -325,15 +435,31 @@ pub fn vt_hizmet_listele(state: State<'_, Veritabani>, salon_id: i64) -> Sonuc<V
 }
 
 #[tauri::command]
-pub fn vt_berber_ekle(state: State<'_, Veritabani>, salon_id: i64, ad: String) -> Sonuc<i64> {
+pub fn vt_berber_ekle(
+    state: State<'_, Veritabani>,
+    salon_id: i64,
+    ad: String,
+    pin: String,
+) -> Sonuc<i64> {
     let c = kilit(&state)?;
-    berber_ekle(&c, salon_id, &ad)
+    berber_ekle(&c, salon_id, &ad, &pin)
 }
 
 #[tauri::command]
 pub fn vt_berber_listele(state: State<'_, Veritabani>, salon_id: i64) -> Sonuc<Vec<BerberSatiri>> {
     let c = kilit(&state)?;
     berber_listele(&c, salon_id)
+}
+
+#[tauri::command]
+pub fn vt_berber_giris(
+    state: State<'_, Veritabani>,
+    salon_id: i64,
+    ad: String,
+    pin: String,
+) -> Sonuc<BerberOturumu> {
+    let c = kilit(&state)?;
+    berber_giris(&c, salon_id, &ad, &pin)
 }
 
 #[tauri::command]
@@ -349,9 +475,29 @@ pub fn vt_randevu_listele(state: State<'_, Veritabani>) -> Sonuc<Vec<RandevuSati
 }
 
 #[tauri::command]
+pub fn vt_berber_randevulari(
+    state: State<'_, Veritabani>,
+    berber_id: i64,
+) -> Sonuc<Vec<RandevuSatiri>> {
+    let c = kilit(&state)?;
+    berber_randevulari(&c, berber_id)
+}
+
+#[tauri::command]
 pub fn vt_durum_guncelle(state: State<'_, Veritabani>, id: i64, durum: String) -> Sonuc<()> {
     let c = kilit(&state)?;
     durum_guncelle(&c, id, &durum)
+}
+
+#[tauri::command]
+pub fn vt_berber_durum_guncelle(
+    state: State<'_, Veritabani>,
+    berber_id: i64,
+    randevu_id: i64,
+    durum: String,
+) -> Sonuc<()> {
+    let c = kilit(&state)?;
+    berber_durum_guncelle(&c, berber_id, randevu_id, &durum)
 }
 
 #[cfg(test)]
@@ -362,6 +508,18 @@ mod testler {
         let conn = Connection::open_in_memory().unwrap();
         hazirla(&conn).unwrap();
         conn
+    }
+
+    fn ornek_randevu(salon: i64, berber: Option<i64>, kod: &str) -> YeniRandevu {
+        YeniRandevu {
+            kod: kod.to_string(),
+            salon_id: salon,
+            berber_id: berber,
+            hizmet: "Saç Kesimi".to_string(),
+            tarih: "2026-11-02".to_string(),
+            saat: "14:00".to_string(),
+            tutar: 250,
+        }
     }
 
     // @lat: [[testler#Yönetim#Şema dört tabloyu oluşturur]]
@@ -396,17 +554,8 @@ mod testler {
     fn randevu_kaydedilir_ve_durumu_guncellenir() {
         let conn = bellek();
         let salon = salon_ekle(&conn, "Moda Berber", "İstanbul", "").unwrap();
-        let berber = berber_ekle(&conn, salon, "Emre Usta").unwrap();
-        let kayit = YeniRandevu {
-            kod: "RNV-001-AB12CD".to_string(),
-            salon_id: salon,
-            berber_id: Some(berber),
-            hizmet: "Saç Kesimi".to_string(),
-            tarih: "2026-11-02".to_string(),
-            saat: "14:00".to_string(),
-            tutar: 250,
-        };
-        randevu_kaydet(&conn, &kayit).unwrap();
+        let berber = berber_ekle(&conn, salon, "Emre Usta", "1234").unwrap();
+        randevu_kaydet(&conn, &ornek_randevu(salon, Some(berber), "RNV-001-AB12CD")).unwrap();
 
         let liste = randevu_listele(&conn).unwrap();
         assert_eq!(liste.len(), 1);
@@ -422,17 +571,44 @@ mod testler {
     fn gecersiz_durum_reddedilir() {
         let conn = bellek();
         let salon = salon_ekle(&conn, "Moda Berber", "İstanbul", "").unwrap();
-        let kayit = YeniRandevu {
-            kod: "RNV-002-CD34EF".to_string(),
-            salon_id: salon,
-            berber_id: None,
-            hizmet: "Sakal".to_string(),
-            tarih: "2026-11-03".to_string(),
-            saat: "10:00".to_string(),
-            tutar: 150,
-        };
-        let id = randevu_kaydet(&conn, &kayit).unwrap();
+        let id = randevu_kaydet(&conn, &ornek_randevu(salon, None, "RNV-002-CD34EF")).unwrap();
         assert!(durum_guncelle(&conn, id, "belirsiz").is_err());
         assert_eq!(randevu_listele(&conn).unwrap()[0].durum, "bekliyor");
+    }
+
+    // @lat: [[testler#Berber#Doğru PIN ile giriş yapılır]]
+    #[test]
+    fn dogru_pin_ile_giris_yapilir() {
+        let conn = bellek();
+        let salon = salon_ekle(&conn, "Moda Berber", "İstanbul", "").unwrap();
+        berber_ekle(&conn, salon, "Emre Usta", "1234").unwrap();
+
+        let oturum = berber_giris(&conn, salon, "emre usta", "1234").unwrap();
+        assert_eq!(oturum.ad, "Emre Usta");
+        assert_eq!(oturum.salon_ad, "Moda Berber");
+
+        assert!(berber_giris(&conn, salon, "Emre Usta", "9999").is_err());
+        assert!(berber_giris(&conn, salon, "Emre Usta", "12").is_err());
+        assert!(berber_ekle(&conn, salon, "Mert Usta", "abcd").is_err());
+    }
+
+    // @lat: [[testler#Berber#Berber yalnızca kendi randevusunu günceller]]
+    #[test]
+    fn berber_yalnizca_kendi_randevusunu_gunceller() {
+        let conn = bellek();
+        let salon = salon_ekle(&conn, "Moda Berber", "İstanbul", "").unwrap();
+        let emre = berber_ekle(&conn, salon, "Emre Usta", "1234").unwrap();
+        let mert = berber_ekle(&conn, salon, "Mert Usta", "5678").unwrap();
+        let kendi = randevu_kaydet(&conn, &ornek_randevu(salon, Some(emre), "RNV-003-AA11BB")).unwrap();
+        let baskasi = randevu_kaydet(&conn, &ornek_randevu(salon, Some(mert), "RNV-004-CC22DD")).unwrap();
+
+        let liste = berber_randevulari(&conn, emre).unwrap();
+        assert_eq!(liste.len(), 1);
+        assert_eq!(liste[0].id, kendi);
+
+        assert!(berber_durum_guncelle(&conn, emre, baskasi, "onaylandi").is_err());
+        assert!(berber_durum_guncelle(&conn, emre, kendi, "bekliyor").is_err());
+        berber_durum_guncelle(&conn, emre, kendi, "onaylandi").unwrap();
+        assert_eq!(berber_randevulari(&conn, emre).unwrap()[0].durum, "onaylandi");
     }
 }
