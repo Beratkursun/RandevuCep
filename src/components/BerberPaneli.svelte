@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { saatler } from "$lib/data";
   import {
     durumEtiketi,
     type BerberOturumu,
@@ -12,6 +13,9 @@
     berberGiris,
     berberOturumu,
     berberRandevulari,
+    kapaliSlotlar,
+    slotAc,
+    slotKapat,
     yonetimSalonlari,
   } from "$lib/native";
 
@@ -24,6 +28,8 @@
   let yukleniyor = $state(true);
   let isleniyor = $state(false);
   let hata = $state("");
+  let tarih = $state(new Date().toISOString().slice(0, 10));
+  let kapali = $state<string[]>([]);
 
   function hataMetni(e: unknown): string {
     return e instanceof Error ? e.message : String(e);
@@ -40,6 +46,7 @@
     try {
       oturum = await berberGiris(seciliSalon, ad, pin);
       await randevulariGetir(oturum.id);
+      await musaitlikYukle(oturum.id);
       pin = "";
     } catch (e) {
       hata = hataMetni(e);
@@ -71,12 +78,30 @@
     hata = "";
   }
 
+  async function musaitlikYukle(berberId?: number) {
+    const id = berberId ?? oturum?.id;
+    if (!id) return;
+    kapali = await kapaliSlotlar(id, tarih);
+  }
+
+  async function slotDegistir(saat: string) {
+    if (!oturum) return;
+    try {
+      if (kapali.includes(saat)) await slotAc(oturum.id, tarih, saat);
+      else await slotKapat(oturum.id, tarih, saat);
+      await musaitlikYukle(oturum.id);
+    } catch (e) {
+      hata = hataMetni(e);
+    }
+  }
+
   onMount(async () => {
     try {
       salonlar = await yonetimSalonlari();
       if (salonlar.length > 0) seciliSalon = salonlar[0].id;
       oturum = berberOturumu();
       if (oturum) await randevulariGetir(oturum.id);
+      if (oturum) await musaitlikYukle(oturum.id);
     } catch (e) {
       hata = hataMetni(e);
     } finally {
@@ -142,7 +167,16 @@
         </div>
       {/each}
     {/if}
-  {/if}
+    <h2>Müsaitlik</h2>
+    <div class="kart blok">
+      <label>Tarih<input type="date" bind:value={tarih} onchange={() => musaitlikYukle()} /></label>
+      <p class="aciklama">Kapalı saatler randevuya kapatılır; tekrar tıklayınca açılır.</p>
+      <div class="slotlar">
+        {#each saatler as s (s)}
+          <button class:kapali={kapali.includes(s)} onclick={() => slotDegistir(s)}>{s}</button>
+        {/each}
+      </div>
+    </div>  {/if}
 </div>
 
 <style>
@@ -166,4 +200,8 @@
   .rozet.iptal { background: #fee2e2; color: #991b1b; }
   .bos { color: var(--yazi-soluk); font-size: 14px; }
   .uyari { margin: 0; padding: 10px 12px; border-radius: 10px; background: #fee2e2; color: #991b1b; font-size: 14px; }
+  .blok { padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .slotlar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .slotlar button { padding: 8px 0; border: 1px solid var(--kenar); border-radius: 8px; background: var(--zemin); font-size: 13px; }
+  .slotlar button.kapali { background: #fee2e2; color: #991b1b; border-color: #fca5a5; text-decoration: line-through; }
 </style>

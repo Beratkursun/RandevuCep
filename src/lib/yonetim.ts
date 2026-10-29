@@ -83,16 +83,23 @@ export function ozetSayilari(liste: YonetimRandevusu[]) {
 // @lat: [[yonetim#Tarayıcı Yedeği]]
 const ANAHTAR = "yonetim-verisi";
 
+export interface KapaliSlot {
+  berberId: number;
+  tarih: string;
+  saat: string;
+}
+
 export interface YedekVeri {
   salonlar: YonetimSalonu[];
   hizmetler: YonetimHizmeti[];
   berberler: YonetimBerberi[];
   randevular: YonetimRandevusu[];
   sayac: number;
+  kapaliSlotlar: KapaliSlot[];
 }
 
 function bosVeri(): YedekVeri {
-  return { salonlar: [], hizmetler: [], berberler: [], randevular: [], sayac: 1 };
+  return { salonlar: [], hizmetler: [], berberler: [], randevular: [], sayac: 1, kapaliSlotlar: [] };
 }
 
 export function yedekOku(): YedekVeri {
@@ -216,5 +223,34 @@ export function yedekBerberDurumGuncelle(berberId: number, randevuId: number, du
   const kayit = veri.randevular.find((r) => r.id === randevuId);
   if (!kayit || kayit.berberId !== berberId) throw new Error("randevu bulunamadı veya bu berbere ait değil");
   kayit.durum = durum;
+  yedekYaz(veri);
+}
+
+// @lat: [[yonetim#Müsaitlik]]
+export function yedekKapaliSlotlar(berberId: number, tarih: string): string[] {
+  const veri = yedekOku();
+  return (veri.kapaliSlotlar ?? [])
+    .filter((s) => s.berberId === berberId && s.tarih === tarih)
+    .map((s) => s.saat)
+    .sort();
+}
+
+export function yedekSlotKapat(berberId: number, tarih: string, saat: string): void {
+  if (!/^\d{2}:\d{2}$/.test(saat)) throw new Error("geçersiz saat");
+  const veri = yedekOku();
+  const liste = veri.kapaliSlotlar ?? [];
+  if (!liste.some((s) => s.berberId === berberId && s.tarih === tarih && s.saat === saat)) {
+    liste.push({ berberId, tarih, saat });
+    veri.kapaliSlotlar = liste;
+    yedekYaz(veri);
+  }
+}
+
+export function yedekSlotAc(berberId: number, tarih: string, saat: string): void {
+  const veri = yedekOku();
+  const liste = veri.kapaliSlotlar ?? [];
+  const kalan = liste.filter((s) => !(s.berberId === berberId && s.tarih === tarih && s.saat === saat));
+  if (kalan.length === liste.length) throw new Error("slot zaten açık");
+  veri.kapaliSlotlar = kalan;
   yedekYaz(veri);
 }

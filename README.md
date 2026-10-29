@@ -160,8 +160,8 @@ Bu proje salt bir web sayfası değil; tek bir kod tabanından **iOS, Android, m
 | Ölçü | Değer |
 |---|---|
 | Astro sayfası | 29 |
-| Vitest | 5 dosya / 14 test |
-| Rust (`cargo test`) | 8 test |
+| Vitest | 5 dosya / 15 test |
+| Rust (`cargo test`) | 10 test |
 | Sürüm etiketi | `v0.2.0-batch-02` |
 | Dokümantasyon | `lat.md/` bilgi grafiği + `docs/` |
 

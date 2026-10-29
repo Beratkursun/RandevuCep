@@ -5,6 +5,9 @@ import {
   yedekBerberEkle,
   yedekBerberGiris,
   yedekBerberRandevulari,
+  yedekKapaliSlotlar,
+  yedekSlotAc,
+  yedekSlotKapat,
   yedekRandevuEkle,
   yedekSalonEkle,
 } from "../src/lib/yonetim";
@@ -51,6 +54,20 @@ describe("berber girişi", () => {
     expect(() => yedekBerberDurumGuncelle(mert.id, kendi.id, "onaylandi")).toThrow();
     yedekBerberDurumGuncelle(emre.id, kendi.id, "onaylandi");
     expect(yedekBerberRandevulari(emre.id)[0].durum).toBe("onaylandi");
+  });
+  // @lat: [[testler#Berber#Tarayıcı yedeğinde slot kapatılır]]
+  it("kapalı slotu kaydeder, tekrar eklemez ve yeniden açar", () => {
+    const salon = yedekSalonEkle("Moda Berber", "İstanbul", "");
+    const emre = yedekBerberEkle(salon.id, "Emre Usta", "1234");
+
+    yedekSlotKapat(emre.id, "2026-11-08", "10:00");
+    yedekSlotKapat(emre.id, "2026-11-08", "10:00");
+    expect(yedekKapaliSlotlar(emre.id, "2026-11-08")).toEqual(["10:00"]);
+    expect(() => yedekSlotKapat(emre.id, "2026-11-08", "9:00")).toThrow();
+
+    yedekSlotAc(emre.id, "2026-11-08", "10:00");
+    expect(yedekKapaliSlotlar(emre.id, "2026-11-08")).toEqual([]);
+    expect(() => yedekSlotAc(emre.id, "2026-11-08", "10:00")).toThrow();
   });
 });
 

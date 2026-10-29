@@ -112,7 +112,13 @@ pub fn hazirla(conn: &Connection) -> Sonuc<()> {
              ad TEXT NOT NULL,
              pin_hash TEXT NOT NULL DEFAULT ''
          );
-         CREATE TABLE IF NOT EXISTS randevular (
+         CREATE TABLE IF NOT EXISTS kapali_slotlar (
+             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             berber_id INTEGER NOT NULL REFERENCES berberler(id) ON DELETE CASCADE,
+             tarih TEXT NOT NULL,
+             saat TEXT NOT NULL,
+             UNIQUE(berber_id, tarih, saat)
+         );         CREATE TABLE IF NOT EXISTS randevular (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              kod TEXT NOT NULL UNIQUE,
              salon_id INTEGER NOT NULL REFERENCES salonlar(id),
@@ -398,6 +404,58 @@ pub fn berber_durum_guncelle(
     Ok(())
 }
 
+fn saat_gecerli(saat: &str) -> bool {
+    let parcalar: Vec<&str> = saat.split(':').collect();
+    if parcalar.len() != 2 || parcalar[0].len() != 2 || parcalar[1].len() != 2 {
+        return false;
+    }
+    match (parcalar[0].parse::<u32>(), parcalar[1].parse::<u32>()) {
+        (Ok(s), Ok(d)) => s < 24 && d < 60,
+        _ => false,
+    }
+}
+
+// @lat: [[yonetim#Müsaitlik]]
+pub fn kapali_slotlar(conn: &Connection, berber_id: i64, tarih: &str) -> Sonuc<Vec<String>> {
+    let mut stmt = conn
+        .prepare("SELECT saat FROM kapali_slotlar WHERE berber_id = ?1 AND tarih = ?2 ORDER BY saat")
+        .map_err(|e| e.to_string())?;
+    let satirlar = stmt
+        .query_map(params![berber_id, tarih], |r| r.get::<_, String>(0))
+        .map_err(|e| e.to_string())?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())?;
+    Ok(satirlar)
+}
+
+pub fn slot_kapat(conn: &Connection, berber_id: i64, tarih: &str, saat: &str) -> Sonuc<()> {
+    if tarih.trim().is_empty() {
+        return Err("geçersiz tarih".to_string());
+    }
+    if !saat_gecerli(saat) {
+        return Err("geçersiz saat".to_string());
+    }
+    conn.execute(
+        "INSERT OR IGNORE INTO kapali_slotlar (berber_id, tarih, saat) VALUES (?1, ?2, ?3)",
+        params![berber_id, tarih.trim(), saat],
+    )
+    .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+pub fn slot_ac(conn: &Connection, berber_id: i64, tarih: &str, saat: &str) -> Sonuc<()> {
+    let etkilenen = conn
+        .execute(
+            "DELETE FROM kapali_slotlar WHERE berber_id = ?1 AND tarih = ?2 AND saat = ?3",
+            params![berber_id, tarih, saat],
+        )
+        .map_err(|e| e.to_string())?;
+    if etkilenen == 0 {
+        return Err("slot zaten açık".to_string());
+    }
+    Ok(())
+}
+
 fn kilit(vt: &Veritabani) -> Sonuc<std::sync::MutexGuard<'_, Connection>> {
     vt.0.lock()
         .map_err(|_| "veritabanı kilidi alınamadı".to_string())
@@ -500,6 +558,38 @@ pub fn vt_berber_durum_guncelle(
     berber_durum_guncelle(&c, berber_id, randevu_id, &durum)
 }
 
+#[tauri::command]
+pub fn vt_kapali_slotlar(
+    state: State<'_, Veritabani>,
+    berber_id: i64,
+    tarih: String,
+) -> Sonuc<Vec<String>> {
+    let c = kilit(&state)?;
+    kapali_slotlar(&c, berber_id, &tarih)
+}
+
+#[tauri::command]
+pub fn vt_slot_kapat(
+    state: State<'_, Veritabani>,
+    berber_id: i64,
+    tarih: String,
+    saat: String,
+) -> Sonuc<()> {
+    let c = kilit(&state)?;
+    slot_kapat(&c, berber_id, &tarih, &saat)
+}
+
+#[tauri::command]
+pub fn vt_slot_ac(
+    state: State<'_, Veritabani>,
+    berber_id: i64,
+    tarih: String,
+    saat: String,
+) -> Sonuc<()> {
+    let c = kilit(&state)?;
+    slot_ac(&c, berber_id, &tarih, &saat)
+}
+
 #[cfg(test)]
 mod testler {
     use super::*;
@@ -574,6 +664,34 @@ mod testler {
         let id = randevu_kaydet(&conn, &ornek_randevu(salon, None, "RNV-002-CD34EF")).unwrap();
         assert!(durum_guncelle(&conn, id, "belirsiz").is_err());
         assert_eq!(randevu_listele(&conn).unwrap()[0].durum, "bekliyor");
+    }
+
+    // @lat: [[testler#Berber#Slot kapatılır ve yeniden açılır]]
+    #[test]
+    fn slot_kapatilir_ve_acilir() {
+        let conn = bellek();
+        let salon = salon_ekle(&conn, "Moda Berber", "İstanbul", "").unwrap();
+        let emre = berber_ekle(&conn, salon, "Emre Usta", "1234").unwrap();
+
+        slot_kapat(&conn, emre, "2026-11-07", "14:00").unwrap();
+        slot_kapat(&conn, emre, "2026-11-07", "14:00").unwrap();
+        assert_eq!(kapali_slotlar(&conn, emre, "2026-11-07").unwrap(), vec!["14:00".to_string()]);
+
+        slot_ac(&conn, emre, "2026-11-07", "14:00").unwrap();
+        assert!(kapali_slotlar(&conn, emre, "2026-11-07").unwrap().is_empty());
+        assert!(slot_ac(&conn, emre, "2026-11-07", "14:00").is_err());
+    }
+
+    // @lat: [[testler#Berber#Geçersiz slot reddedilir]]
+    #[test]
+    fn gecersiz_slot_reddedilir() {
+        let conn = bellek();
+        let salon = salon_ekle(&conn, "Moda Berber", "İstanbul", "").unwrap();
+        let emre = berber_ekle(&conn, salon, "Emre Usta", "1234").unwrap();
+
+        assert!(slot_kapat(&conn, emre, "2026-11-07", "25:00").is_err());
+        assert!(slot_kapat(&conn, emre, "2026-11-07", "9:00").is_err());
+        assert!(slot_kapat(&conn, emre, "", "14:00").is_err());
     }
 
     // @lat: [[testler#Berber#Doğru PIN ile giriş yapılır]]

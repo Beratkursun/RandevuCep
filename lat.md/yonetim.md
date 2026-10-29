@@ -54,3 +54,12 @@ Giriş sonrası berber yalnızca kendi randevularını görür; onaylayabilir ve
 Berberin durum güncellemesi `onaylandi` ve `iptal` ile sınırlıdır; `bekliyor` değeri reddedilir. Berber seçilmeden alınan ("İlk müsait berber") randevular yönetici panelinde kalır.
 
 Kaynak: [[src-tauri/src/db.rs#berber_randevulari]], [[src-tauri/src/db.rs#berber_durum_guncelle]].
+## Müsaitlik
+
+Berber, seçtiği günün saatlerini kapatıp yeniden açabilir; kapalı slotlar `kapali_slotlar` tablosunda (berber, tarih, saat) benzersiz olarak tutulur.
+
+Panel 09:00–19:00 arası saatleri ızgara olarak gösterir; kapalı saat kırmızı ve üstü çizili görünür. `vt_slot_kapat` aynı slotu ikinci kez kapatmayı hata saymaz, `vt_slot_ac` açık slotu açmayı reddeder; saat `HH:MM` biçiminde ve geçerli olmalıdır.
+
+Müşteri randevu ekranı hâlâ statik katalogla çalıştığı için kapalı slotları henüz okumaz; kayıtlar berber panelinde ve SQLite API'sinde tutulur.
+
+Kaynak: [[src-tauri/src/db.rs#slot_kapat]], [[src/components/BerberPaneli.svelte]].
