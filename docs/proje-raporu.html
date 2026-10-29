@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <title>RandevuCep — Proje Durumu Raporu</title>
+    <style>
+      @page { size: A4; margin: 16mm 14mm; }
+      :root { --murekkep: #14202e; --soluk: #5b6b7c; --cizgi: #d7dee6; --vurgu: #b3122f; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0 auto;
+        max-width: 186mm;
+        padding: 10mm 6mm;
+        font: 10.5pt/1.55 "Segoe UI", system-ui, -apple-system, sans-serif;
+        color: var(--murekkep);
+        background: #fff;
+      }
+      h1 { margin: 0 0 2mm; font-size: 22pt; letter-spacing: -0.4pt; }
+      h2 { margin: 7mm 0 2mm; font-size: 12.5pt; color: var(--vurgu); }
+      p { margin: 0 0 2mm; }
+      .ust { display: flex; justify-content: space-between; align-items: flex-end; gap: 8mm; border-bottom: 2px solid var(--murekkep); padding-bottom: 3mm; }
+      .ust .kunye { text-align: right; font-size: 9pt; color: var(--soluk); line-height: 1.7; }
+      table { width: 100%; border-collapse: collapse; margin: 2mm 0 3mm; font-size: 9.5pt; }
+      th, td { border: 1px solid var(--cizgi); padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
+      th { background: #f2f5f8; font-weight: 600; }
+      ul { margin: 0 0 3mm; padding-left: 5mm; }
+      li { margin-bottom: 1mm; }
+      code { font-family: "Cascadia Mono", Consolas, monospace; font-size: 9pt; background: #f2f5f8; padding: 0.5mm 1mm; border-radius: 1.5mm; }
+      pre { background: #f6f8fa; border: 1px solid var(--cizgi); border-radius: 2mm; padding: 3mm; font-size: 9pt; overflow: hidden; }
+      .kutular { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin: 2mm 0 3mm; }
+      .kutu { border: 1px solid var(--cizgi); border-radius: 2mm; padding: 3mm; }
+      .kutu b { display: block; font-size: 16pt; line-height: 1.2; }
+      .kutu span { font-size: 8.5pt; color: var(--soluk); }
+      .not { border-left: 3px solid var(--vurgu); padding: 1mm 0 1mm 3mm; color: var(--soluk); font-size: 9.5pt; }
+      footer { margin-top: 8mm; border-top: 1px solid var(--cizgi); padding-top: 2mm; font-size: 8.5pt; color: var(--soluk); display: flex; justify-content: space-between; }
+    </style>
+  </head>
+  <body>
+    <div class="ust">
+      <div>
+        <h1>RandevuCep</h1>
+        <p>Berber ve kuaför randevu uygulaması — proje durumu</p>
+      </div>
+      <div class="kunye">
+        Berat Kurşun · 2620511110 · Şube 1<br />
+        MYO063 Mobil Programlama · 2026–2027 Güz<br />
+        29 Ekim 2026
+      </div>
+    </div>
+
+    <h2>1. Uygulama ne yapıyor?</h2>
+    <p>
+      Kullanıcı; semt veya hizmete göre salon arar, hizmet ve berber seçer, uygun saati görür ve randevu alır.
+      Berberler kendi PIN'leriyle ayrı bir panele girip randevularını yönetir, boş saatlerini kapatır ve kazancını görür.
+      Yönetim paneli salon, hizmet, berber ve randevu kayıtlarını SQLite üzerinde tutar.
+    </p>
+
+    <div class="kutular">
+      <div class="kutu"><b>12</b><span>İstanbul salonu</span></div>
+      <div class="kutu"><b>35</b><span>üretilen sayfa</span></div>
+      <div class="kutu"><b>17 + 11</b><span>Vitest + Rust testi</span></div>
+    </div>
+
+    <h2>2. Ekranlar ve yetenekler</h2>
+    <table>
+      <tr><th style="width: 32%">Ekran</th><th>Öne çıkan davranış</th></tr>
+      <tr><td>Keşfet <code>/</code></td><td>Arama, kategori çipleri, iskelet yükleme, sonuç sayacı, fotoğraflı salon kartları</td></tr>
+      <tr><td>Salon detayı <code>/salon/[id]</code></td><td>Hizmet/berber/saat seçimi, kapalı saatler “dolu” olarak devre dışı, sabit “Randevu al” çubuğu</td></tr>
+      <tr><td>Sepet ve onay <code>/randevu</code>, <code>/onay</code></td><td>Çok hizmetli taslaklar, toplam süre/tutar, Rust `randevu_olustur` ile RNV kodu</td></tr>
+      <tr><td>Randevularım <code>/randevularim</code></td><td>Kod, tarih, durum ve yerel kalıcılık</td></tr>
+      <tr><td>Berber girişi <code>/berber</code></td><td>Salon + ad + 4 haneli PIN; oturum localStorage'da</td></tr>
+      <tr><td>Berber paneli</td><td>Özet, randevular, müsaitlik, kazanç sekmeleri; avatar ve haftalık doluluk</td></tr>
+      <tr><td>Yönetim <code>/yonetim</code></td><td>Salon/hizmet/berber ekleme, randevu onay/iptal, özet kartları</td></tr>
+      <tr><td>Bilgi sayfaları</td><td>Hakkında, iletişim, koşullar, gizlilik — TR/EN/AR/FA (AR/FA RTL)</td></tr>
+    </table>
+
+    <h2>3. Mimari</h2>
+    <ul>
+      <li><b>Ön yüz:</b> Astro statik üretim, Svelte 5 runes ekranları, React 19 yalnızca dekoratif bileşen, MDX bilgi sayfaları.</li>
+      <li><b>Masaüstü/mobil kabuk:</b> Tauri v2; Rust tarafında <code>randevu_olustur</code> ve <code>vt_*</code> SQLite komutları.</li>
+      <li><b>Veri:</b> Katalog <code>src/lib/data.ts</code>; yönetim ve müsaitlik verisi SQLite (<code>rusqlite</code>, 4 tablo); tarayıcıda aynı arayüzü localStorage yedeği karşılar.</li>
+      <li><b>Dokümantasyon grafiği:</b> <code>lat.md/</code> — 11 dosya, <code>lat check</code> temiz.</li>
+    </ul>
+
+    <h2>4. Teslim ve sürüm durumu</h2>
+    <table>
+      <tr><th style="width: 32%">Kalem</th><th>Durum</th></tr>
+      <tr><td>Depo</td><td><code>Beratkursun/hello-mobil</code> (master)</td></tr>
+      <tr><td>Etiketler</td><td><code>v0.1.0-batch-01</code>, <code>v0.2.0-batch-02</code></td></tr>
+      <tr><td>PR geçmişi</td><td>20 PR açıldı ve merge edildi (lat grafiği, RandevuCep dönüşümü, SQLite, yönetim paneli, berber paneli, müsaitlik, fotoğraflı katalog, arayüz cilası)</td></tr>
+      <tr><td>Doğrulama</td><td><code>lat check</code>, <code>bun run check</code> (0 hata), <code>bun run test</code> (17), <code>cargo test</code> (11), <code>bun run build</code> (35 sayfa)</td></tr>
+      <tr><td>Bekleyen</td><td>Yeni ZIP üretimi ve Blackboard yüklemesi (kullanıcı adımı)</td></tr>
+    </table>
+
+    <h2>5. Çalıştırma</h2>
+    <pre>bun install
+bun run dev          # http://127.0.0.1:1420
+bun run tauri dev    # masaüstü kabuğu (SQLite burada etkin)
+bun run test         # Vitest
+bun run check        # svelte-check + lat check
+bun run build        # statik üretim</pre>
+
+    <h2>6. Bilinen sınırlar</h2>
+    <ul>
+      <li>Müşteri tarafı berberi <b>ad</b> ile eşler; yönetim panelindeki salon/berber adı katalogla aynı olmalıdır.</li>
+      <li>“İlk müsait berber” seçildiğinde kapalı saat filtresi uygulanmaz.</li>
+      <li>Salon verisi temsilidir (12 kurgusal işletme); fotoğraflar yapay zekâ ile üretilmiş temsili görsellerdir.</li>
+      <li>Müşteri randevuları şu an <code>localStorage</code>'da; SQLite'a taşınması bir sonraki adımdır.</li>
+    </ul>
+
+    <p class="not">
+      Bu rapor tarayıcıda açılıp Ctrl+P ile A4 olarak yazdırılabilir. Kaynak: <code>docs/proje-raporu.html</code>.
+    </p>
+
+    <footer>
+      <span>RandevuCep · MYO063 Mobil Programlama</span>
+      <span>Berat Kurşun · 2620511110</span>
+    </footer>
+  </body>
+</html>
