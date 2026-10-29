@@ -137,3 +137,9 @@ button {
     background-position: -200% 0;
   }
 }
+
+/* Gece modunda kapak fotoğraflarını yumuşat (kontrast ve göz yorgunluğu) */
+:root[data-tema="gece"] .kapak img,
+:root[data-tema="gece"] .gorsel img {
+  filter: brightness(0.82) saturate(0.95);
+}

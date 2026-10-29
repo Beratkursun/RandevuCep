@@ -4,8 +4,7 @@
   import SalonKart from "$lib/components/SalonKart.svelte";
   import { hizmetKategorileri, salonlar } from "$lib/data";
   import type { HizmetKategorisi } from "$lib/types";
-  import Yukleniyor from "./ui/Yukleniyor.svelte";
-  import BosDurum from "./ui/BosDurum.svelte";
+    import BosDurum from "./ui/BosDurum.svelte";
   import HataDurumu from "./ui/HataDurumu.svelte";
 
   let arama = $state("");
@@ -66,7 +65,15 @@
   </div>
 
   {#if durum === "yukleniyor"}
-    <Yukleniyor mesaj="Randevu saatleri yükleniyor…" satir={3} />
+    <div class="liste" aria-busy="true">
+      {#each [1, 2, 3] as i (i)}
+        <div class="kart iskelet">
+          <div class="iskelet-gorsel"></div>
+          <div class="iskelet-satir genis"></div>
+          <div class="iskelet-satir"></div>
+        </div>
+      {/each}
+    </div>
   {:else if durum === "hata"}
     <HataDurumu baslik="Katalog yüklenemedi." mesaj={hata} onTekrar={yukle} />
   {:else if liste.length === 0}
@@ -80,6 +87,7 @@
       }}
     />
   {:else}
+    <p class="sonuc">{liste.length} salon</p>
     <div class="liste">
       {#each liste as s (s.id)}
         <SalonKart salon={s} />
@@ -152,5 +160,40 @@
     .liste {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+  }
+  .sonuc {
+    margin: 0;
+    font-size: 13px;
+    color: var(--yazi-soluk);
+  }
+
+  .iskelet {
+    padding: 0 0 14px;
+    overflow: hidden;
+  }
+
+  .iskelet-gorsel {
+    height: 150px;
+    background: linear-gradient(90deg, #e9edf2 25%, #f6f8fa 37%, #e9edf2 63%);
+    background-size: 400% 100%;
+    animation: parilti 1.3s ease infinite;
+  }
+
+  .iskelet-satir {
+    height: 12px;
+    margin: 12px 14px 0;
+    border-radius: 6px;
+    background: #eef1f5;
+    width: 55%;
+  }
+
+  .iskelet-satir.genis {
+    width: 75%;
+    height: 16px;
+  }
+
+  @keyframes parilti {
+    0% { background-position: 100% 0; }
+    100% { background-position: 0 0; }
   }
 </style>
