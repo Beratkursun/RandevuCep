@@ -24,9 +24,11 @@
 
   const bugun = new Date().toISOString().slice(0, 10);
 
-  const seciliHizmetObjeleri = $derived(
-    salon.hizmetler.filter((h) => seciliHizmetler.includes(h.id)),
-  );
+  const seciliHizmetObjeleri = $derived.by(() => {
+    const secili = salon.hizmetler.filter((h) => seciliHizmetler.includes(h.id));
+    const kombin = secili.find((h) => h.ad.includes("+"));
+    return kombin ? [kombin] : secili;
+  });
   const tutar = $derived(tutarHesapla(seciliHizmetObjeleri));
   const sure = $derived(sureHesapla(seciliHizmetObjeleri));
   const gecerli = $derived(seciliHizmetObjeleri.length > 0 && tarih !== "" && saat !== "");
@@ -52,6 +54,20 @@
     kapaliYukle();
   });
 
+  function hizmetSec(id: string) {
+    const hizmet = salon.hizmetler.find((h) => h.id === id);
+    if (!hizmet) return;
+    if (seciliHizmetler.includes(id)) {
+      seciliHizmetler = seciliHizmetler.filter((x) => x !== id);
+      return;
+    }
+    if (hizmet.ad.includes("+")) {
+      seciliHizmetler = [id];
+      return;
+    }
+    const kombin = salon.hizmetler.find((h) => h.ad.includes("+") && seciliHizmetler.includes(h.id));
+    seciliHizmetler = kombin ? [id] : [...seciliHizmetler, id];
+  }
   function taslakOlustur(): RandevuTaslagi {
     return {
       id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
@@ -99,10 +115,10 @@
 
   <section>
     <h2>Hizmet seçin</h2>
-    <p class="ipucu">Birden fazla hizmet seçebilirsiniz.</p>
+    <p class="ipucu">Birden fazla hizmet seçebilirsiniz; kombin hizmetler (ör. Saç + Sakal) tek başına seçilir.</p>
     {#each salon.hizmetler as h (h.id)}
       <label class="kart secenek" class:secili={seciliHizmetler.includes(h.id)}>
-        <input type="checkbox" value={h.id} bind:group={seciliHizmetler} />
+        <input type="checkbox" checked={seciliHizmetler.includes(h.id)} onchange={() => hizmetSec(h.id)} />
         <span class="hizmet">
           <b>{h.ad}</b>
           <small>{h.kategori} · {h.sureDk} dk</small>

@@ -482,6 +482,26 @@ pub fn kapali_saatler_ad(
     Ok(satirlar)
 }
 
+/// Berber yoksa demo giriş hesabı oluşturur (salon + berber, PIN 1234).
+// @lat: [[yonetim#Berber Girişi]]
+pub fn demo_tohumla(conn: &Connection) -> Sonuc<()> {
+    let berber_sayi: i64 = conn
+        .query_row("SELECT COUNT(*) FROM berberler", [], |r| r.get(0))
+        .map_err(|e| e.to_string())?;
+    if berber_sayi > 0 {
+        return Ok(());
+    }
+    let mevcut_salon: Option<i64> = conn
+        .query_row("SELECT id FROM salonlar ORDER BY id LIMIT 1", [], |r| r.get(0))
+        .optional()
+        .map_err(|e| e.to_string())?;
+    let salon = match mevcut_salon {
+        Some(id) => id,
+        None => salon_ekle(conn, "Demo Berber", "İstanbul", "Moda Cad. 5")?,
+    };
+    berber_ekle(conn, salon, "Emre Usta", "1234")?;
+    Ok(())
+}
 fn kilit(vt: &Veritabani) -> Sonuc<std::sync::MutexGuard<'_, Connection>> {
     vt.0.lock()
         .map_err(|_| "veritabanı kilidi alınamadı".to_string())

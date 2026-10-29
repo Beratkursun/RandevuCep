@@ -43,7 +43,7 @@ Kaynak: [[src/lib/yonetim.ts#yedekOku]].
 
 Berberler `/berber` sayfasından salon, ad ve 4 haneli PIN ile giriş yapar; PIN veritabanında SHA-256 özetiyle saklanır, oturum `localStorage["berber-oturum"]` içinde tutulur.
 
-Salon yöneticisi berberi eklerken PIN belirler; aynı salonda aynı ada sahip kayıt varsa giriş ad üzerinden eşleşir. Hatalı PIN veya 4 haneden farklı PIN reddedilir.
+Salon yöneticisi berberi eklerken PIN belirler; aynı salonda aynı ada sahip kayıt varsa giriş ad üzerinden eşleşir. Hatalı PIN veya 4 haneden farklı PIN reddedilir. Berber kaydı yoksa açılışta Demo Berber salonu ve Emre Usta (PIN 1234) otomatik oluşturulur.
 
 Kaynak: [[src-tauri/src/db.rs#berber_giris]], [[src/components/BerberPaneli.svelte]].
 

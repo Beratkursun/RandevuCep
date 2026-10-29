@@ -24,6 +24,7 @@ pub fn run() {
             let klasor = app.path().app_data_dir()?;
             std::fs::create_dir_all(&klasor)?;
             let conn = db::baglan(&klasor.join("randevucep.db"))?;
+            db::demo_tohumla(&conn)?;
             app.manage(db::Veritabani(std::sync::Mutex::new(conn)));
             Ok(())
         })
