@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { YonetimRandevusu } from "../src/lib/yonetim";
+import { kapaliSaatler } from "../src/lib/native";
 import {
   oturumOku,
   yedekBerberDurumGuncelle,
@@ -105,6 +106,15 @@ describe("berber girişi", () => {
       "09:00",
       "12:00",
     ]);
+  });
+  // @lat: [[testler#Berber#Tarayıcıda müşteri kapalı saati görür]]
+  it("salon ve berber adıyla kapalı saatleri bulur", async () => {
+    const salon = yedekSalonEkle("Moda Berber", "İstanbul", "");
+    const emre = yedekBerberEkle(salon.id, "Emre Usta", "1234");
+    yedekSlotKapat(emre.id, "2026-11-11", "14:00");
+
+    await expect(kapaliSaatler("moda berber", "emre usta", "2026-11-11")).resolves.toEqual(["14:00"]);
+    await expect(kapaliSaatler("Moda Berber", "Mert Usta", "2026-11-11")).resolves.toEqual([]);
   });
 });
 

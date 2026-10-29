@@ -456,6 +456,32 @@ pub fn slot_ac(conn: &Connection, berber_id: i64, tarih: &str, saat: &str) -> So
     Ok(())
 }
 
+// @lat: [[yonetim#Müşteri Tarafı]]
+pub fn kapali_saatler_ad(
+    conn: &Connection,
+    salon_ad: &str,
+    berber_ad: &str,
+    tarih: &str,
+) -> Sonuc<Vec<String>> {
+    let mut stmt = conn
+        .prepare(
+            "SELECT k.saat FROM kapali_slotlar k
+             JOIN berberler b ON b.id = k.berber_id
+             JOIN salonlar s ON s.id = b.salon_id
+             WHERE lower(s.ad) = lower(?1) AND lower(b.ad) = lower(?2) AND k.tarih = ?3
+             ORDER BY k.saat",
+        )
+        .map_err(|e| e.to_string())?;
+    let satirlar = stmt
+        .query_map(params![salon_ad.trim(), berber_ad.trim(), tarih], |r| {
+            r.get::<_, String>(0)
+        })
+        .map_err(|e| e.to_string())?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())?;
+    Ok(satirlar)
+}
+
 fn kilit(vt: &Veritabani) -> Sonuc<std::sync::MutexGuard<'_, Connection>> {
     vt.0.lock()
         .map_err(|_| "veritabanı kilidi alınamadı".to_string())
@@ -590,6 +616,17 @@ pub fn vt_slot_ac(
     slot_ac(&c, berber_id, &tarih, &saat)
 }
 
+#[tauri::command]
+pub fn vt_kapali_saatler(
+    state: State<'_, Veritabani>,
+    salon_ad: String,
+    berber_ad: String,
+    tarih: String,
+) -> Sonuc<Vec<String>> {
+    let c = kilit(&state)?;
+    kapali_saatler_ad(&c, &salon_ad, &berber_ad, &tarih)
+}
+
 #[cfg(test)]
 mod testler {
     use super::*;
@@ -692,6 +729,20 @@ mod testler {
         assert!(slot_kapat(&conn, emre, "2026-11-07", "25:00").is_err());
         assert!(slot_kapat(&conn, emre, "2026-11-07", "9:00").is_err());
         assert!(slot_kapat(&conn, emre, "", "14:00").is_err());
+    }
+
+    // @lat: [[testler#Berber#Müşteri kapalı saati görür]]
+    #[test]
+    fn musteri_kapali_saati_gorur() {
+        let conn = bellek();
+        let salon = salon_ekle(&conn, "Moda Berber", "İstanbul", "").unwrap();
+        let emre = berber_ekle(&conn, salon, "Emre Usta", "1234").unwrap();
+        slot_kapat(&conn, emre, "2026-11-09", "14:00").unwrap();
+
+        let kapali = kapali_saatler_ad(&conn, "moda berber", "EMRE USTA", "2026-11-09").unwrap();
+        assert_eq!(kapali, vec!["14:00".to_string()]);
+        assert!(kapali_saatler_ad(&conn, "Moda Berber", "Mert Usta", "2026-11-09").unwrap().is_empty());
+        assert!(kapali_saatler_ad(&conn, "Moda Berber", "Emre Usta", "2026-11-10").unwrap().is_empty());
     }
 
     // @lat: [[testler#Berber#Doğru PIN ile giriş yapılır]]

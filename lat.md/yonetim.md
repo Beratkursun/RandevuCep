@@ -60,7 +60,7 @@ Berber, seçtiği günün saatlerini kapatıp yeniden açabilir; kapalı slotlar
 
 Panel 09:00–19:00 arası saatleri ızgara olarak gösterir; kapalı saat kırmızı ve üstü çizili görünür. `vt_slot_kapat` aynı slotu ikinci kez kapatmayı hata saymaz, `vt_slot_ac` açık slotu açmayı reddeder; saat `HH:MM` biçiminde ve geçerli olmalıdır.
 
-Müşteri randevu ekranı hâlâ statik katalogla çalıştığı için kapalı slotları henüz okumaz; kayıtlar berber panelinde ve SQLite API'sinde tutulur.
+Müşteri randevu ekranı, seçilen salon ve berberin adını t_kapali_saatler ile sorgular; kapalı saatler saat listesinde devre dışı kalır ve · dolu etiketi alır.
 
 Kaynak: [[src-tauri/src/db.rs#slot_kapat]], [[src/components/BerberPaneli.svelte]].
 
@@ -71,3 +71,11 @@ Panel yalnızca `onaylandi` durumundaki randevulardan günlük, son 7 günlük v
 `kazancOzeti` tarihleri ISO gün olarak karşılaştırır, son yedi günü `sonYediGun` üretir ve grafik için günlük tutarları döndürür. Boş saatler `bosSaatler` ile kapalı slot listesinden türetilir; panelde "X saat müsait" ve ilk üç saat gösterilir.
 
 Kaynak: [[src/lib/yonetim.ts#kazancOzeti]], [[src/lib/yonetim.ts#bosSaatler]].
+
+## Müşteri Tarafı
+
+Müşteri tarafı berberi adla eşler: `kapali_saatler_ad` salon adı, berber adı ve tarihle kapalı saatleri döndürür; eşleşme büyük/küçük harf duyarsızdır.
+
+Bu yüzden yönetim panelindeki salon ve berber adı, katalogdaki adla aynı olmalıdır. Berber "İlk müsait" seçildiğinde kapalı saat filtresi uygulanmaz; kullanıcı belirli bir berber seçtiğinde saatler kapanır.
+
+Kaynak: [[src-tauri/src/db.rs#kapali_saatler_ad]], [[src/components/SalonDetay.svelte]].

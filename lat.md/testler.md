@@ -130,3 +130,10 @@ Tauri dışında `yedekSlotKapat` kapalı saati localStorage'a yazmalı, tekrar 
 ### Kazanç ve boş saatler hesaplanır
 
 `kazancOzeti` yalnızca onaylı randevuları saymalı; bugün, son 7 gün ve ay toplamlarını ayrı ayrı vermeli, iptal edilen tutarı dışlamalıdır. `bosSaatler` kapalı saatleri listeden çıkarmalıdır.
+### Müşteri kapalı saati görür
+
+`kapali_saatler_ad` salon ve berber adını büyük/küçük harf duyarsız eşleştirip yalnızca ilgili günün kapalı saatlerini döndürmelidir; başka berber veya başka tarih boş liste vermelidir.
+
+### Tarayıcıda müşteri kapalı saati görür
+
+Tauri dışında `kapaliSaatler` yedek store'daki salon ve berber adını eşleştirip kapalı saatleri döndürmeli; eşleşmeyen berberde boş liste vermelidir.

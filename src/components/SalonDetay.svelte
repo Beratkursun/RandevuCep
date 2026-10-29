@@ -9,6 +9,7 @@
     toplamTutar as tutarHesapla,
   } from "$lib/data";
   import { randevuSepeti } from "$lib/randevu-sepeti.svelte";
+  import { kapaliSaatler } from "$lib/native";
   import type { RandevuTaslagi, Salon } from "$lib/types";
 
   let { salon }: { salon: Salon } = $props();
@@ -18,6 +19,7 @@
   let tarih = $state("");
   let saat = $state("10:00");
   let mesaj = $state("");
+  let kapali = $state<string[]>([]);
 
   const bugun = new Date().toISOString().slice(0, 10);
 
@@ -28,8 +30,25 @@
   const sure = $derived(sureHesapla(seciliHizmetObjeleri));
   const gecerli = $derived(seciliHizmetObjeleri.length > 0 && tarih !== "" && saat !== "");
 
+  async function kapaliYukle() {
+    const berber = salon.berberler.find((b) => b.id === seciliBerber);
+    if (!berber || !tarih) {
+      kapali = [];
+      return;
+    }
+    try {
+      kapali = await kapaliSaatler(salon.ad, berber.ad, tarih);
+      if (kapali.includes(saat)) {
+        saat = saatler.find((s) => !kapali.includes(s)) ?? "";
+      }
+    } catch {
+      kapali = [];
+    }
+  }
+
   onMount(() => {
     tarih = bugun;
+    kapaliYukle();
   });
 
   function taslakOlustur(): RandevuTaslagi {
@@ -91,7 +110,7 @@
   <section>
     <h2>Berber seçin</h2>
     <label class="kart secenek" class:secili={seciliBerber === "ilk"}>
-      <input type="radio" value="ilk" bind:group={seciliBerber} />
+      <input type="radio" value="ilk" bind:group={seciliBerber} onchange={() => kapaliYukle()} />
       <span class="hizmet">
         <b>İlk müsait berber</b>
         <small>Salon senin için uygun berberi seçer.</small>
@@ -99,7 +118,7 @@
     </label>
     {#each salon.berberler as b (b.id)}
       <label class="kart secenek" class:secili={seciliBerber === b.id}>
-        <input type="radio" value={b.id} bind:group={seciliBerber} />
+        <input type="radio" value={b.id} bind:group={seciliBerber} onchange={() => kapaliYukle()} />
         <span class="hizmet">
           <b>{b.ad}</b>
           <small>{b.uzmanlik.join(" · ")}</small>
@@ -113,13 +132,13 @@
     <div class="tarih-saat">
       <label>
         Tarih
-        <input type="date" min={bugun} bind:value={tarih} />
+        <input type="date" min={bugun} bind:value={tarih} onchange={() => kapaliYukle()} />
       </label>
       <label>
         Saat
         <select bind:value={saat}>
           {#each saatler as s}
-            <option value={s}>{s}</option>
+            <option value={s} disabled={kapali.includes(s)}>{s}{kapali.includes(s) ? " · dolu" : ""}</option>
           {/each}
         </select>
       </label>

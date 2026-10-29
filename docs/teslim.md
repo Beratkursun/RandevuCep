@@ -34,13 +34,13 @@ All checks passed
 
 $ bun run test
 Test Files  5 passed (5)
-Tests       16 passed (16)
+Tests       17 passed (17)
 
 $ bun run build
 29 page(s) built
 
 $ cd src-tauri && cargo test
-test result: ok. 10 passed; 0 failed
+test result: ok. 11 passed; 0 failed
 ```
 
 ## Notlar
