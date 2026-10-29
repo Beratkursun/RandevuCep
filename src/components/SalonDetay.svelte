@@ -10,6 +10,7 @@
   } from "$lib/data";
   import { randevuSepeti } from "$lib/randevu-sepeti.svelte";
   import { kapaliSaatler } from "$lib/native";
+  import { salonFoto } from "$lib/data";
   import type { RandevuTaslagi, Salon } from "$lib/types";
 
   let { salon }: { salon: Salon } = $props();
@@ -79,10 +80,14 @@
   }
 </script>
 
-<div class="kapak" style:background={salon.renk}>
-  <span>{salon.semt}</span>
-  <h1>{salon.ad}</h1>
-  <p>★ {salon.puan.toFixed(1)} · {salon.hizmetler.length} hizmet</p>
+<div class="kapak">
+  <img src={salonFoto(salon)} alt={`${salon.ad} — ${salon.semt}`} />
+  <div class="perde"></div>
+  <div class="kapak-icerik">
+    <span>{salon.semt}</span>
+    <h1>{salon.ad}</h1>
+    <p>★ {salon.puan.toFixed(1)} · {salon.hizmetler.length} hizmet · {salon.berberler.length} berber</p>
+  </div>
 </div>
 
 <div class="sayfa">
@@ -307,5 +312,44 @@
     background: var(--kart);
     color: var(--yazi);
     border: 1px solid var(--kenar);
+  }
+  .kapak {
+    position: relative;
+    min-height: 220px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    color: #fff;
+  }
+  .kapak img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .kapak .perde {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(8, 12, 20, 0.1) 30%, rgba(8, 12, 20, 0.85));
+  }
+  .kapak-icerik {
+    position: relative;
+    padding: 64px 16px 18px;
+  }
+  .kapak-icerik span {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+  .kapak-icerik h1 {
+    margin: 4px 0 0;
+    font-size: 26px;
+    letter-spacing: -0.4px;
+  }
+  .kapak-icerik p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    opacity: 0.9;
   }
 </style>

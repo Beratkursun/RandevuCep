@@ -37,7 +37,7 @@ Test Files  5 passed (5)
 Tests       17 passed (17)
 
 $ bun run build
-29 page(s) built
+35 page(s) built
 
 $ cd src-tauri && cargo test
 test result: ok. 11 passed; 0 failed

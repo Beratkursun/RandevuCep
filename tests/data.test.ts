@@ -14,7 +14,7 @@ import { kesim, sakal, salon } from "./helpers";
 describe("salon kataloğu", () => {
   // @lat: [[testler#Veri#Salon kimlikle bulunur]]
   it("salonu kimlikle bulur, olmayan kimlikte undefined doner", () => {
-    expect(salonlar).toHaveLength(6);
+    expect(salonlar).toHaveLength(12);
     expect(salonBul(1)?.ad).toBe("Kadıköy Berber Atölyesi");
     expect(salonBul(99)).toBeUndefined();
     expect(hizmetBul(salon, kesim.id)?.ad).toBe(kesim.ad);
