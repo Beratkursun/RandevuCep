@@ -254,3 +254,45 @@ export function yedekSlotAc(berberId: number, tarih: string, saat: string): void
   veri.kapaliSlotlar = kalan;
   yedekYaz(veri);
 }
+// @lat: [[yonetim#Kazanç Özeti]]
+export function gunEkle(iso: string, fark: number): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + fark);
+  return d.toISOString().slice(0, 10);
+}
+
+export function sonYediGun(bugun: string): string[] {
+  return Array.from({ length: 7 }, (_, i) => gunEkle(bugun, i - 6));
+}
+
+export interface KazancOzeti {
+  bugun: number;
+  hafta: number;
+  ay: number;
+  gunluk: { gun: string; tutar: number }[];
+}
+
+export function kazancOzeti(liste: YonetimRandevusu[], bugun: string): KazancOzeti {
+  const ay = bugun.slice(0, 7);
+  const gunler = sonYediGun(bugun);
+  const onayli = liste.filter((r) => r.durum === "onaylandi");
+  const topla = (kayitlar: YonetimRandevusu[]) => kayitlar.reduce((t, r) => t + r.tutar, 0);
+
+  return {
+    bugun: topla(onayli.filter((r) => r.tarih === bugun)),
+    hafta: topla(onayli.filter((r) => r.tarih >= gunler[0] && r.tarih <= bugun)),
+    ay: topla(onayli.filter((r) => r.tarih.startsWith(ay))),
+    gunluk: gunler.map((gun) => ({
+      gun,
+      tutar: topla(onayli.filter((r) => r.tarih === gun)),
+    })),
+  };
+}
+
+export function bosSaatler(kapali: string[], tumSaatler: string[]): string[] {
+  return tumSaatler.filter((s) => !kapali.includes(s));
+}
+
+export function tariheGoreSirala(liste: YonetimRandevusu[]): YonetimRandevusu[] {
+  return [...liste].sort((a, b) => `${a.tarih} ${a.saat}`.localeCompare(`${b.tarih} ${b.saat}`));
+}

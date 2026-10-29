@@ -127,3 +127,6 @@ Tauri dışında `yedekBerberGiris` salon + ad + PIN ile oturum üretmeli, yanl�
 ### Tarayıcı yedeğinde slot kapatılır
 
 Tauri dışında `yedekSlotKapat` kapalı saati localStorage'a yazmalı, tekrar eklememeli; `yedekSlotAc` kaydı silmeli ve açık slotta hata vermelidir.
+### Kazanç ve boş saatler hesaplanır
+
+`kazancOzeti` yalnızca onaylı randevuları saymalı; bugün, son 7 gün ve ay toplamlarını ayrı ayrı vermeli, iptal edilen tutarı dışlamalıdır. `bosSaatler` kapalı saatleri listeden çıkarmalıdır.

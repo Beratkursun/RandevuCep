@@ -34,7 +34,7 @@ All checks passed
 
 $ bun run test
 Test Files  5 passed (5)
-Tests       15 passed (15)
+Tests       16 passed (16)
 
 $ bun run build
 29 page(s) built

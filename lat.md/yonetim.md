@@ -49,7 +49,7 @@ Kaynak: [[src-tauri/src/db.rs#berber_giris]], [[src/components/BerberPaneli.svel
 
 ## Berber Paneli
 
-Giriş sonrası berber yalnızca kendi randevularını görür; onaylayabilir veya iptal edebilir, başka berberin randevusunu değiştiremez.
+Giriş sonrası berber dört sekmeli panel görür: Özet (bugünün programı ve sıradaki randevu), Randevular (filtreli liste), Müsaitlik (boş saatler) ve Kazanç. Berber yalnızca kendi randevularını görür; başka berberin randevusunu değiştiremez.
 
 Berberin durum güncellemesi `onaylandi` ve `iptal` ile sınırlıdır; `bekliyor` değeri reddedilir. Berber seçilmeden alınan ("İlk müsait berber") randevular yönetici panelinde kalır.
 
@@ -63,3 +63,11 @@ Panel 09:00–19:00 arası saatleri ızgara olarak gösterir; kapalı saat kırm
 Müşteri randevu ekranı hâlâ statik katalogla çalıştığı için kapalı slotları henüz okumaz; kayıtlar berber panelinde ve SQLite API'sinde tutulur.
 
 Kaynak: [[src-tauri/src/db.rs#slot_kapat]], [[src/components/BerberPaneli.svelte]].
+
+## Kazanç Özeti
+
+Panel yalnızca `onaylandi` durumundaki randevulardan günlük, son 7 günlük ve aylık kazanç hesaplar; bekleyen ve iptal edilen kayıtlar toplama girmez.
+
+`kazancOzeti` tarihleri ISO gün olarak karşılaştırır, son yedi günü `sonYediGun` üretir ve grafik için günlük tutarları döndürür. Boş saatler `bosSaatler` ile kapalı slot listesinden türetilir; panelde "X saat müsait" ve ilk üç saat gösterilir.
+
+Kaynak: [[src/lib/yonetim.ts#kazancOzeti]], [[src/lib/yonetim.ts#bosSaatler]].
