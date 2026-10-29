@@ -5,6 +5,7 @@
     bosSaatler,
     durumEtiketi,
     kazancOzeti,
+    sonYediGun,
     tariheGoreSirala,
     type BerberOturumu,
     type YonetimRandevusu,
@@ -48,6 +49,15 @@
   const sonraki = $derived(sirali.find((r) => r.tarih >= bugun && r.durum !== "iptal"));
   const bos = $derived(bosSaatler(kapali, saatler));
   const enYuksek = $derived(Math.max(1, ...ozet.gunluk.map((g) => g.tutar)));
+  const basHarfler = $derived(
+    oturum
+      ? oturum.ad.split(" ").filter(Boolean).map((p) => p[0]).slice(0, 2).join("").toLocaleUpperCase("tr")
+      : "",
+  );
+  const haftaRandevu = $derived(
+    randevular.filter((r) => r.tarih >= sonYediGun(bugun)[0] && r.tarih <= bugun && r.durum !== "iptal").length,
+  );
+  const doluluk = $derived(Math.min(100, Math.round((haftaRandevu / (7 * saatler.length)) * 100)));
 
   const gosterilecek = $derived(
     filtre === "bugun"
@@ -170,12 +180,17 @@
     </form>
   {:else}
     <header class="ust">
-      <div>
-        <h1>{oturum.ad}</h1>
-        <p>{oturum.salonAd}</p>
+      <div class="kimlik">
+        <div class="avatar">{basHarfler}</div>
+        <div>
+          <h1>{oturum.ad}</h1>
+          <p>{oturum.salonAd}</p>
+        </div>
       </div>
       <button class="btn ikincil" onclick={cikis}>Çıkış</button>
     </header>
+
+    <p class="doluluk">Bu hafta doluluk: <b>%{doluluk}</b> · {haftaRandevu} randevu</p>
 
     <section class="kartlar">
       <div class="kart"><span>Bugünkü randevu</span><b>{bugunku.length}</b></div>
@@ -331,4 +346,8 @@
   .cubuk span { font-size: 11px; color: var(--yazi-soluk); }
   .bos { color: var(--yazi-soluk); font-size: 14px; }
   .uyari { margin: 0; padding: 10px 12px; border-radius: 10px; background: #fee2e2; color: #991b1b; font-size: 14px; }
+  .kimlik { display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--renk-ana), #7a0016); color: #fff; font-weight: 800; font-size: 18px; letter-spacing: 0.5px; }
+  .doluluk { margin: 0; font-size: 13px; color: var(--yazi-soluk); }
+  .doluluk b { color: var(--yazi); }
 </style>

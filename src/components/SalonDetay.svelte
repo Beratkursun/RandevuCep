@@ -169,6 +169,11 @@
     <button class="btn ikincil" onclick={sepeteEkle} disabled={!gecerli}>Sepete ekle</button>
     <button class="btn" onclick={hemenAl} disabled={!gecerli}>Hemen randevu al</button>
   </div>
+
+  <div class="sabit-cta">
+    <div><span>Toplam</span><b>{tl(tutar)}</b></div>
+    <button class="btn" onclick={hemenAl} disabled={!gecerli}>Randevu al</button>
+  </div>
 </div>
 
 <style>
@@ -352,4 +357,20 @@
     font-size: 14px;
     opacity: 0.9;
   }
+  .sabit-cta {
+    position: sticky;
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--kenar);
+    border-radius: 14px;
+    background: var(--kart);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    z-index: 12;
+  }
+  .sabit-cta span { display: block; font-size: 11px; color: var(--yazi-soluk); }
+  .sabit-cta b { font-size: 16px; }
 </style>
