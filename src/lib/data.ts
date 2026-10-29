@@ -176,3 +176,127 @@ export const tarihYaz = (tarih: string, saat?: string) => {
   });
   return saat ? `${metin} · ${saat}` : metin;
 };
+
+const FOTOLAR = ["/salonlar/klasik.jpg", "/salonlar/modern.jpg", "/salonlar/luks.jpg"];
+
+/** Salon kartlarında kullanılan kapak fotoğrafı; id'ye göre döner. */
+export const salonFoto = (salon: Salon) => FOTOLAR[salon.id % FOTOLAR.length];
+
+const ekSalonlar: Salon[] = [
+  {
+    id: 7,
+    ad: "Beşiktaş Berber Kulübü",
+    semt: "Beşiktaş",
+    adres: "Sinanpaşa Mah. Çarşı Cad. No: 21",
+    puan: 4.7,
+    renk: "linear-gradient(135deg, #0ea5e9, #0c4a6e)",
+    aciklama: "Çarşının ortasında, hızlı ve klasik tıraş sevenler için.",
+    calismaSaatleri: "09:00 - 21:00",
+    hizmetler: [
+      { id: "b7-kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 30, fiyat: 300 },
+      { id: "b7-sakal", ad: "Sakal Tıraşı", kategori: "Sakal", sureDk: 20, fiyat: 180 },
+      { id: "b7-kombo", ad: "Saç + Sakal", kategori: "Saç", sureDk: 45, fiyat: 420 },
+    ],
+    berberler: [
+      { id: "b7-kaan", ad: "Kaan Usta", uzmanlik: ["Saç", "Sakal"] },
+      { id: "b7-ali", ad: "Ali Usta", uzmanlik: ["Saç"] },
+    ],
+  },
+  {
+    id: 8,
+    ad: "Nişantaşı Grooming",
+    semt: "Şişli",
+    adres: "Teşvikiye Mah. Ihlamur Yolu No: 8",
+    puan: 4.9,
+    renk: "linear-gradient(135deg, #7c3aed, #312e81)",
+    aciklama: "Kişiye özel bakım, sıcak havlu ve premium ürünler.",
+    calismaSaatleri: "10:00 - 20:00",
+    hizmetler: [
+      { id: "b8-kesim", ad: "Signature Kesim", kategori: "Saç", sureDk: 45, fiyat: 650 },
+      { id: "b8-bakim", ad: "Cilt Bakımı", kategori: "Bakım", sureDk: 30, fiyat: 500 },
+      { id: "b8-boyama", ad: "Saç Boyama", kategori: "Boyama", sureDk: 60, fiyat: 900 },
+    ],
+    berberler: [
+      { id: "b8-cem", ad: "Cem Usta", uzmanlik: ["Saç", "Bakım", "Boyama"] },
+      { id: "b8-deniz", ad: "Deniz Usta", uzmanlik: ["Saç", "Sakal"] },
+    ],
+  },
+  {
+    id: 9,
+    ad: "Cihangir Barber House",
+    semt: "Beyoğlu",
+    adres: "Cihangir Mah. Sıraselviler Cad. No: 44",
+    puan: 4.6,
+    renk: "linear-gradient(135deg, #f59e0b, #7c2d12)",
+    aciklama: "Müzik, kahve ve ustura tıraşı; mahallenin buluşma noktası.",
+    calismaSaatleri: "09:30 - 22:00",
+    hizmetler: [
+      { id: "b9-ustura", ad: "Ustura Tıraşı", kategori: "Sakal", sureDk: 30, fiyat: 250 },
+      { id: "b9-kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 30, fiyat: 280 },
+      { id: "b9-kombo", ad: "Saç + Sakal", kategori: "Saç", sureDk: 50, fiyat: 430 },
+    ],
+    berberler: [
+      { id: "b9-eren", ad: "Eren Usta", uzmanlik: ["Saç", "Sakal"] },
+      { id: "b9-murat", ad: "Murat Usta", uzmanlik: ["Sakal"] },
+    ],
+  },
+  {
+    id: 10,
+    ad: "Bakırköy Usta Eller",
+    semt: "Bakırköy",
+    adres: "Zuhuratbaba Mah. İncirli Cad. No: 12",
+    puan: 4.5,
+    renk: "linear-gradient(135deg, #10b981, #064e3b)",
+    aciklama: "Aile işletmesi; üç kuşaktır aynı ustalıkla tıraş.",
+    calismaSaatleri: "08:30 - 20:30",
+    hizmetler: [
+      { id: "b10-kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 30, fiyat: 220 },
+      { id: "b10-sakal", ad: "Sakal Tıraşı", kategori: "Sakal", sureDk: 20, fiyat: 130 },
+      { id: "b10-cocuk", ad: "Çocuk Kesimi", kategori: "Saç", sureDk: 25, fiyat: 180 },
+    ],
+    berberler: [
+      { id: "b10-hasan", ad: "Hasan Usta", uzmanlik: ["Saç", "Sakal"] },
+      { id: "b10-yusuf", ad: "Yusuf Usta", uzmanlik: ["Saç"] },
+    ],
+  },
+  {
+    id: 11,
+    ad: "Üsküdar Tıraş Odası",
+    semt: "Üsküdar",
+    adres: "Mimar Sinan Mah. Hakimiyet Cad. No: 3",
+    puan: 4.8,
+    renk: "linear-gradient(135deg, #ef4444, #7f1d1d)",
+    aciklama: "Boğaz manzaralı, sakin ve titiz bir tıraş deneyimi.",
+    calismaSaatleri: "09:00 - 20:00",
+    hizmetler: [
+      { id: "b11-kesim", ad: "Saç Kesimi", kategori: "Saç", sureDk: 35, fiyat: 320 },
+      { id: "b11-bakim", ad: "Cilt Bakımı", kategori: "Bakım", sureDk: 30, fiyat: 380 },
+      { id: "b11-kombo", ad: "Saç + Sakal", kategori: "Saç", sureDk: 50, fiyat: 470 },
+    ],
+    berberler: [
+      { id: "b11-omer", ad: "Ömer Usta", uzmanlik: ["Saç", "Bakım"] },
+      { id: "b11-tolga", ad: "Tolga Usta", uzmanlik: ["Saç", "Sakal"] },
+    ],
+  },
+  {
+    id: 12,
+    ad: "Ataşehir Modern Cut",
+    semt: "Ataşehir",
+    adres: "Barbaros Mah. Mimar Sinan Cad. No: 55",
+    puan: 4.4,
+    renk: "linear-gradient(135deg, #6366f1, #1e1b4b)",
+    aciklama: "Randevuyla çalışan, hızlı ve modern bir stüdyo.",
+    calismaSaatleri: "10:00 - 21:00",
+    hizmetler: [
+      { id: "b12-kesim", ad: "Modern Kesim", kategori: "Saç", sureDk: 40, fiyat: 400 },
+      { id: "b12-fade", ad: "Fade Kesim", kategori: "Saç", sureDk: 45, fiyat: 450 },
+      { id: "b12-boyama", ad: "Saç Boyama", kategori: "Boyama", sureDk: 60, fiyat: 800 },
+    ],
+    berberler: [
+      { id: "b12-baris", ad: "Barış Usta", uzmanlik: ["Saç", "Boyama"] },
+      { id: "b12-selim", ad: "Selim Usta", uzmanlik: ["Saç"] },
+    ],
+  },
+];
+
+salonlar.push(...ekSalonlar);

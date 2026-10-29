@@ -12,7 +12,9 @@ Kaynak: [[src/lib/types/salon.ts#Salon]], [[src/lib/types/randevu.ts#RandevuTasl
 
 ## Katalog ve Arama
 
-Altı salon sabit tanımlıdır (`salonlar`) ve `salonBul` kimlikle tek kayıt döner; `hizmetBul` salon içindeki hizmeti, `berberBul` ise berberi bulur.
+On iki İstanbul salonu sabit tanımlıdır (`salonlar`) ve `salonBul` kimlikle tek kayıt döner; `hizmetBul` salon içindeki hizmeti, `berberBul` ise berberi bulur.
+
+Kart ve kapak fotoğrafları `salonFoto` ile id'ye göre üç yerel görselden seçilir (`public/salonlar/`).
 
 Keşfet ekranı hizmet kategorisi çipleriyle ve salon adı, semt veya hizmet adı üzerinde `tr-TR` küçük harfe çevirerek filtreler; eşleşme yoksa boş durum metni gösterilir.
 
