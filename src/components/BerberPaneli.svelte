@@ -159,6 +159,7 @@
     <h1>Berber Girişi</h1>
     <form class="kart giris" onsubmit={giris}>
       <p class="aciklama">Salonunuzu seçin, adınızı ve 4 haneli PIN'inizi girin. PIN'i salon yöneticisi verir.</p>
+      <p class="demo">Demo hesap: <b>Emre Usta</b> · PIN <b>1234</b></p>
       <label>
         Salon
         <select bind:value={seciliSalon} required>
@@ -307,6 +308,7 @@
   .ust p { margin: 4px 0 0; color: var(--yazi-soluk); font-size: 14px; }
   .giris { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
   .aciklama { margin: 0; color: var(--yazi-soluk); font-size: 13px; }
+  .demo { margin: 0; font-size: 12px; color: var(--yazi-soluk); background: var(--zemin); padding: 6px 8px; border-radius: 8px; }
   label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600; }
   input, select { padding: 10px; border: 1px solid var(--kenar); border-radius: 10px; background: var(--zemin); font-weight: 400; }
   .kartlar { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }

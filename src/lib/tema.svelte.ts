@@ -4,12 +4,15 @@ export type Tema = "gunduz" | "gece";
 
 const ANAHTAR = "tema";
 
+function ilkTema(): Tema {
+  if (typeof document === "undefined") return "gunduz";
+  const kayit = typeof localStorage !== "undefined" ? localStorage.getItem(ANAHTAR) : null;
+  if (kayit === "gece" || kayit === "gunduz") return kayit;
+  return document.documentElement.dataset.tema === "gece" ? "gece" : "gunduz";
+}
+
 class TemaYonetici {
-  mod = $state<Tema>(
-    typeof document !== "undefined" && document.documentElement.dataset.tema === "gece"
-      ? "gece"
-      : "gunduz"
-  );
+  mod = $state<Tema>(ilkTema());
 
   // @lat: [[tema#Değiştirme]]
   degistir() {
