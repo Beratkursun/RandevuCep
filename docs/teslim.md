@@ -6,7 +6,7 @@ Teslim zincirinin mevcut durumu, sürüm etiketleri, doğrulama çıktıları ve
 
 | Kalem | Değer |
 |---|---|
-| Repo | `Beratkursun/hello-mobil` |
+| Repo | `Beratkursun/RandevuCep` |
 | Etiketler | `v0.1.0-batch-01` (`9a832f1`), `v0.2.0-batch-02` (`4f626f1`) |
 | ZIP | `RandevuCep-final.zip` (teslim öncesi yeniden üretilmeli) |
 | Blackboard | Yükleme kullanıcı adımı |

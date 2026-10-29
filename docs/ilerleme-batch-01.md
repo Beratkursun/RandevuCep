@@ -6,7 +6,7 @@ Tarih: 21.10.2026 · Kapsam: Hafta 03 (Görev 01–09) · Proje: RandevuCep
 
 | No | Alan | Kanıt | Durum |
 |:---:|---|---|:---:|
-| 1 | Fork ve işbirliği | `Beratkursun/hello-mobil` fork'u; eğitmen collaborator (rapor 10/10) | ✅ |
+| 1 | Fork ve işbirliği | `Beratkursun/RandevuCep` fork'u; eğitmen collaborator (rapor 10/10) | ✅ |
 | 2 | Blackboard teslimi | Final ZIP `RandevuCep-final.zip` hazırlanacak; yükleme kullanıcıda | ⏳ |
 | 3 | Proje fikri | [`docs/proje-fikri.md`](proje-fikri.md) dolu; 3 ekran, hedef kitle ve RNV formatı | ✅ |
 | 4 | README | [`README.md`](../README.md) başlık, künye, rozetler ve TOC güncel | ✅ |
