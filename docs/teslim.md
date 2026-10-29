@@ -33,14 +33,14 @@ svelte-check found 0 errors and 1 warning
 All checks passed
 
 $ bun run test
-Test Files  4 passed (4)
-Tests       13 passed (13)
+Test Files  5 passed (5)
+Tests       14 passed (14)
 
 $ bun run build
-28 page(s) built
+29 page(s) built
 
 $ cd src-tauri && cargo test
-test result: ok. 6 passed; 0 failed
+test result: ok. 8 passed; 0 failed
 ```
 
 ## Notlar

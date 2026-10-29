@@ -101,3 +101,18 @@ Yönetim panelinin SQLite katmanı; cargo test ile bellek içi veritabanında do
 ### Tarayıcı yedeği kaydı saklar
 
 `yedekSalonEkle` ve `yedekRandevuEkle` kayıtları localStorage'a yazmalı, berber seçilmemişse "İlk müsait berber" etiketini üretmeli; `yedekDurumGuncelle` durumu değiştirmeli ve geçersiz durumu reddetmelidir.
+## Berber
+
+Berber girişi ve yetki sınırı; Rust komutları bellek içi veritabanında, tarayıcı yedeği Vitest ile doğrulanır.
+
+### Doğru PIN ile giriş yapılır
+
+`berber_giris` doğru PIN ile berberin adını ve salonunu döndürmeli; hatalı PIN, 4 haneden kısa PIN ve geçersiz PIN ile berber ekleme reddedilmelidir.
+
+### Berber yalnızca kendi randevusunu günceller
+
+`berber_randevulari` yalnızca o berbere atanmış randevuları listelemeli; `berber_durum_guncelle` başka berberin randevusunu ve `bekliyor` durumunu reddetmelidir.
+
+### Tarayıcı yedeğinde berber girişi çalışır
+
+Tauri dışında `yedekBerberGiris` salon + ad + PIN ile oturum üretmeli, yanlış PIN'de hata vermeli ve `yedekBerberRandevulari` yalnızca berberin kendi randevularını döndürmelidir.

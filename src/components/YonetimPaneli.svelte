@@ -32,6 +32,7 @@
   let hizmetSure = $state(30);
   let hizmetFiyat = $state(250);
   let berberAd = $state("");
+  let berberPin = $state("1234");
   let isleniyor = $state(false);
 
   const ozet = $derived(ozetSayilari(randevular));
@@ -88,7 +89,7 @@
     event.preventDefault();
     if (!seciliSalon || !berberAd.trim()) return;
     await calistir(async () => {
-      await yonetimBerberEkle(seciliSalon, berberAd);
+      await yonetimBerberEkle(seciliSalon, berberAd, berberPin);
       berberAd = "";
     }, "Berber eklendi.");
   }
@@ -202,6 +203,7 @@
     <form class="kart blok" onsubmit={berberEkle}>
       <h2>Berber ekle</h2>
       <label>Ad<input bind:value={berberAd} placeholder="Emre Usta" required /></label>
+      <label>PIN<input bind:value={berberPin} inputmode="numeric" maxlength="4" placeholder="1234" required /></label>
       <button class="btn" disabled={isleniyor || !seciliSalon}>Berberi kaydet</button>
       <button type="button" class="btn ikincil" onclick={ornekRandevu} disabled={isleniyor || !seciliSalon}>
         Örnek randevu ekle

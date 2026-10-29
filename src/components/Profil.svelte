@@ -32,6 +32,7 @@
 </script>
 
 <div class="sayfa">
+  <p class="berber-link"><a href="/berber">Berber misiniz? Berber girişi →</a></p>
   {#if kullanici}
     <div class="kart profil">
       <div class="avatar">{kullanici[0].toLocaleUpperCase("tr")}</div>
@@ -64,6 +65,8 @@
 </div>
 
 <style>
+  .berber-link { margin: 0; font-size: 13px; }
+  .berber-link a { color: var(--renk-ana); font-weight: 600; }
   h1 {
     margin: 2px 0 0;
     font-size: 22px;
