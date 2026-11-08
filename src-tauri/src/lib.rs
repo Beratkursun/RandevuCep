@@ -3,6 +3,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::Manager;
 
 mod db;
+mod hesaplar;
 
 // Adım 11: Rust komutu — ön yüz invoke("randevu_olustur", { salonId }) ile çağırır
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -27,6 +28,7 @@ pub fn run() {
             std::fs::create_dir_all(&klasor)?;
             let conn = db::baglan(&klasor.join("randevucep.db"))?;
             db::demo_tohumla(&conn)?;
+            hesaplar::hazirla(&conn)?;
             app.manage(db::Veritabani(std::sync::Mutex::new(conn)));
             Ok(())
         })
@@ -50,7 +52,10 @@ pub fn run() {
             db::vt_kapali_slotlar,
             db::vt_slot_kapat,
             db::vt_slot_ac,
-            db::vt_kapali_saatler
+            db::vt_kapali_saatler,
+            hesaplar::vt_hesap_kayit,
+            hesaplar::vt_hesap_giris,
+            hesaplar::vt_isletme_calisanlari
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

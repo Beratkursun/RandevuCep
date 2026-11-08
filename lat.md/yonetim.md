@@ -79,3 +79,11 @@ Müşteri tarafı berberi adla eşler: `kapali_saatler_ad` salon adı, berber ad
 Bu yüzden yönetim panelindeki salon ve berber adı, katalogdaki adla aynı olmalıdır. Berber "İlk müsait" seçildiğinde kapalı saat filtresi uygulanmaz; kullanıcı belirli bir berber seçtiğinde saatler kapanır.
 
 Kaynak: [[src-tauri/src/db.rs#kapali_saatler_ad]], [[src/components/SalonDetay.svelte]].
+
+## Hesaplar
+
+Dükkan sahibi ve çalışanlar aynı uygulamada hesapla giriş yapar; şifreler rastgele tuz + SHA-256 ile saklanır, düz metin tutulmaz.
+
+Çalışan hesabı açıldığında aynı adla bir berber kaydı yoksa otomatik oluşturulur ve randevular bu kayda bağlanır. Sahip, `vt_isletme_calisanlari` ile çalışan listesini, kişi başına randevu sayısını, onaylı sayısını ve ciroyu görür. Roller `sahip` ve `calisan` ile sınırlıdır.
+
+Kaynak: [[src-tauri/src/hesaplar.rs#kayit]], [[src-tauri/src/hesaplar.rs#calisanlar]].
