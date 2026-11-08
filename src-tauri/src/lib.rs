@@ -1,3 +1,4 @@
+mod permissions;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::Manager;
 
@@ -20,6 +21,7 @@ fn randevu_olustur(salon_id: u32) -> String {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_notification::init())
         .setup(|app| {
             let klasor = app.path().app_data_dir()?;
             std::fs::create_dir_all(&klasor)?;
@@ -29,6 +31,9 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            permissions::permissions_status,
+            permissions::permission_request,
+            permissions::bildirim_gonder,
             randevu_olustur,
             db::vt_salon_ekle,
             db::vt_salon_listele,
