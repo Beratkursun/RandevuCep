@@ -302,3 +302,21 @@ const ekSalonlar: Salon[] = [
 
 salonlar.push(...ekSalonlar);
 salonlar.push(...gercekBerberler);
+// Demo salonların hizmet verdiği müşteri grubu (gerçek OSM kayıtları kendi alanını taşır).
+const demoCinsiyet: Record<number, "erkek" | "kadin" | "unisex"> = {
+  1: "erkek",
+  2: "kadin",
+  3: "erkek",
+  4: "kadin",
+  5: "erkek",
+  6: "unisex",
+  7: "erkek",
+  8: "kadin",
+  9: "unisex",
+  10: "erkek",
+  11: "erkek",
+  12: "unisex",
+};
+salonlar.forEach((s) => {
+  if (!s.cinsiyet) s.cinsiyet = demoCinsiyet[s.id] ?? "unisex";
+});
