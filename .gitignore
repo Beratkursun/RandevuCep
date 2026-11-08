@@ -22,3 +22,6 @@ docs/tasks/**/raw/
 
 # Teslim ZIP'i (Blackboard'a yuklenir, repoya girmez)
 RandevuCep-final.zip
+
+# CI artefaktları (APK vb.)
+artifacts/
