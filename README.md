@@ -122,6 +122,8 @@ Bu proje, İstinye Üniversitesi Bilişim Güvenliği Teknolojisi programı **MY
 
 Proje, İstinye Üniversitesi MYO063 Mobil Programlama dersi kapsamında Berat Kurşun tarafından geliştirilmektedir.
 
+Katalogdaki bir bölüm işletme **OpenStreetMap**'ten alınmıştır (© OpenStreetMap katkıcıları, ODbL 1.0); hizmet/fiyat bilgileri örnek olarak üretilmiştir.
+
 ---
 
 ## 🧩 Mimari ve Çoklu Çatı (Multi-Framework)

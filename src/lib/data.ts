@@ -1,4 +1,5 @@
 import type { Berber, Hizmet, HizmetKategorisi, Salon } from "./types";
+import { gercekBerberler } from "./gercek-berberler";
 
 export const hizmetKategorileri: HizmetKategorisi[] = ["Saç", "Sakal", "Bakım", "Boyama"];
 
@@ -300,3 +301,4 @@ const ekSalonlar: Salon[] = [
 ];
 
 salonlar.push(...ekSalonlar);
+salonlar.push(...gercekBerberler);

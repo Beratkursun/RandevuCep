@@ -26,4 +26,7 @@ export interface Salon {
   calismaSaatleri: string;
   hizmetler: Hizmet[];
   berberler: Berber[];
+  /** Veri kaynağı: OSM ise gerçek işletme kaydıdır. */
+  kaynak?: "OSM";
+  iletisim?: { telefon: string; web: string; osm: string };
 }

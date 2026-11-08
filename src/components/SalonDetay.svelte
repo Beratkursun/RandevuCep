@@ -102,7 +102,7 @@
   <div class="kapak-icerik">
     <span>{salon.semt}</span>
     <h1>{salon.ad}</h1>
-    <p>★ {salon.puan.toFixed(1)} · {salon.hizmetler.length} hizmet · {salon.berberler.length} berber</p>
+    <p>{salon.puan > 0 ? `★ ${salon.puan.toFixed(1)} · ` : ""}{salon.hizmetler.length} hizmet · {salon.berberler.length} berber</p>
   </div>
 </div>
 
@@ -111,6 +111,7 @@
     <p>📍 {salon.adres}</p>
     <p>🕘 {salon.calismaSaatleri}</p>
     <p class="aciklama">{salon.aciklama}</p>
+    {#if salon.iletisim?.telefon}<p>📞 <a href={`tel:${salon.iletisim.telefon}`}>{salon.iletisim.telefon}</a></p>{/if}
   </div>
 
   <section>
