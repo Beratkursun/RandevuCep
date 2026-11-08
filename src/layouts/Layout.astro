@@ -22,10 +22,19 @@ const currentPath = Astro.url.pathname;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <script is:inline>
-      // Adım 15: Açılışta renk yanıp sönmesini engellemek için temayı anında uygula
-      document.documentElement.dataset.tema =
-        localStorage.getItem("tema") ??
-        (matchMedia("(prefers-color-scheme: dark)").matches ? "gece" : "gunduz");
+      // Açılışta ve her istemci geçişinden sonra kayıtlı temayı uygula.
+      (() => {
+        const uygula = () => {
+          document.documentElement.dataset.tema =
+            localStorage.getItem("tema") ??
+            (matchMedia("(prefers-color-scheme: dark)").matches ? "gece" : "gunduz");
+        };
+        uygula();
+        document.addEventListener("astro:after-swap", uygula);
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden) uygula();
+        });
+      })();
     </script>
     <ClientRouter />
   </head>
