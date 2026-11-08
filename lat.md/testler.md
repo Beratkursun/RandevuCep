@@ -137,3 +137,14 @@ Tauri dışında `yedekSlotKapat` kapalı saati localStorage'a yazmalı, tekrar 
 ### Tarayıcıda müşteri kapalı saati görür
 
 Tauri dışında `kapaliSaatler` yedek store'daki salon ve berber adını eşleştirip kapalı saatleri döndürmeli; eşleşmeyen berberde boş liste vermelidir.
+## Hesaplar
+
+Dükkan sahibi ve çalışan hesaplarının kayıt, giriş ve özet davranışı; `cargo test` ile bellek içi veritabanında doğrulanır.
+
+### Kayıt ve giriş çalışır
+
+`kayit` en az 4 karakterli şifreyle hesap oluşturmalı, aynı salon ve adla ikinci kayıt reddedilmeli; `giris` doğru şifrede oturum dönmeli, yanlış şifrede hata vermelidir.
+
+### Sahip çalışan özetini görür
+
+`calisanlar` yalnızca `calisan` rolündeki hesapları listelemeli; onaylı randevuların sayısını ve cirosunu berber kaydı üzerinden toplamalıdır.
