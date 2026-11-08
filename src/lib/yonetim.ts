@@ -102,13 +102,34 @@ function bosVeri(): YedekVeri {
   return { salonlar: [], hizmetler: [], berberler: [], randevular: [], sayac: 1, kapaliSlotlar: [] };
 }
 
+
+function demoVeri(): YedekVeri {
+  return {
+    salonlar: [{ id: 1, ad: "Demo Berber", sehir: "İstanbul", adres: "Moda Cad. 5" }],
+    hizmetler: [],
+    berberler: [{ id: 2, salonId: 1, ad: "Emre Usta", pin: "1234" }],
+    randevular: [],
+    sayac: 3,
+    kapaliSlotlar: [],
+  };
+}
+
 export function yedekOku(): YedekVeri {
   try {
     if (typeof localStorage === "undefined") return bosVeri();
     const ham = localStorage.getItem(ANAHTAR);
-    if (!ham) return bosVeri();
+    if (!ham) {
+      const v = demoVeri();
+      localStorage.setItem(ANAHTAR, JSON.stringify(v));
+      return v;
+    }
     const veri = JSON.parse(ham);
     if (!veri || !Array.isArray(veri.salonlar) || !Array.isArray(veri.randevular)) return bosVeri();
+    if (Array.isArray(veri.salonlar) && veri.salonlar.length > 0 && (!Array.isArray(veri.berberler) || veri.berberler.length === 0)) {
+      veri.berberler = [{ id: (veri.sayac ?? 1) + 1, salonId: veri.salonlar[0].id, ad: "Emre Usta", pin: "1234" }];
+      veri.sayac = (veri.sayac ?? 1) + 2;
+      localStorage.setItem(ANAHTAR, JSON.stringify(veri));
+    }
     return veri as YedekVeri;
   } catch {
     return bosVeri();
