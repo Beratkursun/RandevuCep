@@ -11,17 +11,25 @@
   let secili = $state<HizmetKategorisi | "Tümü">("Tümü");
   let durum = $state<"yukleniyor" | "hazir" | "hata">("yukleniyor");
   let hata = $state("");
+  let cinsiyet = $state<"hepsi" | "erkek" | "kadin">("hepsi");
 
   const filtreler: (HizmetKategorisi | "Tümü")[] = ["Tümü", ...hizmetKategorileri];
+  const cinsiyetler: { k: "hepsi" | "erkek" | "kadin"; ad: string }[] = [
+    { k: "hepsi", ad: "Tümü" },
+    { k: "erkek", ad: "Erkek" },
+    { k: "kadin", ad: "Kadın" },
+  ];
 
   const liste = $derived(
     salonlar.filter((s) => {
       const kategoriUygun =
         secili === "Tümü" || s.hizmetler.some((h) => h.kategori === secili);
+      const cinsiyetUygun =
+        cinsiyet === "hepsi" || !s.cinsiyet || s.cinsiyet === "unisex" || s.cinsiyet === cinsiyet;
       const metin = `${s.ad} ${s.semt} ${s.hizmetler.map((h) => h.ad).join(" ")}`.toLocaleLowerCase(
         "tr",
       );
-      return kategoriUygun && metin.includes(arama.toLocaleLowerCase("tr"));
+      return kategoriUygun && cinsiyetUygun && metin.includes(arama.toLocaleLowerCase("tr"));
     }),
   );
 
@@ -64,6 +72,12 @@
     {/each}
   </div>
 
+  <div class="cipler cinsiyet">
+    {#each cinsiyetler as c (c.k)}
+      <button class:aktif={cinsiyet === c.k} onclick={() => (cinsiyet = c.k)}>{c.ad}</button>
+    {/each}
+  </div>
+
   {#if durum === "yukleniyor"}
     <div class="liste" aria-busy="true">
       {#each [1, 2, 3] as i (i)}
@@ -84,6 +98,7 @@
       onEylem={() => {
         arama = "";
         secili = "Tümü";
+        cinsiyet = "hepsi";
       }}
     />
   {:else}

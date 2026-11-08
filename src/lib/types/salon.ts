@@ -28,5 +28,7 @@ export interface Salon {
   berberler: Berber[];
   /** Veri kaynağı: OSM ise gerçek işletme kaydıdır. */
   kaynak?: "OSM";
+  /** Hizmet verilen müşteri grubu. */
+  cinsiyet?: "erkek" | "kadin" | "unisex";
   iletisim?: { telefon: string; web: string; osm: string };
 }

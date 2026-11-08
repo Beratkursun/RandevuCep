@@ -36,7 +36,7 @@ function temiz(deger) {
   return typeof deger === "string" ? deger.trim() : "";
 }
 
-const yanit = await fetch("https://overpass-api.de/api/interpreter", {
+const yanit = await fetch("https://overpass.kumi.systems/api/interpreter", {
   method: "POST",
   headers: {
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -62,8 +62,19 @@ for (const el of veri.elements ?? []) {
   const kapi = temiz(t["addr:housenumber"]);
   const adres = sokak ? `${sokak}${kapi ? " No: " + kapi : ""}` : "Adres bilgisi OpenStreetMap'te yok";
 
+  let cinsiyet = "unisex";
+  if (t.male === "yes" && t.female !== "yes") cinsiyet = "erkek";
+  if (t.female === "yes" && t.male !== "yes") cinsiyet = "kadin";
+  if (t.unisex === "yes") cinsiyet = "unisex";
+  const adKucuk = ad.toLocaleLowerCase("tr");
+  if (cinsiyet === "unisex") {
+    if (/(bayan|kadın|kadin|hanım|güzellik)/.test(adKucuk)) cinsiyet = "kadin";
+    else if (/(erkek|bay)/.test(adKucuk)) cinsiyet = "erkek";
+  }
+
   kayitlar.push({
     ad,
+    cinsiyet,
     semt,
     adres,
     telefon: temiz(t.phone) || temiz(t["contact:phone"]),
@@ -93,6 +104,7 @@ const satirlar = secilen.map((k, i) => {
     calismaSaatleri: "OpenStreetMap'te belirtilmemiş",
     hizmetler: ${JSON.stringify(HIZMETLER)},
     berberler: ${JSON.stringify(BERBERLER)},
+    cinsiyet: ${JSON.stringify(k.cinsiyet)},
     kaynak: "OSM",
     iletisim: ${JSON.stringify({ telefon: k.telefon, web: k.web, osm: k.osm })},
   },`;
