@@ -23,6 +23,18 @@
   let kapali = $state<string[]>([]);
 
   const bugun = new Date().toISOString().slice(0, 10);
+  const GUN_ADLARI = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+  const AY_ADLARI = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+  const gunler = Array.from({ length: 14 }, (_, i) => {
+    const d = new Date(`${bugun}T12:00:00`);
+    d.setDate(d.getDate() + i);
+    return {
+      iso: d.toISOString().slice(0, 10),
+      gun: i === 0 ? "Bugün" : i === 1 ? "Yarın" : GUN_ADLARI[d.getDay()],
+      gunNo: d.getDate(),
+      ay: AY_ADLARI[d.getMonth()],
+    };
+  });
 
   const seciliHizmetObjeleri = $derived.by(() => {
     const secili = salon.hizmetler.filter((h) => seciliHizmetler.includes(h.id));
@@ -151,19 +163,33 @@
 
   <section>
     <h2>Tarih ve saat</h2>
-    <div class="tarih-saat">
-      <label>
-        Tarih
-        <input type="date" min={bugun} bind:value={tarih} onchange={() => kapaliYukle()} />
-      </label>
-      <label>
-        Saat
-        <select bind:value={saat}>
-          {#each saatler as s}
-            <option value={s} disabled={kapali.includes(s)}>{s}{kapali.includes(s) ? " · dolu" : ""}</option>
-          {/each}
-        </select>
-      </label>
+    <p class="ipucu">En fazla 2 hafta sonrasına randevu alabilirsiniz.</p>
+    <div class="gunler">
+      {#each gunler as g (g.iso)}
+        <button
+          class:secili={tarih === g.iso}
+          onclick={() => {
+            tarih = g.iso;
+            kapaliYukle();
+          }}
+        >
+          <small>{g.gun}</small>
+          <b>{g.gunNo}</b>
+          <span>{g.ay}</span>
+        </button>
+      {/each}
+    </div>
+    <div class="saatler">
+      {#each saatler as s (s)}
+        <button
+          class:secili={saat === s}
+          class:dolu={kapali.includes(s)}
+          disabled={kapali.includes(s)}
+          onclick={() => (saat = s)}
+        >
+          {s}
+        </button>
+      {/each}
     </div>
   </section>
 
@@ -390,4 +416,60 @@
   }
   .sabit-cta span { display: block; font-size: 11px; color: var(--yazi-soluk); }
   .sabit-cta b { font-size: 16px; }
+
+  .gunler {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .gunler button {
+    flex: 0 0 auto;
+    width: 62px;
+    padding: 8px 0;
+    border: 1px solid var(--kenar);
+    border-radius: 14px;
+    background: var(--kart);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    line-height: 1.2;
+  }
+  .gunler small { font-size: 10px; color: var(--yazi-soluk); }
+  .gunler b { font-size: 18px; }
+  .gunler span { font-size: 10px; color: var(--yazi-soluk); }
+  .gunler button.secili {
+    background: var(--renk-ana);
+    border-color: var(--renk-ana);
+    color: #fff;
+  }
+  .gunler button.secili small,
+  .gunler button.secili span { color: #ffffffcc; }
+  .saatler {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .saatler button {
+    padding: 10px 0;
+    border: 1px solid var(--kenar);
+    border-radius: 12px;
+    background: var(--kart);
+    font-size: 14px;
+  }
+  .saatler button.secili {
+    background: var(--renk-ana);
+    border-color: var(--renk-ana);
+    color: #fff;
+    font-weight: 700;
+  }
+  .saatler button.dolu {
+    background: var(--zemin);
+    color: var(--yazi-soluk);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
 </style>
