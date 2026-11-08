@@ -11,13 +11,14 @@
   let secili = $state<HizmetKategorisi | "Tümü">("Tümü");
   let durum = $state<"yukleniyor" | "hazir" | "hata">("yukleniyor");
   let hata = $state("");
-  let cinsiyet = $state<"hepsi" | "erkek" | "kadin">("hepsi");
+  let cinsiyet = $state<"hepsi" | "erkek" | "kadin" | "unisex">("hepsi");
 
   const filtreler: (HizmetKategorisi | "Tümü")[] = ["Tümü", ...hizmetKategorileri];
-  const cinsiyetler: { k: "hepsi" | "erkek" | "kadin"; ad: string }[] = [
+  const cinsiyetler: { k: "hepsi" | "erkek" | "kadin" | "unisex"; ad: string }[] = [
     { k: "hepsi", ad: "Tümü" },
     { k: "erkek", ad: "Erkek" },
     { k: "kadin", ad: "Kadın" },
+    { k: "unisex", ad: "Unisex" },
   ];
 
   const liste = $derived(
@@ -25,7 +26,7 @@
       const kategoriUygun =
         secili === "Tümü" || s.hizmetler.some((h) => h.kategori === secili);
       const cinsiyetUygun =
-        cinsiyet === "hepsi" || !s.cinsiyet || s.cinsiyet === "unisex" || s.cinsiyet === cinsiyet;
+        cinsiyet === "hepsi" || s.cinsiyet === cinsiyet;
       const metin = `${s.ad} ${s.semt} ${s.hizmetler.map((h) => h.ad).join(" ")}`.toLocaleLowerCase(
         "tr",
       );
