@@ -25,3 +25,9 @@ Ekranlar Svelte 5 runes ile yazılır. React 19 bugün yalnızca dekoratif `Canl
 Yeni bir ekran eklenirken taşıyıcı çatı Svelte'dir; React yalnızca hazır bir React bileşeni gerektiğinde devreye alınır.
 
 Kaynak: [[src/components/react/CanliRozet.tsx#CanliRozet]], [[src/pages/hakkinda.mdx]].
+
+## Mobil Hedefler
+
+Aynı kod tabanı Tauri v2 ile Android ve iOS'a derlenir; `package.json` içinde `android`, `android:build`, `ios`, `ios:build` betikleri hazırdır.
+
+Android için JDK 17 + Android SDK/NDK ve dört Rust hedefi gerekir; iOS yalnızca macOS'ta (Xcode + CocoaPods) derlenir. Ayrıntılı adımlar [[docs/mobil.md]] içindedir; SQLite mobilde de `app_data_dir` altında çalışır.

@@ -10,7 +10,11 @@
     "test": "vitest run",
     "check": "svelte-check --tsconfig ./tsconfig.json && lat check",
     "astro": "astro",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "android": "tauri android dev",
+    "android:build": "tauri android build --apk",
+    "ios": "tauri ios dev",
+    "ios:build": "tauri ios build"
   },
   "license": "MIT",
   "dependencies": {
