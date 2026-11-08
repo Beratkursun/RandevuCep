@@ -25,3 +25,9 @@ Kaynak: [[src/lib/data.ts#salonlar]], [[src/lib/data.ts#salonBul]], [[src/compon
 Tüm fiyat ve tarih gösterimi `tl` ve `tarihYaz` yardımcılarından geçer; `tl` tutarı TRY olarak ondalıksız, `tarihYaz` ise gün adı, ay ve isteğe bağlı saati tr-TR biçiminde yazar.
 
 Kaynak: [[src/lib/data.ts#tl]], [[src/lib/data.ts#tarihYaz]], [[src/lib/data.ts#toplamTutar]].
+
+## Gerçek İşletme Verisi
+
+Katalogdaki 30 kayıt OpenStreetMap'ten üretilir (scripts/osm-berberler.mjs); kaynak: "OSM" alanı taşır ve puanı 0'dır, kartta yıldız yerine "Gerçek kayıt" rozeti görünür.
+
+Veri ODbL 1.0 lisanslıdır; atıf README ve uygulama içinde korunur. Hizmet ve fiyatlar örnek olarak üretildiği için işletmeyle doğrulanmamıştır.

@@ -12,7 +12,7 @@
     <img src={salonFoto(salon)} alt={`${salon.ad} — ${salon.semt}`} loading="lazy" />
     <div class="perde"></div>
     <span class="semt">{salon.semt}</span>
-    <b class="puan">★ {salon.puan.toFixed(1)}</b>
+    <b class="puan">{salon.puan > 0 ? `★ ${salon.puan.toFixed(1)}` : "Gerçek kayıt"}</b>
   </div>
   <div class="bilgi">
     <h3>{salon.ad}</h3>
