@@ -25,3 +25,6 @@ RandevuCep-final.zip
 
 # CI artefaktları (APK vb.)
 artifacts/
+
+# Otomatik ekran görüntüsü çıktıları
+docs/ekranlar/
