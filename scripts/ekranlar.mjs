@@ -1,15 +1,18 @@
-// Sayfaları üç boyutta gezip ekran görüntüsü alır ve taşma/kesilme kontrolü yapar.
-// Kullanım:
+// Sayfaları üç boyutta gezip ekran görüntüsü alır; taşma/kesilme ve konsol hatası kontrolü yapar.
+//
+// Web (varsayılan):
 //   1) bun run build
 //   2) python -m http.server 4177 --bind 127.0.0.1 --directory dist   (veya bun run dev)
-//   3) bun run ekranlar            (BASE_URL verilmezse http://127.0.0.1:4177)
+//   3) bun run ekranlar
 //
-// Çıktı: docs/ekranlar/<sayfa>-<boyut>.png ve docs/ekranlar/rapor.json
+// Native cihaz/emülatör (tek kare, o an açık ekranı yakalar):
+//   bun run ekranlar -- --native=android     → adb exec-out screencap -p
+//   bun run ekranlar -- --native=ios         → xcrun simctl io booted screenshot
+//   bun run ekranlar -- --native=ios --udid <UDID>   → idb screenshot (varsa)
+//   Araç yoksa uyarı verir ve web moduna düşer.
 //
-// Mobil cihazlarda native yakalama (Playwright yerine):
-//   Android: adb exec-out screencap -p > ekran.png
-//   iOS    : xcrun simctl io booted screenshot ekran.png
-//   iOS (fiziksel cihaz): idb screenshot --udid <UDID> ekran.png
+// Çıktı: docs/ekranlar/<sayfa>-<boyut>.png · native-<platform>-<zaman>.png · rapor.json
+import { spawnSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
 
@@ -32,7 +35,86 @@ const SAYFALAR = [
   { yol: "/hakkinda/", ad: "hakkinda" },
 ];
 
+const argumanlar = process.argv.slice(2);
+const nativeArg = argumanlar.find((a) => a.startsWith("--native"));
+const nativePlatform = nativeArg
+  ? nativeArg.includes("=")
+    ? nativeArg.split("=")[1]
+    : argumanlar[argumanlar.indexOf(nativeArg) + 1]
+  : null;
+const udidIndex = argumanlar.indexOf("--udid");
+const udid = udidIndex >= 0 ? argumanlar[udidIndex + 1] : process.env.IOS_UDID;
+
 await mkdir(CIKTI, { recursive: true });
+
+function komut(varMi, args) {
+  try {
+    return spawnSync(varMi, args, { encoding: "buffer" });
+  } catch {
+    return null;
+  }
+}
+
+function aracVar(ad) {
+  const r = komut(ad, ["--version"]);
+  return Boolean(r && r.status === 0);
+}
+
+function zaman() {
+  return new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+}
+
+async function nativeYakala(platform) {
+  if (platform === "android") {
+    if (!aracVar("adb")) {
+      console.warn("adb bulunamadı, web moduna düşülüyor.");
+      return false;
+    }
+    const cihazlar = komut("adb", ["devices"]).stdout?.toString() ?? "";
+    if (!/\tdevice/.test(cihazlar)) {
+      console.warn("Bağlı Android cihaz/emülatör yok, web moduna düşülüyor.");
+      return false;
+    }
+    const kare = komut("adb", ["exec-out", "screencap", "-p"]);
+    if (!kare || kare.status !== 0 || !kare.stdout?.length) {
+      console.warn("Android ekran görüntüsü alınamadı, web moduna düşülüyor.");
+      return false;
+    }
+    const dosya = `${CIKTI}/native-android-${zaman()}.png`;
+    await writeFile(dosya, kare.stdout);
+    console.log(`Android ekran görüntüsü: ${dosya}`);
+    return true;
+  }
+
+  if (platform === "ios") {
+    if (udid && aracVar("idb")) {
+      const dosya = `${CIKTI}/native-ios-${zaman()}.png`;
+      const r = komut("idb", ["screenshot", "--udid", udid, dosya]);
+      if (r && r.status === 0) {
+        console.log(`iOS (idb) ekran görüntüsü: ${dosya}`);
+        return true;
+      }
+    }
+    if (aracVar("xcrun")) {
+      const dosya = `${CIKTI}/native-ios-${zaman()}.png`;
+      const r = komut("xcrun", ["simctl", "io", "booted", "screenshot", dosya]);
+      if (r && r.status === 0) {
+        console.log(`iOS simülatör ekran görüntüsü: ${dosya}`);
+        return true;
+      }
+    }
+    console.warn("xcrun/idb bulunamadı veya simülatör açık değil, web moduna düşülüyor.");
+    return false;
+  }
+
+  console.warn(`Bilinmeyen platform: ${platform}. Kullanım: --native=android|ios`);
+  return false;
+}
+
+if (nativePlatform) {
+  const basarili = await nativeYakala(nativePlatform);
+  if (basarili) process.exit(0);
+}
 
 const tarayici = await chromium.launch();
 const rapor = [];
@@ -65,8 +147,7 @@ for (const boyut of BOYUTLAR) {
       const kaydirilabilir = (el) => {
         let p = el.parentElement;
         while (p) {
-          const s = getComputedStyle(p);
-          if (/(auto|scroll)/.test(s.overflowX)) return true;
+          if (/(auto|scroll)/.test(getComputedStyle(p).overflowX)) return true;
           p = p.parentElement;
         }
         return false;
